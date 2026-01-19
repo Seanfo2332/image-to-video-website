@@ -1,12 +1,10 @@
 "use client";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { Spotlight } from "@/components/ui/spotlight";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { SparklesCore } from "@/components/ui/sparkles";
-import { NorthernLights } from "@/components/ui/aurora-background";
-import { MorphingBlobs } from "@/components/ui/morphing-blobs";
 import { LiquidGlassCard } from "@/components/ui/liquid-glass";
 import { Play, Pause, Volume2, VolumeX, Sparkles, ArrowRight, Users, Globe, Mic } from "lucide-react";
 import Link from "next/link";
@@ -59,186 +57,102 @@ const avatars = [
 export function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [activeAvatar, setActiveAvatar] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
   const [videoError, setVideoError] = useState(false);
-
-  // Mouse tracking for interactive gradient
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const springConfig = { damping: 30, stiffness: 200 };
-  const smoothMouseX = useSpring(mouseX, springConfig);
-  const smoothMouseY = useSpring(mouseY, springConfig);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width;
-      const y = (e.clientY - rect.top) / rect.height;
-      mouseX.set(x);
-      mouseY.set(y);
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [mouseX, mouseY]);
+  const [videoLoaded, setVideoLoaded] = useState(false);
 
   // Reset video when avatar changes
   useEffect(() => {
     setVideoError(false);
+    setVideoLoaded(false);
     if (videoRef.current) {
       videoRef.current.load();
       videoRef.current.play().catch(() => {
-        // Autoplay might be blocked
         setIsPlaying(false);
       });
     }
   }, [activeAvatar]);
-
-  // Parallax transforms
-  const bgX = useTransform(smoothMouseX, [0, 1], [-20, 20]);
-  const bgY = useTransform(smoothMouseY, [0, 1], [-20, 20]);
 
   return (
     <div
       ref={containerRef}
       className="min-h-screen w-full flex items-center justify-center bg-black relative overflow-hidden"
     >
-      {/* Layer 1: Northern Lights Background */}
-      <NorthernLights className="opacity-50" />
+      {/* Simplified background - single gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black" />
 
-      {/* Layer 2: Morphing Blobs */}
-      <MorphingBlobs className="opacity-30" />
-
-      {/* Layer 3: Interactive mouse gradient */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: `radial-gradient(800px circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(0, 195, 255, 0.12), transparent 40%)`,
-        }}
-      />
-
-      {/* Layer 4: Spotlights */}
+      {/* Single spotlight for accent */}
       <Spotlight
         className="-top-40 left-0 md:left-60 md:-top-20"
-        fill="white"
-      />
-      <Spotlight
-        className="top-10 left-full h-[80vh] w-[50vw]"
         fill="cyan"
       />
-      <Spotlight className="top-28 left-80 h-[80vh] w-[50vw]" fill="blue" />
 
-      {/* Layer 5: Sparkles */}
+      {/* Reduced sparkles - lower density for better performance */}
       <div className="absolute inset-0">
         <SparklesCore
           background="transparent"
-          minSize={0.4}
-          maxSize={1.5}
-          particleDensity={60}
+          minSize={0.6}
+          maxSize={1.2}
+          particleDensity={15}
           className="w-full h-full"
           particleColor="#00C3FF"
         />
       </div>
 
-      {/* Layer 6: Animated gradient orbs - cyan theme */}
-      <motion.div
-        className="absolute w-[600px] h-[600px] rounded-full opacity-20 blur-[100px]"
+      {/* Static gradient orbs - no animation, just CSS */}
+      <div
+        className="absolute w-[400px] h-[400px] rounded-full opacity-20"
         style={{
-          background: "radial-gradient(circle, rgba(0, 195, 255, 0.8) 0%, transparent 70%)",
-          x: bgX,
-          y: bgY,
+          background: "radial-gradient(circle, rgba(0, 195, 255, 0.6) 0%, transparent 70%)",
           top: "10%",
           left: "10%",
-        }}
-        animate={{
-          scale: [1, 1.2, 1],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: "easeInOut",
+          filter: "blur(60px)",
         }}
       />
-      <motion.div
-        className="absolute w-[500px] h-[500px] rounded-full opacity-20 blur-[80px]"
+      <div
+        className="absolute w-[350px] h-[350px] rounded-full opacity-15"
         style={{
-          background: "radial-gradient(circle, rgba(139, 92, 246, 0.8) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(139, 92, 246, 0.6) 0%, transparent 70%)",
           top: "50%",
           right: "5%",
-        }}
-        animate={{
-          scale: [1, 1.3, 1],
-          y: [0, -50, 0],
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: "easeInOut",
+          filter: "blur(60px)",
         }}
       />
 
       {/* Content */}
       <div className="p-4 max-w-7xl mx-auto relative z-10 w-full pt-32 md:pt-28">
-        {/* Animated Badge */}
+        {/* Badge - simplified animation */}
         <motion.div
-          initial={{ opacity: 0, y: 20, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
           className="flex justify-center mb-6"
         >
-          <motion.div
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full liquid-glass"
-            whileHover={{ scale: 1.05 }}
-            animate={{
-              boxShadow: [
-                "0 0 20px rgba(0, 195, 255, 0.3)",
-                "0 0 40px rgba(0, 195, 255, 0.5)",
-                "0 0 20px rgba(0, 195, 255, 0.3)",
-              ],
-            }}
-            transition={{
-              boxShadow: { duration: 2, repeat: Infinity },
-            }}
-          >
-            <motion.div
-              animate={{ rotate: [0, 360] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-            >
-              <Sparkles className="w-4 h-4 text-cyan-400" />
-            </motion.div>
+          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 border border-cyan-500/30 shadow-lg shadow-cyan-500/20">
+            <Sparkles className="w-4 h-4 text-cyan-400" />
             <span className="text-sm text-cyan-200 font-medium">
               #1 AI Avatar Video Platform
             </span>
             <ArrowRight className="w-4 h-4 text-cyan-400" />
-          </motion.div>
+          </div>
         </motion.div>
 
-        {/* Main heading */}
+        {/* Main heading - simplified */}
         <motion.h1
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+          transition={{ duration: 0.6, delay: 0.1 }}
           className="text-4xl md:text-7xl font-bold text-center leading-tight"
         >
-          <motion.span className="inline-block bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-neutral-400">
+          <span className="bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-neutral-400">
             Create AI Avatar Videos
-          </motion.span>
+          </span>
           <br />
-          <motion.span
-            className="inline-block bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-400 to-violet-400"
-            animate={{
-              backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-            }}
-            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-            style={{ backgroundSize: "200% 200%" }}
-          >
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-400 to-violet-400">
             That Look Real
-          </motion.span>
+          </span>
         </motion.h1>
 
         {/* Subheading */}
@@ -313,24 +227,18 @@ export function Hero() {
 
         {/* Avatar Showcase */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.9 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
           className="mt-16 relative max-w-5xl mx-auto"
         >
-          {/* Glow effect */}
-          <motion.div
-            className="absolute -inset-8 rounded-3xl opacity-30"
-            animate={{
-              background: [
-                "linear-gradient(45deg, rgba(0, 195, 255, 0.4), rgba(139, 92, 246, 0.4))",
-                "linear-gradient(180deg, rgba(6, 182, 212, 0.4), rgba(99, 102, 241, 0.4))",
-                "linear-gradient(315deg, rgba(34, 211, 238, 0.4), rgba(0, 195, 255, 0.4))",
-                "linear-gradient(45deg, rgba(0, 195, 255, 0.4), rgba(139, 92, 246, 0.4))",
-              ],
+          {/* Static glow effect - no animation */}
+          <div
+            className="absolute -inset-6 rounded-3xl opacity-25"
+            style={{
+              background: "linear-gradient(45deg, rgba(0, 195, 255, 0.4), rgba(139, 92, 246, 0.4))",
+              filter: "blur(30px)",
             }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-            style={{ filter: "blur(40px)" }}
           />
 
           <LiquidGlassCard className="relative">
@@ -349,44 +257,37 @@ export function Hero() {
                     />
 
                     {/* Video Player or Image Fallback */}
-                    <motion.div
-                      className="absolute inset-0"
-                      key={activeAvatar}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.5 }}
-                    >
-                      {!videoError ? (
+                    <div className="absolute inset-0">
+                      {/* Show thumbnail while video loads */}
+                      <img
+                        src={avatars[activeAvatar].thumbnail}
+                        alt={avatars[activeAvatar].name}
+                        className={`w-full h-full object-cover transition-opacity duration-300 ${videoLoaded && !videoError ? 'opacity-0' : 'opacity-100'}`}
+                      />
+                      {!videoError && (
                         <video
                           ref={videoRef}
                           src={avatars[activeAvatar].video}
-                          className="w-full h-full object-cover"
+                          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${videoLoaded ? 'opacity-100' : 'opacity-0'}`}
                           autoPlay
                           loop
                           muted={isMuted}
                           playsInline
+                          preload="metadata"
+                          onCanPlay={() => setVideoLoaded(true)}
                           onPlay={() => setIsPlaying(true)}
                           onPause={() => setIsPlaying(false)}
                           onError={() => setVideoError(true)}
                         />
-                      ) : (
-                        <img
-                          src={avatars[activeAvatar].thumbnail}
-                          alt={avatars[activeAvatar].name}
-                          className="w-full h-full object-cover"
-                        />
                       )}
                       {/* Gradient overlay for better text visibility */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                    </motion.div>
+                    </div>
 
-                    {/* Video Controls - only show when video is working */}
+                    {/* Video Controls - simplified */}
                     {!videoError && (
                       <div className="absolute top-4 right-4 flex gap-2">
-                        {/* Play/Pause Button */}
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
+                        <button
                           onClick={() => {
                             if (videoRef.current) {
                               if (isPlaying) {
@@ -396,59 +297,38 @@ export function Hero() {
                               }
                             }
                           }}
-                          className="w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-black/70 transition-colors"
+                          className="w-10 h-10 rounded-full bg-black/60 border border-white/20 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
                         >
                           {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
-                        </motion.button>
+                        </button>
 
-                        {/* Mute/Unmute Button */}
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
+                        <button
                           onClick={() => {
                             setIsMuted(!isMuted);
                             if (videoRef.current) {
                               videoRef.current.muted = !isMuted;
                             }
                           }}
-                          className="w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-black/70 transition-colors"
+                          className="w-10 h-10 rounded-full bg-black/60 border border-white/20 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
                         >
                           {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-                        </motion.button>
+                        </button>
                       </div>
                     )}
 
-                    {/* Speaking animation overlay */}
-                    {isPlaying && !videoError && (
-                      <motion.div
-                        className="absolute bottom-24 left-1/2 -translate-x-1/2 flex gap-1 px-4 py-2 rounded-full bg-black/50 backdrop-blur-sm"
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                      >
-                        {[0, 1, 2, 3, 4].map((i) => (
-                          <motion.div
-                            key={i}
-                            className="w-1 bg-cyan-400 rounded-full"
-                            animate={{
-                              height: [4, 16, 4],
-                            }}
-                            transition={{
-                              duration: 0.4,
-                              repeat: Infinity,
-                              delay: i * 0.08,
-                            }}
-                          />
-                        ))}
-                      </motion.div>
+                    {/* Speaking indicator - simplified */}
+                    {isPlaying && !videoError && videoLoaded && (
+                      <div className="absolute bottom-24 left-1/2 -translate-x-1/2 flex gap-1 px-4 py-2 rounded-full bg-black/60">
+                        <div className="w-1 h-3 bg-cyan-400 rounded-full animate-pulse" />
+                        <div className="w-1 h-4 bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: '0.1s' }} />
+                        <div className="w-1 h-2 bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }} />
+                        <div className="w-1 h-4 bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: '0.3s' }} />
+                        <div className="w-1 h-3 bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }} />
+                      </div>
                     )}
 
-                    {/* Avatar name badge */}
-                    <motion.div
-                      className="absolute bottom-4 left-4 right-4 p-3 rounded-xl liquid-glass"
-                      initial={{ y: 20, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      transition={{ delay: 0.3 }}
-                    >
+                    {/* Avatar name badge - simplified */}
+                    <div className="absolute bottom-4 left-4 right-4 p-3 rounded-xl bg-black/60 border border-white/10">
                       <div className="flex items-center justify-between">
                         <div>
                           <div className="text-white font-semibold">{avatars[activeAvatar].name}</div>
@@ -456,47 +336,41 @@ export function Hero() {
                         </div>
                         <div className="flex items-center gap-2">
                           <span className="text-xs text-neutral-400">
-                            {videoError ? "Preview" : isPlaying ? "Speaking" : "Paused"}
+                            {videoError ? "Preview" : isPlaying && videoLoaded ? "Speaking" : "Loading..."}
                           </span>
-                          <motion.div
-                            className={`w-2.5 h-2.5 rounded-full ${videoError ? "bg-blue-500" : isPlaying ? "bg-green-500" : "bg-yellow-500"}`}
-                            animate={isPlaying && !videoError ? { scale: [1, 1.3, 1], opacity: [1, 0.7, 1] } : {}}
-                            transition={{ duration: 1, repeat: Infinity }}
+                          <div
+                            className={`w-2.5 h-2.5 rounded-full ${videoError ? "bg-blue-500" : isPlaying && videoLoaded ? "bg-green-500 animate-pulse" : "bg-yellow-500"}`}
                           />
                         </div>
                       </div>
-                    </motion.div>
+                    </div>
                   </div>
 
-                  {/* Avatar selector thumbnails */}
+                  {/* Avatar selector thumbnails - simplified */}
                   <div className="flex justify-center gap-3 mt-4">
                     {avatars.map((avatar, index) => (
-                      <motion.button
+                      <button
                         key={index}
                         onClick={() => {
                           setActiveAvatar(index);
                           setIsPlaying(true);
                         }}
-                        className={`relative w-12 h-12 rounded-xl overflow-hidden border-2 transition-all ${
+                        className={`relative w-12 h-12 rounded-xl overflow-hidden border-2 transition-all duration-200 hover:scale-105 ${
                           index === activeAvatar
                             ? "border-cyan-400 shadow-lg shadow-cyan-400/30"
                             : "border-white/20 hover:border-white/40"
                         }`}
-                        whileHover={{ scale: 1.1, y: -2 }}
-                        whileTap={{ scale: 0.95 }}
                       >
                         <img
                           src={avatar.thumbnail}
                           alt={avatar.name}
                           className="w-full h-full object-cover"
+                          loading="lazy"
                         />
                         {index === activeAvatar && (
-                          <motion.div
-                            className="absolute inset-0 bg-cyan-400/20"
-                            layoutId="avatarSelector"
-                          />
+                          <div className="absolute inset-0 bg-cyan-400/20" />
                         )}
-                      </motion.button>
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -551,22 +425,14 @@ export function Hero() {
             </div>
           </LiquidGlassCard>
 
-          {/* Floating elements */}
-          <motion.div
-            className="absolute -top-4 -right-4 w-16 h-16 rounded-2xl liquid-glass flex items-center justify-center"
-            animate={{ y: [0, -10, 0], rotate: [0, 5, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          >
+          {/* Floating elements - static for performance */}
+          <div className="absolute -top-4 -right-4 w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
             <span className="text-2xl">🎭</span>
-          </motion.div>
+          </div>
 
-          <motion.div
-            className="absolute -bottom-4 -left-4 w-14 h-14 rounded-2xl liquid-glass flex items-center justify-center"
-            animate={{ y: [0, 10, 0], rotate: [0, -5, 0] }}
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-          >
+          <div className="absolute -bottom-4 -left-4 w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
             <span className="text-xl">🎬</span>
-          </motion.div>
+          </div>
         </motion.div>
 
         {/* Trust badges */}
