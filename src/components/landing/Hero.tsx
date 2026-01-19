@@ -11,40 +11,43 @@ import { LiquidGlassCard } from "@/components/ui/liquid-glass";
 import { Play, Pause, Volume2, VolumeX, Sparkles, ArrowRight, Users, Globe, Mic } from "lucide-react";
 import Link from "next/link";
 
-// Avatar data with videos and thumbnail images
-// Replace video URLs with your actual AI avatar videos
+// Avatar data with talking head videos
+// Using free stock videos from Mixkit that show people speaking to camera
 const avatars = [
   {
     id: 1,
-    name: "Sarah",
+    name: "James",
     role: "Business",
-    thumbnail: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=500&fit=crop&crop=face",
-    // Sample video - replace with your AI avatar video URL
-    video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+    thumbnail: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=500&fit=crop&crop=face",
+    // Man in suit talking directly to camera with hand gestures (green screen)
+    video: "https://assets.mixkit.co/videos/28287/28287-720.mp4",
     color: "from-cyan-500 to-blue-500"
   },
   {
     id: 2,
-    name: "James",
-    role: "Casual",
-    thumbnail: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop&crop=face",
-    video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+    name: "Dr. Sarah",
+    role: "Professional",
+    thumbnail: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=500&fit=crop&crop=face",
+    // Doctor/therapist speaking directly to camera from office
+    video: "https://assets.mixkit.co/videos/4834/4834-720.mp4",
     color: "from-violet-500 to-purple-500"
   },
   {
     id: 3,
     name: "Emily",
-    role: "Professional",
-    thumbnail: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=500&fit=crop&crop=face",
-    video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+    role: "Presenter",
+    thumbnail: "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?w=400&h=500&fit=crop&crop=face",
+    // Person talking directly to camera in professional setting
+    video: "https://assets.mixkit.co/videos/2961/2961-720.mp4",
     color: "from-pink-500 to-rose-500"
   },
   {
     id: 4,
-    name: "Michael",
-    role: "Creative",
-    thumbnail: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=500&fit=crop&crop=face",
-    video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+    name: "Marcus",
+    role: "Casual",
+    thumbnail: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop&crop=face",
+    // Influencer/content creator style talking to camera
+    video: "https://assets.mixkit.co/videos/42323/42323-720.mp4",
     color: "from-amber-500 to-orange-500"
   },
 ];
