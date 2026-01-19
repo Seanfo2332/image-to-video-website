@@ -12,41 +12,45 @@ import { Play, Pause, Volume2, VolumeX, Sparkles, ArrowRight, Users, Globe, Mic 
 import Link from "next/link";
 
 // Avatar data with talking head videos
-// Using free stock videos from Mixkit that show people speaking to camera
+// Using free stock videos from Mixkit - thumbnails extracted directly from videos
 const avatars = [
   {
     id: 1,
     name: "James",
     role: "Business",
-    thumbnail: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=500&fit=crop&crop=face",
-    // Man in suit talking directly to camera with hand gestures (green screen)
+    // Thumbnail directly from the video for perfect sync
+    thumbnail: "https://assets.mixkit.co/videos/28287/28287-thumb-720-0.jpg",
+    // Man in suit talking directly to camera with hand gestures
     video: "https://assets.mixkit.co/videos/28287/28287-720.mp4",
     color: "from-cyan-500 to-blue-500"
   },
   {
     id: 2,
-    name: "Dr. Sarah",
+    name: "Dr. David",
     role: "Professional",
-    thumbnail: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=500&fit=crop&crop=face",
+    // Thumbnail directly from the video for perfect sync
+    thumbnail: "https://assets.mixkit.co/videos/4834/4834-thumb-720-0.jpg",
     // Doctor/therapist speaking directly to camera from office
     video: "https://assets.mixkit.co/videos/4834/4834-720.mp4",
     color: "from-violet-500 to-purple-500"
   },
   {
     id: 3,
-    name: "Emily",
+    name: "Alex",
     role: "Presenter",
-    thumbnail: "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?w=400&h=500&fit=crop&crop=face",
-    // Person talking directly to camera in professional setting
+    // Thumbnail directly from the video for perfect sync
+    thumbnail: "https://assets.mixkit.co/videos/2961/2961-thumb-720-0.jpg",
+    // Person talking directly to camera with microphone
     video: "https://assets.mixkit.co/videos/2961/2961-720.mp4",
     color: "from-pink-500 to-rose-500"
   },
   {
     id: 4,
-    name: "Marcus",
-    role: "Casual",
-    thumbnail: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop&crop=face",
-    // Influencer/content creator style talking to camera
+    name: "Sofia",
+    role: "Creator",
+    // Thumbnail directly from the video for perfect sync
+    thumbnail: "https://assets.mixkit.co/videos/42323/42323-thumb-720-0.jpg",
+    // Content creator style talking to camera
     video: "https://assets.mixkit.co/videos/42323/42323-720.mp4",
     color: "from-amber-500 to-orange-500"
   },
