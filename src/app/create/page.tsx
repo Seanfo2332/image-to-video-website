@@ -287,15 +287,13 @@ export default function CreatePage() {
         submitData.append("field-7", formData["field-7"]);
       }
 
-      // Submit to our API (which forwards to n8n and tracks status)
-      const response = await fetch("/api/prompts", {
+      // Submit directly to n8n webhook
+      const response = await fetch("https://n8n.${process.env.NEXT_PUBLIC_N8N_DOMAIN || 'your-n8n-domain.com'}/webhook/prompt-generator", {
         method: "POST",
         body: submitData,
       });
 
-      const result = await response.json();
-
-      if (response.ok && result.success) {
+      if (response.ok) {
         setSubmitStatus("success");
         // Reset form
         setFormData({
@@ -309,7 +307,7 @@ export default function CreatePage() {
         });
         setImageFiles([]);
       } else {
-        throw new Error(result.error || "Submission failed");
+        throw new Error("Submission failed");
       }
     } catch (error) {
       setSubmitStatus("error");
@@ -448,25 +446,14 @@ export default function CreatePage() {
               <p className="text-neutral-400 mb-6">
                 Your prompt has been submitted and is being processed.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/submissions">
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="px-8 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-medium shadow-lg shadow-cyan-500/25"
-                  >
-                    View My Submissions
-                  </motion.button>
-                </Link>
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => setSubmitStatus(null)}
-                  className="px-8 py-3 rounded-xl bg-white/10 border border-white/20 text-white font-medium"
-                >
-                  Create Another
-                </motion.button>
-              </div>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setSubmitStatus(null)}
+                className="px-8 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium shadow-lg shadow-purple-500/25"
+              >
+                Create Another
+              </motion.button>
             </motion.div>
           ) : (
             <motion.form

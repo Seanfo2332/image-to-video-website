@@ -24,7 +24,6 @@ model User {
 
   accounts      Account[]
   sessions      Session[]
-  submissions   PromptSubmission[]
 }
 
 model Account {
@@ -63,32 +62,3 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model PromptSubmission {
-  id          String    @id @default(cuid())
-  userId      String
-  status      String    @default("pending") // pending, processing, completed, failed, cancelled
-
-  // Form data
-  materialUrl String    // field-0: 素材网址
-  imageOption String    // field-2: 生成图片选项
-  scriptStyle String    // field-3: 脚本风格
-  language    String?   // field-4: 语言
-  voiceId     String    // field-5: 声音身份 ID
-  fileFormat  String?   // field-6: 文件格式
-  videoMaterial String? // field-7: 视频素材
-
-  // Result data from n8n callback
-  downloadUrl String?
-  resultData  String?   // JSON string for any extra data
-  errorMessage String?
-
-  // Timestamps
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  completedAt DateTime?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([status])
-}

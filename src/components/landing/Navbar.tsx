@@ -154,15 +154,6 @@ export function Navbar() {
                           Prompt Generator
                         </Link>
 
-                        <Link
-                          href="/submissions"
-                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-300 hover:text-white hover:bg-white/5 transition-colors"
-                          onClick={() => setIsUserMenuOpen(false)}
-                        >
-                          <Sparkles className="w-4 h-4" />
-                          My Submissions
-                        </Link>
-
                         <div className="my-2 border-t border-white/10" />
 
                         <button
@@ -287,12 +278,6 @@ export function Navbar() {
                       <button className="w-full py-4 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold text-lg flex items-center justify-center gap-2">
                         <Wand2 className="w-5 h-5" />
                         Prompt Generator
-                      </button>
-                    </Link>
-                    <Link href="/submissions" onClick={() => setIsMobileMenuOpen(false)}>
-                      <button className="w-full py-3 rounded-xl bg-white/5 border border-white/10 text-white font-medium text-lg flex items-center justify-center gap-2">
-                        <Sparkles className="w-5 h-5" />
-                        My Submissions
                       </button>
                     </Link>
                     <button
