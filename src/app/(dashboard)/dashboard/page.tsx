@@ -16,6 +16,7 @@ import {
   CheckCircle,
   AlertCircle,
   ExternalLink,
+  Activity,
 } from "lucide-react";
 
 // Types for stats and recent activity
@@ -138,11 +139,10 @@ export default function DashboardPage() {
     {
       name: "Active Workflows",
       value: stats.activeWorkflows,
-      icon: Loader2,
+      icon: Activity,
       href: "/dashboard/history?status=processing",
       color: "text-yellow-400",
       bgColor: "from-yellow-500/20 to-orange-500/20",
-      animate: stats.activeWorkflows > 0,
     },
   ];
 
@@ -188,11 +188,7 @@ export default function DashboardPage() {
                   )}
                 </div>
                 <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.bgColor} flex items-center justify-center`}>
-                  <stat.icon
-                    className={`w-6 h-6 ${stat.color} ${
-                      stat.animate ? "animate-spin" : ""
-                    }`}
-                  />
+                  <stat.icon className={`w-6 h-6 ${stat.color}`} />
                 </div>
               </div>
               <div className="mt-3 flex items-center text-sm text-neutral-500 group-hover:text-neutral-400 transition-colors">
