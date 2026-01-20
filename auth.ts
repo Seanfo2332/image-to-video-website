@@ -1,12 +1,10 @@
 import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import type { Adapter } from "next-auth/adapters";
 import prisma from "@/lib/prisma";
-import { authConfig } from "./auth.config";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -14,14 +12,31 @@ const loginSchema = z.object({
 });
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  ...authConfig,
   adapter: PrismaAdapter(prisma) as Adapter,
   session: { strategy: "jwt" },
+  pages: {
+    signIn: "/login",
+    error: "/login",
+  },
+  callbacks: {
+    jwt({ token, user }) {
+      if (user) {
+        token.id = user.id!;
+        token.role = (user as any).role || "user";
+        token.isActive = (user as any).isActive ?? true;
+      }
+      return token;
+    },
+    session({ session, token }) {
+      if (token && session.user) {
+        session.user.id = token.id as string;
+        session.user.role = token.role as string;
+        session.user.isActive = token.isActive as boolean;
+      }
+      return session;
+    },
+  },
   providers: [
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
     Credentials({
       name: "credentials",
       credentials: {
@@ -29,47 +44,35 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const parsed = loginSchema.safeParse(credentials);
-        if (!parsed.success) return null;
+        try {
+          const parsed = loginSchema.safeParse(credentials);
+          if (!parsed.success) return null;
 
-        const { email, password } = parsed.data;
+          const { email, password } = parsed.data;
 
-        const user = await prisma.user.findUnique({
-          where: { email },
-        });
+          const user = await prisma.user.findUnique({
+            where: { email },
+          });
 
-        if (!user || !user.password) return null;
-        if (!user.isActive) return null;
+          if (!user || !user.password) return null;
+          if (!user.isActive) return null;
 
-        const passwordMatch = await bcrypt.compare(password, user.password);
-        if (!passwordMatch) return null;
+          const passwordMatch = await bcrypt.compare(password, user.password);
+          if (!passwordMatch) return null;
 
-        // Update last login time
-        await prisma.user.update({
-          where: { id: user.id },
-          data: { lastLoginAt: new Date() },
-        });
-
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          image: user.image,
-          role: user.role,
-          isActive: user.isActive,
-        };
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            image: user.image,
+            role: user.role,
+            isActive: user.isActive,
+          };
+        } catch (error) {
+          console.error("Auth error:", error);
+          return null;
+        }
       },
     }),
   ],
-  events: {
-    async signIn({ user, account }) {
-      if (account?.provider !== "credentials") {
-        // Update last login for OAuth users
-        await prisma.user.update({
-          where: { id: user.id },
-          data: { lastLoginAt: new Date() },
-        });
-      }
-    },
-  },
 });
