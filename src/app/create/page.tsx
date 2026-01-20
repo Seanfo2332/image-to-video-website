@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Navbar } from "@/components/landing/Navbar";
@@ -19,37 +19,164 @@ import {
   Lock,
   X,
   Sparkles,
+  ChevronDown,
+  Check,
 } from "lucide-react";
 import Link from "next/link";
 
+// Custom Select Component
+interface SelectOption {
+  value: string;
+  label: string;
+  icon?: React.ReactNode;
+}
+
+interface CustomSelectProps {
+  options: SelectOption[];
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  error?: string;
+  icon?: React.ReactNode;
+}
+
+function CustomSelect({
+  options,
+  value,
+  onChange,
+  placeholder = "Select an option...",
+  error,
+  icon,
+}: CustomSelectProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const selectedOption = options.find((opt) => opt.value === value);
+
+  // Close on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <div ref={containerRef} className="relative">
+      <motion.button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        whileTap={{ scale: 0.995 }}
+        className={`w-full px-4 py-3 rounded-xl bg-white/5 border ${
+          error
+            ? "border-red-500/50"
+            : isOpen
+            ? "border-purple-500/50 ring-1 ring-purple-500/50"
+            : "border-white/10 hover:border-white/20"
+        } text-left transition-all duration-200 flex items-center justify-between gap-3 group`}
+      >
+        <div className="flex items-center gap-3 flex-1 min-w-0">
+          {icon && (
+            <span className={`flex-shrink-0 transition-colors ${isOpen ? "text-purple-400" : "text-neutral-500 group-hover:text-purple-400"}`}>
+              {icon}
+            </span>
+          )}
+          <span className={`truncate ${selectedOption ? "text-white" : "text-neutral-500"}`}>
+            {selectedOption ? selectedOption.label : placeholder}
+          </span>
+        </div>
+        <motion.div
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.2 }}
+          className={`flex-shrink-0 ${isOpen ? "text-purple-400" : "text-neutral-500"}`}
+        >
+          <ChevronDown className="w-5 h-5" />
+        </motion.div>
+      </motion.button>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            className="absolute z-50 w-full mt-2 py-2 rounded-xl bg-neutral-900/95 backdrop-blur-xl border border-white/10 shadow-xl shadow-black/50 overflow-hidden"
+          >
+            <div className="max-h-60 overflow-y-auto custom-scrollbar">
+              {options.map((option, index) => (
+                <motion.button
+                  key={option.value}
+                  type="button"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.03 }}
+                  onClick={() => {
+                    onChange(option.value);
+                    setIsOpen(false);
+                  }}
+                  className={`w-full px-4 py-3 flex items-center justify-between gap-3 transition-all duration-150 ${
+                    value === option.value
+                      ? "bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-white"
+                      : "text-neutral-300 hover:bg-white/5 hover:text-white"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    {option.icon && <span className="text-purple-400">{option.icon}</span>}
+                    <span className="text-sm font-medium">{option.label}</span>
+                  </div>
+                  {value === option.value && (
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="flex-shrink-0"
+                    >
+                      <div className="w-5 h-5 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
+                        <Check className="w-3 h-3 text-white" />
+                      </div>
+                    </motion.div>
+                  )}
+                </motion.button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 // Form options matching n8n form
-const imageOptions = [
+const imageOptions: SelectOption[] = [
   { value: "YouTube 标准口播", label: "YouTube 标准口播" },
   { value: "YouTube 标准口播西装", label: "YouTube 标准口播西装" },
   { value: "足球直播", label: "足球直播" },
 ];
 
-const scriptStyles = [
+const scriptStyles: SelectOption[] = [
   { value: "企业深度解析", label: "企业深度解析" },
   { value: "自定义脚本", label: "自定义脚本" },
   { value: "企业深度解析-素材", label: "企业深度解析-素材" },
   { value: "足球", label: "足球" },
 ];
 
-const languages = [
-  { value: "中文", label: "中文" },
-  { value: "英语", label: "英语" },
+const languages: SelectOption[] = [
+  { value: "中文", label: "中文 (Chinese)" },
+  { value: "英语", label: "英语 (English)" },
 ];
 
-const voiceIds = [
-  { value: "moss_audio_affebf31-a4f0-11f0-87ae-d2bc00c8f7d2", label: "Voice 1 - affebf31" },
-  { value: "moss_audio_aa3c6e63-9c23-11f0-ac24-56b1c4839062", label: "Voice 2 - aa3c6e63" },
-  { value: "moss_audio_dbb57018-bb78-11f0-ac4c-6ec75523ad7f", label: "Voice 3 - dbb57018" },
-  { value: "moss_audio_583ed315-c222-11f0-bb54-eebc22378c55", label: "Voice 4 - 583ed315" },
-  { value: "moss_audio_a4aeabac-c44b-11f0-8e99-26a6b19c3810", label: "Voice 5 - a4aeabac" },
+const voiceIds: SelectOption[] = [
+  { value: "moss_audio_affebf31-a4f0-11f0-87ae-d2bc00c8f7d2", label: "Voice 1 - Natural Male" },
+  { value: "moss_audio_aa3c6e63-9c23-11f0-ac24-56b1c4839062", label: "Voice 2 - Professional" },
+  { value: "moss_audio_dbb57018-bb78-11f0-ac4c-6ec75523ad7f", label: "Voice 3 - Energetic" },
+  { value: "moss_audio_583ed315-c222-11f0-bb54-eebc22378c55", label: "Voice 4 - Calm" },
+  { value: "moss_audio_a4aeabac-c44b-11f0-8e99-26a6b19c3810", label: "Voice 5 - Dynamic" },
 ];
 
-const fileFormats = [
+const fileFormats: SelectOption[] = [
   { value: "application/pdf", label: "PDF Document" },
   { value: "video/mp4", label: "MP4 Video" },
 ];
@@ -75,12 +202,18 @@ export default function CreatePage() {
   // Validation errors
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  const handleSelectChange = (name: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+  };
+
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    // Clear error when user types
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
@@ -154,15 +287,15 @@ export default function CreatePage() {
         submitData.append("field-7", formData["field-7"]);
       }
 
-      // Submit to n8n webhook
-      const webhookUrl = "https://n8n.srv1007594.hstgr.cloud/webhook/ad77bb16-47ef-46ce-a7dd-e479259f81b8";
-
-      const response = await fetch(webhookUrl, {
+      // Submit to our API (which forwards to n8n and tracks status)
+      const response = await fetch("/api/prompts", {
         method: "POST",
         body: submitData,
       });
 
-      if (response.ok) {
+      const result = await response.json();
+
+      if (response.ok && result.success) {
         setSubmitStatus("success");
         // Reset form
         setFormData({
@@ -176,7 +309,7 @@ export default function CreatePage() {
         });
         setImageFiles([]);
       } else {
-        throw new Error("Submission failed");
+        throw new Error(result.error || "Submission failed");
       }
     } catch (error) {
       setSubmitStatus("error");
@@ -251,6 +384,23 @@ export default function CreatePage() {
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-blob-morph" style={{ animationDelay: "-4s" }} />
       </div>
 
+      {/* Custom scrollbar styles */}
+      <style jsx global>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(168, 85, 247, 0.4);
+          border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(168, 85, 247, 0.6);
+        }
+      `}</style>
+
       <main className="relative z-10 max-w-4xl mx-auto px-4 py-24">
         {/* Header */}
         <motion.div
@@ -295,17 +445,28 @@ export default function CreatePage() {
               <h2 className="text-2xl font-bold text-white mb-3">
                 提交成功！
               </h2>
-              <p className="text-neutral-400 mb-8">
-                Your prompt has been submitted successfully. You will be notified when it&apos;s ready.
+              <p className="text-neutral-400 mb-6">
+                Your prompt has been submitted and is being processed.
               </p>
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => setSubmitStatus(null)}
-                className="px-8 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium shadow-lg shadow-purple-500/25"
-              >
-                Create Another
-              </motion.button>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link href="/submissions">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="px-8 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-medium shadow-lg shadow-cyan-500/25"
+                  >
+                    View My Submissions
+                  </motion.button>
+                </Link>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setSubmitStatus(null)}
+                  className="px-8 py-3 rounded-xl bg-white/10 border border-white/20 text-white font-medium"
+                >
+                  Create Another
+                </motion.button>
+              </div>
             </motion.div>
           ) : (
             <motion.form
@@ -357,7 +518,8 @@ export default function CreatePage() {
                     <ImageIcon className="w-4 h-4 text-purple-400" />
                     Image <span className="text-pink-400">*</span>
                   </label>
-                  <div
+                  <motion.div
+                    whileHover="hover"
                     className={`relative border-2 border-dashed rounded-xl p-6 text-center transition-all ${
                       errors["field-1"]
                         ? "border-red-500/50 bg-red-500/5"
@@ -369,16 +531,73 @@ export default function CreatePage() {
                       accept=".jpeg,.png,.jpg"
                       onChange={handleFileChange}
                       multiple
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                     />
-                    <Upload className="w-8 h-8 text-neutral-400 mx-auto mb-2" />
-                    <p className="text-neutral-400">
+                    <motion.div
+                      className="relative mx-auto mb-3 w-16 h-16"
+                      variants={{
+                        hover: {
+                          scale: 1.1,
+                        }
+                      }}
+                    >
+                      {/* Animated rings */}
+                      <motion.div
+                        className="absolute inset-0 rounded-full bg-purple-500/20"
+                        animate={{
+                          scale: [1, 1.5, 1],
+                          opacity: [0.5, 0, 0.5],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                      />
+                      <motion.div
+                        className="absolute inset-0 rounded-full bg-pink-500/20"
+                        animate={{
+                          scale: [1, 1.8, 1],
+                          opacity: [0.3, 0, 0.3],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                          delay: 0.3,
+                        }}
+                      />
+                      {/* Icon container */}
+                      <motion.div
+                        className="absolute inset-0 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center backdrop-blur-sm border border-white/10"
+                        animate={{
+                          y: [0, -5, 0],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                      >
+                        <motion.div
+                          variants={{
+                            hover: {
+                              rotate: [0, -10, 10, 0],
+                              transition: { duration: 0.5 }
+                            }
+                          }}
+                        >
+                          <Upload className="w-7 h-7 text-purple-400" />
+                        </motion.div>
+                      </motion.div>
+                    </motion.div>
+                    <p className="text-neutral-300 font-medium">
                       Click or drag to upload images
                     </p>
                     <p className="text-neutral-500 text-sm mt-1">
                       Supports: JPEG, PNG, JPG (Multiple files allowed)
                     </p>
-                  </div>
+                  </motion.div>
                   {errors["field-1"] && (
                     <p className="text-red-400 text-sm mt-1">{errors["field-1"]}</p>
                   )}
@@ -423,23 +642,14 @@ export default function CreatePage() {
                       <Sparkles className="w-4 h-4 text-purple-400" />
                       生成图片选项 <span className="text-pink-400">*</span>
                     </label>
-                    <select
-                      name="field-2"
+                    <CustomSelect
+                      options={imageOptions}
                       value={formData["field-2"]}
-                      onChange={handleInputChange}
-                      className={`w-full px-4 py-3 rounded-xl bg-white/5 border ${
-                        errors["field-2"] ? "border-red-500/50" : "border-white/10"
-                      } text-white focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all appearance-none cursor-pointer`}
-                    >
-                      <option value="" disabled className="bg-neutral-900">
-                        Select an option...
-                      </option>
-                      {imageOptions.map((opt) => (
-                        <option key={opt.value} value={opt.value} className="bg-neutral-900">
-                          {opt.label}
-                        </option>
-                      ))}
-                    </select>
+                      onChange={(value) => handleSelectChange("field-2", value)}
+                      placeholder="Select image style..."
+                      error={errors["field-2"]}
+                      icon={<Sparkles className="w-4 h-4" />}
+                    />
                     {errors["field-2"] && (
                       <p className="text-red-400 text-sm mt-1">{errors["field-2"]}</p>
                     )}
@@ -451,23 +661,14 @@ export default function CreatePage() {
                       <FileType className="w-4 h-4 text-purple-400" />
                       脚本风格 <span className="text-pink-400">*</span>
                     </label>
-                    <select
-                      name="field-3"
+                    <CustomSelect
+                      options={scriptStyles}
                       value={formData["field-3"]}
-                      onChange={handleInputChange}
-                      className={`w-full px-4 py-3 rounded-xl bg-white/5 border ${
-                        errors["field-3"] ? "border-red-500/50" : "border-white/10"
-                      } text-white focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all appearance-none cursor-pointer`}
-                    >
-                      <option value="" disabled className="bg-neutral-900">
-                        Select an option...
-                      </option>
-                      {scriptStyles.map((opt) => (
-                        <option key={opt.value} value={opt.value} className="bg-neutral-900">
-                          {opt.label}
-                        </option>
-                      ))}
-                    </select>
+                      onChange={(value) => handleSelectChange("field-3", value)}
+                      placeholder="Select script style..."
+                      error={errors["field-3"]}
+                      icon={<FileType className="w-4 h-4" />}
+                    />
                     {errors["field-3"] && (
                       <p className="text-red-400 text-sm mt-1">{errors["field-3"]}</p>
                     )}
@@ -479,21 +680,13 @@ export default function CreatePage() {
                       <Languages className="w-4 h-4 text-purple-400" />
                       语言
                     </label>
-                    <select
-                      name="field-4"
+                    <CustomSelect
+                      options={languages}
                       value={formData["field-4"]}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all appearance-none cursor-pointer"
-                    >
-                      <option value="" disabled className="bg-neutral-900">
-                        Select an option...
-                      </option>
-                      {languages.map((opt) => (
-                        <option key={opt.value} value={opt.value} className="bg-neutral-900">
-                          {opt.label}
-                        </option>
-                      ))}
-                    </select>
+                      onChange={(value) => handleSelectChange("field-4", value)}
+                      placeholder="Select language..."
+                      icon={<Languages className="w-4 h-4" />}
+                    />
                   </div>
 
                   {/* 声音身份 ID - Voice ID */}
@@ -502,23 +695,14 @@ export default function CreatePage() {
                       <Mic className="w-4 h-4 text-purple-400" />
                       声音身份 ID <span className="text-pink-400">*</span>
                     </label>
-                    <select
-                      name="field-5"
+                    <CustomSelect
+                      options={voiceIds}
                       value={formData["field-5"]}
-                      onChange={handleInputChange}
-                      className={`w-full px-4 py-3 rounded-xl bg-white/5 border ${
-                        errors["field-5"] ? "border-red-500/50" : "border-white/10"
-                      } text-white focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all appearance-none cursor-pointer`}
-                    >
-                      <option value="" disabled className="bg-neutral-900">
-                        Select an option...
-                      </option>
-                      {voiceIds.map((opt) => (
-                        <option key={opt.value} value={opt.value} className="bg-neutral-900">
-                          {opt.label}
-                        </option>
-                      ))}
-                    </select>
+                      onChange={(value) => handleSelectChange("field-5", value)}
+                      placeholder="Select voice..."
+                      error={errors["field-5"]}
+                      icon={<Mic className="w-4 h-4" />}
+                    />
                     {errors["field-5"] && (
                       <p className="text-red-400 text-sm mt-1">{errors["field-5"]}</p>
                     )}
@@ -530,21 +714,13 @@ export default function CreatePage() {
                       <FileVideo className="w-4 h-4 text-purple-400" />
                       文件格式
                     </label>
-                    <select
-                      name="field-6"
+                    <CustomSelect
+                      options={fileFormats}
                       value={formData["field-6"]}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all appearance-none cursor-pointer"
-                    >
-                      <option value="" disabled className="bg-neutral-900">
-                        Select an option...
-                      </option>
-                      {fileFormats.map((opt) => (
-                        <option key={opt.value} value={opt.value} className="bg-neutral-900">
-                          {opt.label}
-                        </option>
-                      ))}
-                    </select>
+                      onChange={(value) => handleSelectChange("field-6", value)}
+                      placeholder="Select format..."
+                      icon={<FileVideo className="w-4 h-4" />}
+                    />
                   </div>
 
                   {/* 视频素材 - Video Material */}

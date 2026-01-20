@@ -2,7 +2,6 @@ import { Navbar } from "@/components/landing/Navbar";
 import { Hero } from "@/components/landing/Hero";
 import { Features } from "@/components/landing/Features";
 import { HowItWorks } from "@/components/landing/HowItWorks";
-import { Avatars } from "@/components/landing/Avatars";
 import { Testimonials } from "@/components/landing/Testimonials";
 import { CTA } from "@/components/landing/CTA";
 import { Footer } from "@/components/landing/Footer";
@@ -18,7 +17,6 @@ export default function Home() {
       <section id="how-it-works">
         <HowItWorks />
       </section>
-      <Avatars />
       <section id="testimonials">
         <Testimonials />
       </section>
