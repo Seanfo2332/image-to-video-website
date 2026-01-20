@@ -5,7 +5,9 @@ export const { auth: middleware } = NextAuth(authConfig);
 
 export const config = {
   matcher: [
-    // Match all paths except static files and api routes that don't need auth
-    "/((?!_next/static|_next/image|favicon.ico|api/auth).*)",
+    // Only protect specific routes that need auth
+    "/admin/:path*",
+    "/create/:path*",
+    "/generate/:path*",
   ],
 };
