@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Navbar } from "@/components/landing/Navbar";
 import {
   Link2,
   ImageIcon,
@@ -16,13 +15,11 @@ import {
   CheckCircle,
   AlertCircle,
   Wand2,
-  Lock,
   X,
   Sparkles,
   ChevronDown,
   Check,
 } from "lucide-react";
-import Link from "next/link";
 
 // Custom Select Component
 interface SelectOption {
@@ -182,7 +179,7 @@ const fileFormats: SelectOption[] = [
 ];
 
 export default function CreatePage() {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   // Form state - matching n8n field names
   const [formData, setFormData] = useState({
@@ -287,8 +284,8 @@ export default function CreatePage() {
         submitData.append("field-7", formData["field-7"]);
       }
 
-      // Submit directly to n8n webhook
-      const response = await fetch("https://n8n.${process.env.NEXT_PUBLIC_N8N_DOMAIN || 'your-n8n-domain.com'}/webhook/prompt-generator", {
+      // Submit via local API proxy to avoid CORS
+      const response = await fetch("/api/prompt-generator", {
         method: "POST",
         body: submitData,
       });
@@ -319,65 +316,10 @@ export default function CreatePage() {
     }
   };
 
-  // Loading state
-  if (status === "loading") {
-    return (
-      <div className="min-h-screen bg-[#0a0a0a] bg-gradient-mesh flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
-      </div>
-    );
-  }
-
-  // Login required
-  if (!session) {
-    return (
-      <div className="min-h-screen bg-[#0a0a0a] bg-gradient-mesh">
-        <Navbar />
-        <div className="flex items-center justify-center min-h-screen px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="liquid-glass rounded-2xl p-8 max-w-md w-full text-center"
-          >
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center mx-auto mb-6">
-              <Lock className="w-8 h-8 text-white" />
-            </div>
-            <h1 className="text-2xl font-bold text-white mb-2">Login Required</h1>
-            <p className="text-neutral-400 mb-6">
-              Please sign in to access the Prompt Generator.
-            </p>
-            <div className="flex gap-4 justify-center">
-              <Link href="/login">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium shadow-lg shadow-purple-500/25"
-                >
-                  Sign In
-                </motion.button>
-              </Link>
-              <Link href="/register">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="px-6 py-3 rounded-xl bg-white/10 text-white font-medium border border-white/10"
-                >
-                  Sign Up
-                </motion.button>
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-[#0a0a0a] bg-gradient-mesh">
-      <Navbar />
-
+    <div className="max-w-4xl mx-auto">
       {/* Background effects */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-blob-morph" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-blob-morph" style={{ animationDelay: "-4s" }} />
       </div>
@@ -399,7 +341,7 @@ export default function CreatePage() {
         }
       `}</style>
 
-      <main className="relative z-10 max-w-4xl mx-auto px-4 py-24">
+      <div className="relative z-10">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -414,7 +356,7 @@ export default function CreatePage() {
           >
             <Wand2 className="w-8 h-8 text-white" />
           </motion.div>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-3">
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">
             提示词一键生成
           </h1>
           <p className="text-neutral-400 text-lg">
@@ -463,7 +405,7 @@ export default function CreatePage() {
               exit={{ opacity: 0, y: -20 }}
               transition={{ delay: 0.1 }}
               onSubmit={handleSubmit}
-              className="liquid-glass rounded-2xl p-8"
+              className="liquid-glass rounded-2xl p-6 md:p-8"
             >
               {/* Error Banner */}
               {submitStatus === "error" && (
@@ -759,9 +701,9 @@ export default function CreatePage() {
           transition={{ delay: 0.4 }}
           className="text-center text-neutral-500 text-sm mt-6"
         >
-          Logged in as {session.user?.email}
+          Logged in as {session?.user?.email}
         </motion.p>
-      </main>
+      </div>
     </div>
   );
 }

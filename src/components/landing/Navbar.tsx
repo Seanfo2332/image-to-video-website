@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
-import { Users, Menu, X, Sparkles, LogOut, Settings, Shield, User, ChevronDown, Wand2 } from "lucide-react";
+import { Users, Menu, X, Sparkles, LogOut, Settings, Shield, User, ChevronDown, Wand2, LayoutDashboard } from "lucide-react";
 
 const navItems = [
   { name: "Features", href: "#features" },
@@ -125,6 +125,15 @@ export function Navbar() {
                           </p>
                         </div>
 
+                        <Link
+                          href="/dashboard"
+                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-300 hover:text-white hover:bg-white/5 transition-colors"
+                          onClick={() => setIsUserMenuOpen(false)}
+                        >
+                          <LayoutDashboard className="w-4 h-4" />
+                          Dashboard
+                        </Link>
+
                         {session.user?.role === "admin" && (
                           <Link
                             href="/admin"
@@ -132,21 +141,12 @@ export function Navbar() {
                             onClick={() => setIsUserMenuOpen(false)}
                           >
                             <Shield className="w-4 h-4" />
-                            Admin Dashboard
+                            Admin Panel
                           </Link>
                         )}
 
                         <Link
-                          href="/generate"
-                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-300 hover:text-white hover:bg-white/5 transition-colors"
-                          onClick={() => setIsUserMenuOpen(false)}
-                        >
-                          <Sparkles className="w-4 h-4" />
-                          Generate Video
-                        </Link>
-
-                        <Link
-                          href="/create"
+                          href="/dashboard/create"
                           className="flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-300 hover:text-white hover:bg-white/5 transition-colors"
                           onClick={() => setIsUserMenuOpen(false)}
                         >
@@ -258,6 +258,12 @@ export function Navbar() {
                         <p className="text-sm text-neutral-500">{session.user?.email}</p>
                       </div>
                     </div>
+                    <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
+                      <button className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold text-lg flex items-center justify-center gap-2">
+                        <LayoutDashboard className="w-5 h-5" />
+                        Go to Dashboard
+                      </button>
+                    </Link>
                     {session.user?.role === "admin" && (
                       <Link
                         href="/admin"
@@ -265,16 +271,10 @@ export function Navbar() {
                         className="py-3 text-center text-lg text-purple-400 rounded-xl border border-purple-500/30 bg-purple-500/10 flex items-center justify-center gap-2"
                       >
                         <Shield className="w-5 h-5" />
-                        Admin Dashboard
+                        Admin Panel
                       </Link>
                     )}
-                    <Link href="/generate" onClick={() => setIsMobileMenuOpen(false)}>
-                      <button className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold text-lg flex items-center justify-center gap-2">
-                        <Sparkles className="w-5 h-5" />
-                        Generate Video
-                      </button>
-                    </Link>
-                    <Link href="/create" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Link href="/dashboard/create" onClick={() => setIsMobileMenuOpen(false)}>
                       <button className="w-full py-4 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold text-lg flex items-center justify-center gap-2">
                         <Wand2 className="w-5 h-5" />
                         Prompt Generator
