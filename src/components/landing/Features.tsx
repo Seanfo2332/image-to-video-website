@@ -58,14 +58,6 @@ const features = [
     gradient: "from-pink-500/20 to-rose-500/20",
   },
   {
-    title: "5-Minute Rendering",
-    description:
-      "Our optimized AI pipeline delivers your videos fast. Most videos render in under 5 minutes.",
-    icon: <Zap className="w-6 h-6 text-amber-400" />,
-    className: "md:col-span-1",
-    gradient: "from-amber-500/20 to-yellow-500/20",
-  },
-  {
     title: "Custom Avatar Creation",
     description:
       "Create your own digital twin from just a short video. Your personal AI avatar that speaks any language.",
