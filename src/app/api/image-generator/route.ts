@@ -29,6 +29,8 @@ export async function POST(request: NextRequest) {
           userId: session.user.id,
           materialUrl: "image-generator",
           imageStyle: "nano-banana-edit",
+          scriptStyle: "image-edit",
+          voiceId: "",
           videoMaterial: prompt,
           status: "processing",
           progress: 0,
