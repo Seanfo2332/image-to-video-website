@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "../../../../../auth";
+import prisma from "@/lib/prisma";
 
 // GET /api/dashboard/stats
 // Returns user's dashboard statistics
@@ -7,33 +8,31 @@ export async function GET() {
   try {
     const session = await auth();
 
-    if (!session?.user) {
+    if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // TODO: Connect to database to get real stats
-    // For now, return placeholder data
-    const stats = {
-      videosCreated: 0,
-      promptsGenerated: 0,
-      activeWorkflows: 0,
-    };
+    // Get real stats from database
+    const [videosCreated, promptsGenerated, activeWorkflows] = await Promise.all([
+      prisma.video.count({
+        where: { userId: session.user.id },
+      }),
+      prisma.promptSubmission.count({
+        where: { userId: session.user.id },
+      }),
+      prisma.promptSubmission.count({
+        where: {
+          userId: session.user.id,
+          status: { in: ["queued", "processing"] },
+        },
+      }),
+    ]);
 
-    // In production, this would query the database:
-    // const videosCreated = await prisma.video.count({
-    //   where: { userId: session.user.id }
-    // });
-    // const promptsGenerated = await prisma.promptSubmission.count({
-    //   where: { userId: session.user.id }
-    // });
-    // const activeWorkflows = await prisma.promptSubmission.count({
-    //   where: {
-    //     userId: session.user.id,
-    //     status: { in: ['queued', 'processing'] }
-    //   }
-    // });
-
-    return NextResponse.json(stats);
+    return NextResponse.json({
+      videosCreated,
+      promptsGenerated,
+      activeWorkflows,
+    });
   } catch (error) {
     console.error("Error fetching dashboard stats:", error);
     return NextResponse.json(

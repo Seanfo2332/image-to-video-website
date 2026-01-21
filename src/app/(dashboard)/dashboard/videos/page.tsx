@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   FileVideo,
@@ -63,9 +63,30 @@ const exampleVideos: Video[] = [
 ];
 
 export default function VideosPage() {
-  const [videos] = useState<Video[]>(placeholderVideos);
+  const [videos, setVideos] = useState<Video[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [showExamples, setShowExamples] = useState(false);
+
+  // Fetch videos from API
+  useEffect(() => {
+    const fetchVideos = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch("/api/videos");
+        if (response.ok) {
+          const data = await response.json();
+          setVideos(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch videos:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchVideos();
+  }, []);
 
   const displayVideos = showExamples ? exampleVideos : videos;
   const filteredVideos = displayVideos.filter((video) =>

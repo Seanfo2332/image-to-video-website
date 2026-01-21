@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   History,
@@ -101,12 +101,33 @@ const exampleSubmissions: PromptSubmission[] = [
 ];
 
 export default function HistoryPage() {
-  const [submissions] = useState<PromptSubmission[]>(placeholderSubmissions);
+  const [submissions, setSubmissions] = useState<PromptSubmission[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<WorkflowStatus | "all">("all");
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [showExamples, setShowExamples] = useState(false);
   const [cancellingId, setCancellingId] = useState<string | null>(null);
+
+  // Fetch submissions from API
+  useEffect(() => {
+    const fetchSubmissions = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch("/api/submissions");
+        if (response.ok) {
+          const data = await response.json();
+          setSubmissions(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch submissions:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchSubmissions();
+  }, []);
 
   const displaySubmissions = showExamples ? exampleSubmissions : submissions;
 

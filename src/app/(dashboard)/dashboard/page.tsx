@@ -63,25 +63,25 @@ export default function DashboardPage() {
   const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch stats and recent activity (placeholder - will connect to API)
+  // Fetch stats and recent activity from API
   useEffect(() => {
     const fetchDashboardData = async () => {
       setIsLoading(true);
       try {
-        // Placeholder: In production, these will be real API calls
-        // const statsResponse = await fetch('/api/dashboard/stats');
-        // const activityResponse = await fetch('/api/dashboard/activity');
+        const [statsResponse, activityResponse] = await Promise.all([
+          fetch("/api/dashboard/stats"),
+          fetch("/api/dashboard/activity"),
+        ]);
 
-        // Simulate API delay
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        if (statsResponse.ok) {
+          const statsData = await statsResponse.json();
+          setStats(statsData);
+        }
 
-        // Placeholder data - will be replaced with real data
-        setStats({
-          videosCreated: 0,
-          promptsGenerated: 0,
-          activeWorkflows: 0,
-        });
-        setRecentActivity([]);
+        if (activityResponse.ok) {
+          const activityData = await activityResponse.json();
+          setRecentActivity(activityData);
+        }
       } catch (error) {
         console.error("Failed to fetch dashboard data:", error);
       } finally {
