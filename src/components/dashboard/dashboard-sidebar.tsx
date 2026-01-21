@@ -15,12 +15,14 @@ import {
   FileVideo,
   History,
   Home,
+  Video,
 } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Prompt Generator", href: "/dashboard/create", icon: Wand2 },
+  { name: "Video Generator", href: "/dashboard/video-generator", icon: Video },
   { name: "My Videos", href: "/dashboard/videos", icon: FileVideo },
   { name: "History", href: "/dashboard/history", icon: History },
 ];
