@@ -1,236 +1,173 @@
-{
-  "name": "Image Generator API (Fixed)",
-  "nodes": [
-    {
-      "parameters": {
-        "httpMethod": "POST",
-        "path": "image-generator-api",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2.1,
-      "position": [-160, 0],
-      "id": "c23ff369-e321-4b11-82c1-1cb4e0c27f4d",
-      "name": "Webhook",
-      "webhookId": "720c2a54-abbd-4357-b398-112f3c8d8935"
-    },
-    {
-      "parameters": {
-        "jsCode": "// Convert base64 image from website to binary for IMGBB\nconst inputData = $input.first().json;\n\nconst base64Data = inputData.imageBase64;\nconst mimeType = inputData.imageMimeType || 'image/png';\nconst fileName = inputData.imageFileName || 'image.png';\n\n// Return with binary data for IMGBB upload\nreturn {\n  json: {\n    prompt: inputData.prompt,\n    submissionId: inputData.submissionId,\n    callbackUrl: inputData.callbackUrl\n  },\n  binary: {\n    Image: {\n      data: base64Data,\n      mimeType: mimeType,\n      fileName: fileName\n    }\n  }\n};"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [60, 0],
-      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-      "name": "Convert Base64 to Binary"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://api.imgbb.com/1/upload",
-        "sendQuery": true,
-        "queryParameters": {
-          "parameters": [
-            {
-              "name": "expiration",
-              "value": "600"
-            },
-            {
-              "name": "key",
-              "value": "8ee0f523460ce1eb330207c3dcf4cfc0"
-            }
-          ]
+  {
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "image-generator-api",
+          "options": {}
         },
-        "sendBody": true,
-        "contentType": "multipart-form-data",
-        "bodyParameters": {
-          "parameters": [
-            {
-              "parameterType": "formBinaryData",
-              "name": "image",
-              "inputDataFieldName": "Image"
-            }
-          ]
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [608, 256],
+        "id": "85837370-7c68-423f-9c8c-06a7cb0d13b8",
+        "name": "Webhook",
+        "webhookId": "720c2a54-abbd-4357-b398-112f3c8d8935"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://api.imgbb.com/1/upload",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "expiration",
+                "value": "600"
+              },
+              {
+                "name": "key",
+                "value": "8ee0f523460ce1eb330207c3dcf4cfc0"
+              }
+            ]
+          },
+          "sendBody": true,
+          "contentType": "form-urlencoded",
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "image",
+                "value": "={{ $json.body.imageBase64 }}"
+              }
+            ]
+          },
+          "options": {}
         },
-        "options": {}
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [880, 256],
+        "id": "a6a03388-c434-43f0-8f09-5b1ed7150bc9",
+        "name": "IMGBB Upload"
       },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [280, 0],
-      "id": "16276edd-9630-4630-aaf3-54b000d320ed",
-      "name": "IMGBB Upload"
-    },
-    {
-      "parameters": {
-        "amount": 5
-      },
-      "type": "n8n-nodes-base.wait",
-      "typeVersion": 1.1,
-      "position": [500, 0],
-      "id": "d09ca18e-b44d-4025-bbe4-1ad66cabd127",
-      "name": "Wait 5s",
-      "webhookId": "82ef600a-9893-405a-b615-1d29820174a4"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://api.kie.ai/api/v1/jobs/createTask",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "Bearer 5fc0241687cbf50ff76ec415096c9388"
-            }
-          ]
+      {
+        "parameters": {
+          "amount": 5
         },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"model\": \"google/nano-banana-edit\",\n  \"input\": {\n    \"prompt\": \"{{ $('Convert Base64 to Binary').item.json.prompt }}\",\n    \"image_urls\": [\n      \"{{ $json.data.url }}\"\n    ],\n    \"output_format\": \"png\",\n    \"image_size\": \"auto\"\n  }\n}",
-        "options": {}
+        "type": "n8n-nodes-base.wait",
+        "typeVersion": 1.1,
+        "position": [1104, 256],
+        "id": "849b609a-5e43-44b5-bd6c-00ab26993663",
+        "name": "Wait 5s",
+        "webhookId": "82ef600a-9893-405a-b615-1d29820174a4"
       },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [720, 0],
-      "id": "e150c718-8b61-464e-ae97-6d025e18955f",
-      "name": "Nano Banana Edit"
-    },
-    {
-      "parameters": {
-        "amount": 20
-      },
-      "type": "n8n-nodes-base.wait",
-      "typeVersion": 1.1,
-      "position": [940, 0],
-      "id": "wait-for-result-123",
-      "name": "Wait 20s for Processing",
-      "webhookId": "wait-result-webhook"
-    },
-    {
-      "parameters": {
-        "url": "https://api.kie.ai/api/v1/jobs/recordInfo",
-        "sendQuery": true,
-        "queryParameters": {
-          "parameters": [
-            {
-              "name": "taskId",
-              "value": "={{ $json.data.taskId }}"
-            }
-          ]
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://api.kie.ai/api/v1/jobs/createTask",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Authorization",
+                "value": "Bearer 5fc0241687cbf50ff76ec415096c9388"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"model\": \"google/nano-banana-edit\",\n  \"input\": {\n    \"prompt\": \"{{
+  $('Webhook').item.json.body.prompt }}\",\n    \"image_urls\": [\n      \"{{ $json.data.url }}\"\n    ],\n
+  \"output_format\": \"png\",\n    \"image_size\": \"auto\"\n  }\n}",
+          "options": {}
         },
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "Bearer 5fc0241687cbf50ff76ec415096c9388"
-            }
-          ]
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [1312, 256],
+        "id": "a1bc2277-7862-49cc-80e0-a33aa17aef05",
+        "name": "Nano Banana Edit"
+      },
+      {
+        "parameters": {
+          "amount": 20
         },
-        "options": {}
+        "type": "n8n-nodes-base.wait",
+        "typeVersion": 1.1,
+        "position": [1536, 256],
+        "id": "7cfd989d-394d-45a8-87ac-273e771f0be9",
+        "name": "Wait 20s for Processing",
+        "webhookId": "wait-result-webhook"
       },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.3,
-      "position": [1160, 0],
-      "id": "d13da1ed-27cf-423b-b83f-7f1b2fe6b86a",
-      "name": "Get Result"
+      {
+        "parameters": {
+          "url": "https://api.kie.ai/api/v1/jobs/recordInfo",
+          "sendQuery": true,
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "taskId",
+                "value": "={{ $json.data.taskId }}"
+              }
+            ]
+          },
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Authorization",
+                "value": "Bearer 5fc0241687cbf50ff76ec415096c9388"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.3,
+        "position": [1760, 256],
+        "id": "deabeed6-19a7-4deb-b395-3f9c3d1fce42",
+        "name": "Get Result"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "={{ $('Webhook').item.json.body.callbackUrl }}",
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n    \"submissionId\": \"{{ $('Webhook').item.json.body.submissionId }}\",\n    \"status\":
+  \"{{ $json.data.state === 'success' ? 'completed' : 'failed' }}\",\n    \"progress\": 100,\n    \"imageUrl\": \"{{
+  $json.data.state === 'success' ? JSON.parse($json.data.resultJson).resultUrls[0] : '' }}\",\n    \"videoUrl\": \"{{
+  $json.data.state === 'success' ? JSON.parse($json.data.resultJson).resultUrls[0] : '' }}\",\n    \"currentStep\": \"{{
+   $json.data.state === 'success' ? 'Image generated successfully!' : 'Failed to generate image' }}\",\n    \"error\":
+  \"{{ $json.data.state !== 'success' ? ($json.data.failMsg || 'Generation failed') : '' }}\"\n}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.3,
+        "position": [1984, 256],
+        "id": "7e966040-3a9f-42f6-b737-5635a0a5fc8b",
+        "name": "Send Callback to Website"
+      }
+    ],
+    "connections": {
+      "Webhook": {
+        "main": [[{ "node": "IMGBB Upload", "type": "main", "index": 0 }]]
+      },
+      "IMGBB Upload": {
+        "main": [[{ "node": "Wait 5s", "type": "main", "index": 0 }]]
+      },
+      "Wait 5s": {
+        "main": [[{ "node": "Nano Banana Edit", "type": "main", "index": 0 }]]
+      },
+      "Nano Banana Edit": {
+        "main": [[{ "node": "Wait 20s for Processing", "type": "main", "index": 0 }]]
+      },
+      "Wait 20s for Processing": {
+        "main": [[{ "node": "Get Result", "type": "main", "index": 0 }]]
+      },
+      "Get Result": {
+        "main": [[{ "node": "Send Callback to Website", "type": "main", "index": 0 }]]
+      }
     },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "={{ $('Convert Base64 to Binary').item.json.callbackUrl }}",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n    \"submissionId\": \"{{ $('Convert Base64 to Binary').item.json.submissionId }}\",\n    \"status\": \"{{ $json.data.state === 'success' ? 'completed' : 'failed' }}\",\n    \"progress\": 100,\n    \"imageUrl\": \"{{ $json.data.state === 'success' ? JSON.parse($json.data.resultJson).resultUrls[0] : '' }}\",\n    \"videoUrl\": \"{{ $json.data.state === 'success' ? JSON.parse($json.data.resultJson).resultUrls[0] : '' }}\",\n    \"currentStep\": \"{{ $json.data.state === 'success' ? 'Image generated successfully!' : 'Failed to generate image' }}\",\n    \"error\": \"{{ $json.data.state !== 'success' ? ($json.data.failMsg || 'Generation failed') : '' }}\"\n}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.3,
-      "position": [1380, 0],
-      "id": "1dc999e2-4791-4c49-a577-6c308dc2d1be",
-      "name": "Send Callback to Website"
+    "pinData": {},
+    "meta": {
+      "instanceId": "05e3543f68c394ceb082bf8d2ef8d2b149f35ecddcbc0afb7e81bd6933faf98c"
     }
-  ],
-  "connections": {
-    "Webhook": {
-      "main": [
-        [
-          {
-            "node": "Convert Base64 to Binary",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Convert Base64 to Binary": {
-      "main": [
-        [
-          {
-            "node": "IMGBB Upload",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "IMGBB Upload": {
-      "main": [
-        [
-          {
-            "node": "Wait 5s",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Wait 5s": {
-      "main": [
-        [
-          {
-            "node": "Nano Banana Edit",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Nano Banana Edit": {
-      "main": [
-        [
-          {
-            "node": "Wait 20s for Processing",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Wait 20s for Processing": {
-      "main": [
-        [
-          {
-            "node": "Get Result",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get Result": {
-      "main": [
-        [
-          {
-            "node": "Send Callback to Website",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    }
-  },
-  "meta": {
-    "templateCredsSetupCompleted": true
   }
-}

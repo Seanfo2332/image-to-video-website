@@ -22,7 +22,8 @@ export async function POST(request: Request) {
     //   progress?: number,         // 0-100
     //   currentStep?: string,      // e.g., "Generating images", "Creating video"
     //   error?: string,            // Error message if failed
-    //   videoUrl?: string,         // Download URL when completed
+    //   videoUrl?: string,         // Download URL when completed (for videos)
+    //   imageUrl?: string,         // Download URL when completed (for images)
     //   videoTitle?: string,       // Optional video title
     //   videoDuration?: string,    // e.g., "3:45"
     //   videoSize?: string,        // e.g., "45.2 MB"
@@ -36,6 +37,7 @@ export async function POST(request: Request) {
       currentStep,
       error,
       videoUrl,
+      imageUrl,
       videoTitle,
       videoDuration,
       videoSize,
@@ -96,6 +98,28 @@ export async function POST(request: Request) {
       }
     }
 
+    // If image is completed, create an Image record
+    if (status === "completed" && imageUrl) {
+      // Check if image already exists for this submission
+      const existingImage = await prisma.image.findFirst({
+        where: { submissionId: submissionId },
+      });
+
+      if (!existingImage) {
+        await prisma.image.create({
+          data: {
+            userId: submission.userId,
+            title: `Image - ${new Date().toLocaleDateString()}`,
+            prompt: submission.videoMaterial || "",
+            status: "completed",
+            downloadUrl: imageUrl,
+            thumbnailUrl: imageUrl,
+            submissionId: submissionId,
+          },
+        });
+      }
+    }
+
     return NextResponse.json({
       success: true,
       message: "Callback received",
@@ -128,7 +152,8 @@ export async function GET() {
         progress: "0-100 (optional)",
         currentStep: "description of current step (optional)",
         error: "error message if failed (optional)",
-        videoUrl: "download URL when completed (optional)",
+        videoUrl: "download URL when video completed (optional)",
+        imageUrl: "download URL when image completed (optional)",
         videoTitle: "title for the video (optional)",
         videoDuration: "e.g., 3:45 (optional)",
         videoSize: "e.g., 45.2 MB (optional)",
