@@ -75,23 +75,17 @@ export default function ImagesPage() {
     }
   };
 
-  const handleDownload = async (imageUrl: string, title: string) => {
-    try {
-      const response = await fetch(imageUrl);
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `${title.replace(/\s+/g, "_")}.png`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error("Download failed:", error);
-      // Fallback: open in new tab
-      window.open(imageUrl, "_blank");
-    }
+  const handleDownload = (imageUrl: string, title: string) => {
+    const filename = `${title.replace(/\s+/g, "_").replace(/[^a-zA-Z0-9_-]/g, "")}.png`;
+    const downloadUrl = `/api/download?url=${encodeURIComponent(imageUrl)}&filename=${encodeURIComponent(filename)}`;
+
+    // Create a temporary link and trigger download
+    const link = document.createElement("a");
+    link.href = downloadUrl;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
