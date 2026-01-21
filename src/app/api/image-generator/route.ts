@@ -2,9 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "../../../../auth";
 import prisma from "@/lib/prisma";
 
-const IMGBB_API_KEY = "8ee0f523460ce1eb330207c3dcf4cfc0";
-const KIE_AI_API_KEY = "5fc0241687cbf50ff76ec415096c9388";
-const CALLBACK_URL = "https://image-to-video-website.vercel.app/api/image-callback";
+// n8n Webhook URL (use Webhook trigger, NOT Form trigger)
+const N8N_WEBHOOK_URL = "https://autoskz.app.n8n.cloud/webhook/image-generator-api";
 
 export async function POST(request: NextRequest) {
   try {
@@ -35,81 +34,42 @@ export async function POST(request: NextRequest) {
           videoMaterial: prompt,
           status: "processing",
           progress: 0,
-          currentStep: "Uploading image...",
+          currentStep: "Sending to n8n workflow...",
         },
       });
     }
 
     try {
-      // Step 1: Upload image to imgbb
+      // Convert image to base64
       const imageBuffer = await image.arrayBuffer();
       const base64Image = Buffer.from(imageBuffer).toString("base64");
 
-      const imgbbFormData = new URLSearchParams();
-      imgbbFormData.append("key", IMGBB_API_KEY);
-      imgbbFormData.append("image", base64Image);
-      imgbbFormData.append("expiration", "600");
-
-      const imgbbResponse = await fetch("https://api.imgbb.com/1/upload", {
+      // Send JSON to n8n webhook (simple and clean)
+      const n8nResponse = await fetch(N8N_WEBHOOK_URL, {
         method: "POST",
-        body: imgbbFormData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          imageBase64: base64Image,
+          prompt: prompt,
+          submissionId: submission?.id || "",
+          callbackUrl: "https://image-to-video-website.vercel.app/api/n8n/callback",
+        }),
       });
 
-      if (!imgbbResponse.ok) {
-        throw new Error("Failed to upload image to imgbb");
+      if (!n8nResponse.ok) {
+        const errorText = await n8nResponse.text();
+        throw new Error(`n8n error: ${errorText}`);
       }
-
-      const imgbbData = await imgbbResponse.json();
-      const imageUrl = imgbbData.data.url;
 
       // Update progress
       if (submission) {
         await prisma.promptSubmission.update({
           where: { id: submission.id },
           data: {
-            currentStep: "Sending to AI for processing...",
-            progress: 30,
-          },
-        });
-      }
-
-      // Step 2: Call kie.ai API with callback URL including submissionId
-      const callbackWithId = submission
-        ? `${CALLBACK_URL}?submissionId=${submission.id}`
-        : CALLBACK_URL;
-
-      const kieResponse = await fetch("https://api.kie.ai/api/v1/jobs/createTask", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${KIE_AI_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "google/nano-banana-edit",
-          callBackUrl: callbackWithId,
-          input: {
-            prompt: prompt,
-            image_urls: [imageUrl],
-            output_format: "png",
-            image_size: "auto",
-          },
-        }),
-      });
-
-      if (!kieResponse.ok) {
-        const errorText = await kieResponse.text();
-        throw new Error(`kie.ai API error: ${errorText}`);
-      }
-
-      const kieData = await kieResponse.json();
-
-      // Update submission with task ID
-      if (submission) {
-        await prisma.promptSubmission.update({
-          where: { id: submission.id },
-          data: {
-            currentStep: "AI is processing your image...",
-            progress: 50,
+            currentStep: "n8n workflow started - processing image...",
+            progress: 20,
           },
         });
       }
@@ -118,7 +78,6 @@ export async function POST(request: NextRequest) {
         success: true,
         message: "Image generation started",
         submissionId: submission?.id,
-        taskId: kieData.data?.taskId,
       });
 
     } catch (apiError) {
