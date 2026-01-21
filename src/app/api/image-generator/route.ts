@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "../../../../auth";
 import prisma from "@/lib/prisma";
 
-// n8n form webhook URL
-const N8N_WEBHOOK_URL = "https://autoskz.app.n8n.cloud/webhook/image-generator";
+const IMGBB_API_KEY = "8ee0f523460ce1eb330207c3dcf4cfc0";
+const KIE_AI_API_KEY = "5fc0241687cbf50ff76ec415096c9388";
+const CALLBACK_URL = "https://image-to-video-website.vercel.app/api/image-callback";
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,7 +13,7 @@ export async function POST(request: NextRequest) {
 
     const formData = await request.formData();
     const image = formData.get("image") as File;
-    const prompt = formData.get("prompt") as string || "";
+    const prompt = formData.get("prompt") as string || "enhance the image";
 
     if (!image) {
       return NextResponse.json(
@@ -34,49 +35,81 @@ export async function POST(request: NextRequest) {
           videoMaterial: prompt,
           status: "processing",
           progress: 0,
-          currentStep: "Submitting to n8n workflow...",
+          currentStep: "Uploading image...",
         },
       });
     }
 
     try {
-      // Create FormData for n8n with the field names from the form
-      const n8nFormData = new FormData();
-
-      // Convert image to Blob and append
+      // Step 1: Upload image to imgbb
       const imageBuffer = await image.arrayBuffer();
-      const imageBlob = new Blob([imageBuffer], { type: image.type });
-      n8nFormData.append("Image", imageBlob, image.name);
+      const base64Image = Buffer.from(imageBuffer).toString("base64");
 
-      // Append prompt field
-      n8nFormData.append("自定义图片提示词", prompt);
+      const imgbbFormData = new URLSearchParams();
+      imgbbFormData.append("key", IMGBB_API_KEY);
+      imgbbFormData.append("image", base64Image);
+      imgbbFormData.append("expiration", "600");
 
-      // Add submission tracking
-      if (submission) {
-        n8nFormData.append("submissionId", submission.id);
-        n8nFormData.append("callbackUrl", "https://image-to-video-website.vercel.app/api/n8n/callback");
-      }
-
-      // Submit to n8n webhook
-      const response = await fetch(N8N_WEBHOOK_URL, {
+      const imgbbResponse = await fetch("https://api.imgbb.com/1/upload", {
         method: "POST",
-        body: n8nFormData,
+        body: imgbbFormData,
       });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`n8n error: ${errorText}`);
+      if (!imgbbResponse.ok) {
+        throw new Error("Failed to upload image to imgbb");
       }
 
-      const responseData = await response.text();
+      const imgbbData = await imgbbResponse.json();
+      const imageUrl = imgbbData.data.url;
 
-      // Update submission
+      // Update progress
       if (submission) {
         await prisma.promptSubmission.update({
           where: { id: submission.id },
           data: {
-            currentStep: "Workflow started - processing image...",
+            currentStep: "Sending to AI for processing...",
             progress: 30,
+          },
+        });
+      }
+
+      // Step 2: Call kie.ai API with callback URL including submissionId
+      const callbackWithId = submission
+        ? `${CALLBACK_URL}?submissionId=${submission.id}`
+        : CALLBACK_URL;
+
+      const kieResponse = await fetch("https://api.kie.ai/api/v1/jobs/createTask", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${KIE_AI_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "google/nano-banana-edit",
+          callBackUrl: callbackWithId,
+          input: {
+            prompt: prompt,
+            image_urls: [imageUrl],
+            output_format: "png",
+            image_size: "auto",
+          },
+        }),
+      });
+
+      if (!kieResponse.ok) {
+        const errorText = await kieResponse.text();
+        throw new Error(`kie.ai API error: ${errorText}`);
+      }
+
+      const kieData = await kieResponse.json();
+
+      // Update submission with task ID
+      if (submission) {
+        await prisma.promptSubmission.update({
+          where: { id: submission.id },
+          data: {
+            currentStep: "AI is processing your image...",
+            progress: 50,
           },
         });
       }
@@ -85,7 +118,7 @@ export async function POST(request: NextRequest) {
         success: true,
         message: "Image generation started",
         submissionId: submission?.id,
-        data: responseData,
+        taskId: kieData.data?.taskId,
       });
 
     } catch (apiError) {
