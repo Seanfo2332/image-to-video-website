@@ -41,6 +41,12 @@ export async function POST(request: NextRequest) {
     const n8nWebhookUrl = process.env.NEXT_PUBLIC_N8N_FORM_URL ||
       "https://n8n.srv1007594.hstgr.cloud/webhook/ad77bb16-47ef-46ce-a7dd-e479259f81b8";
 
+    // Add submissionId and callback URL to formData for n8n
+    if (submission) {
+      formData.append("submissionId", submission.id);
+      formData.append("callbackUrl", `${process.env.NEXTAUTH_URL || 'https://your-domain.com'}/api/n8n/callback`);
+    }
+
     // Forward the form data to n8n
     const response = await fetch(n8nWebhookUrl, {
       method: "POST",
