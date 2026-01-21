@@ -5,9 +5,7 @@
       "parameters": {
         "httpMethod": "POST",
         "path": "image-generator-api",
-        "options": {
-          "responseMode": "responseNode"
-        }
+        "options": {}
       },
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
@@ -25,17 +23,6 @@
       "position": [60, 0],
       "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
       "name": "Convert Base64 to Binary"
-    },
-    {
-      "parameters": {
-        "respondWith": "text",
-        "responseBody": "={\"success\": true, \"message\": \"Processing started\", \"submissionId\": \"{{ $('Webhook').item.json.submissionId }}\"}"
-      },
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1.1,
-      "position": [60, 200],
-      "id": "respond-webhook-123",
-      "name": "Respond to Webhook"
     },
     {
       "parameters": {
@@ -170,11 +157,6 @@
         [
           {
             "node": "Convert Base64 to Binary",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Respond to Webhook",
             "type": "main",
             "index": 0
           }
