@@ -2,8 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "../../../../auth";
 import prisma from "@/lib/prisma";
 
-// n8n Webhook URL (use Webhook trigger, NOT Form trigger)
-const N8N_WEBHOOK_URL = "https://autoskz.app.n8n.cloud/webhook/image-generator-api";
+// n8n Webhook URL - no spaces in path
+const N8N_WEBHOOK_URL = process.env.N8N_IMAGE_GENERATOR_WEBHOOK || "https://autoskz.app.n8n.cloud/webhook/image-generator-api";
+// Callback URL - use env variable for flexibility (localhost vs production)
+const CALLBACK_BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://image-to-video-website.vercel.app";
 
 export async function POST(request: NextRequest) {
   try {
@@ -40,11 +42,12 @@ export async function POST(request: NextRequest) {
     }
 
     try {
-      // Convert image to base64
+      // Convert image to base64 with data URI prefix for n8n
       const imageBuffer = await image.arrayBuffer();
       const base64Image = Buffer.from(imageBuffer).toString("base64");
+      const mimeType = image.type || "image/png";
 
-      // Send JSON to n8n webhook (simple and clean)
+      // Send JSON to n8n webhook
       const n8nResponse = await fetch(N8N_WEBHOOK_URL, {
         method: "POST",
         headers: {
@@ -52,9 +55,11 @@ export async function POST(request: NextRequest) {
         },
         body: JSON.stringify({
           imageBase64: base64Image,
+          imageMimeType: mimeType,
+          imageFileName: image.name || "image.png",
           prompt: prompt,
           submissionId: submission?.id || "",
-          callbackUrl: "https://image-to-video-website.vercel.app/api/n8n/callback",
+          callbackUrl: `${CALLBACK_BASE_URL}/api/n8n/callback`,
         }),
       });
 
