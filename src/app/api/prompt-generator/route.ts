@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
     // Add submissionId and callback URL to formData for n8n
     if (submission) {
       formData.append("submissionId", submission.id);
-      formData.append("callbackUrl", `${process.env.NEXTAUTH_URL || 'https://your-domain.com'}/api/n8n/callback`);
+      formData.append("callbackUrl", `${process.env.NEXTAUTH_URL || 'https://image-to-video-website.vercel.app'}/api/n8n/callback`);
     }
 
     // Forward the form data to n8n
