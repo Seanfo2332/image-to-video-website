@@ -41,26 +41,35 @@ export async function POST(request: NextRequest) {
     // n8n webhook URL for video generator
     const n8nWebhookUrl = "https://autoskz.app.n8n.cloud/webhook/b40bb04c-1ba1-4c0c-b3b2-cc418930bf09";
 
-    // Create new FormData for n8n with correct field names
-    const n8nFormData = new FormData();
-    n8nFormData.append("Image", image);
-    n8nFormData.append("生成图片选项", imageStyle);
-    n8nFormData.append("口播主题", scriptTopic);
-    n8nFormData.append("声音身份 ID", voiceId);
-    n8nFormData.append("语言", language);
-    n8nFormData.append("口播 (分钟)", duration);
-    n8nFormData.append("自定义图片提示词", customPrompt);
+    // Convert image to base64
+    const imageBuffer = await image.arrayBuffer();
+    const imageBase64 = Buffer.from(imageBuffer).toString("base64");
+    const imageDataUrl = `data:${image.type};base64,${imageBase64}`;
 
-    // Add submissionId and callback URL for n8n
-    if (submission) {
-      n8nFormData.append("submissionId", submission.id);
-      n8nFormData.append("callbackUrl", "https://image-to-video-website.vercel.app/api/n8n/callback");
-    }
+    // Create JSON payload with Chinese field names (matching n8n webhook expectations)
+    const n8nPayload = {
+      "Image": imageDataUrl,
+      "生成图片选项": imageStyle,
+      "口播主题": scriptTopic,
+      "声音身份 ID": voiceId,
+      "语言": language,
+      "口播 (分钟)": duration,
+      "自定义图片提示词": customPrompt,
+      ...(submission && {
+        submissionId: submission.id,
+        callbackUrl: "https://image-to-video-website.vercel.app/api/n8n/callback",
+      }),
+    };
 
-    // Forward the form data to n8n
+    console.log("Sending to n8n:", JSON.stringify({ ...n8nPayload, Image: "[base64 image]" }));
+
+    // Forward as JSON to n8n
     const response = await fetch(n8nWebhookUrl, {
       method: "POST",
-      body: n8nFormData,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(n8nPayload),
     });
 
     if (!response.ok) {
