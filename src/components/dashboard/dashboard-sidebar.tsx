@@ -18,6 +18,7 @@ import {
   Video,
   ImageIcon,
   Images,
+  Mic2,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -26,6 +27,7 @@ const navItems = [
   { name: "Prompt Generator", href: "/dashboard/create", icon: Wand2 },
   { name: "Image Generator", href: "/dashboard/image-generator", icon: ImageIcon },
   { name: "Video Generator", href: "/dashboard/video-generator", icon: Video },
+  { name: "Lip Sync Video", href: "/dashboard/lip-sync", icon: Mic2 },
   { name: "My Images", href: "/dashboard/images", icon: Images },
   { name: "My Videos", href: "/dashboard/videos", icon: FileVideo },
   { name: "History", href: "/dashboard/history", icon: History },

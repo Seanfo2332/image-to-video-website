@@ -1,0 +1,924 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "14f7319f-fea9-4b2f-8b58-94350f82b6f3",
+              "name": "Google cloud project id",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "014a2454-1470-4275-953f-96217a79157a",
+              "name": "Google model id",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "e6281b2f-96b5-4e72-8469-40fd50fa50f4",
+              "name": "Google AI Studio API_KEY",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "b537c9bd-8b3c-4bf1-88df-feab64ed5559",
+              "name": "Google Cloud Storage Bucket name",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "7ec01e14-2ac1-4e73-b58d-ae931f1c2ae1",
+              "name": "KIE API_KEY",
+              "value": "5fc0241687cbf50ff76ec415096c9388",
+              "type": "string"
+            },
+            {
+              "id": "a7849559-c38b-4791-b455-35dc8de82b01",
+              "name": "Minimax API_KEY",
+              "value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJHcm91cE5hbWUiOiJuOG4gU2VhbiIsIlVzZXJOYW1lIjoibjhuIiwiQWNjb3VudCI6IiIsIlN1YmplY3RJRCI6IjIwMDM2NjQwODk3Mjg5NDcwNDciLCJQaG9uZSI6IiIsIkdyb3VwSUQiOiIyMDAzNjY0MDg5NzI0NzU2ODM5IiwiUGFnZU5hbWUiOiIiLCJNYWlsIjoibjhuc2VhbkBnbWFpbC5jb20iLCJDcmVhdGVUaW1lIjoiMjAyNS0xMi0yNCAxNTo0Mzo0MiIsIlRva2VuVHlwZSI6MSwiaXNzIjoibWluaW1heCJ9.ZuyGjAhKE1cGhYkrFgCPOlwp9j6tVvVE91H-KYW_5sJsRynu2oq9MQH0LNJCIYR2r7oDLdanXLCffFlhdm4sG1TksrSfOfebqga-exHn-obEgaSAGev2-cmNbzFvY9gyN9Rsche05hGcfJlaYvvNnxv6C39hHaLOSW5M-HNCYkEBVGSThLUHCyc8nmT9A9FfhpcKbUTWlxGPMmq-mcOKoAyWNA2_SDV-Nk-0QN4YfxLa9lF19tKnggQkH9ItyYqlVT6Ol6OnCdEKbEgaQQZr8s00_uEMqOVsvD3PuIxwhM-Tqn2wy40h9wW_8Qdl1MXgno5TWzNupe-TzHwrnd080A",
+              "type": "string"
+            },
+            {
+              "id": "ee59e920-f2e2-4537-a989-2c8cb04faf12",
+              "name": "Running Hub API_KEY",
+              "value": "aa96594a94844d19bfdbeb40999b63e7",
+              "type": "string"
+            },
+            {
+              "id": "2505be6c-3490-47c4-b2c2-25ae937bf7cc",
+              "name": "NCA url",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "660e503b-3c1b-409c-ac5e-0b94f7d93290",
+              "name": "NCA api key",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "abe8fd36-8f75-49d9-b2bc-35e7aa0ae646",
+              "name": "视频合并 url",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "354e8e7c-6077-472b-9ada-3a45aebd22a4",
+              "name": "视频合并 API_KEY",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "f0e696fa-b603-462a-8017-bce08af43455",
+              "name": "编号",
+              "value": "={{ $workflow.id }}-{{ $execution.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1328,
+        480
+      ],
+      "id": "e8a7692e-441d-40f0-861b-5a250079c931",
+      "name": "设置参数-综合"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ab3f04df-b5a3-4692-9b27-e76e000527dc",
+              "name": "脚本",
+              "value": "=你是"分镜与口播编排器"。你的输入是一段**脚本原文**。\n请严格遵守以下规则，仅输出**一个合法 JSON 对象**，不得包含额外文字、Markdown 或注释。\n\n---\n\n## 💎 核心约束\n\n1. **绝不修改脚本原文**（包括标点、语序、字词）。\n2. 根据脚本语义、节奏、语气变化，将全文拆成若干 `storyboards`。\n3. 每个分镜都必须包含：\n\n   * `scene_id`: 整数，从 1 开始递增。\n   * `narration_script`: 原文中对应的完整句段（逐字保留）。\n   * `speaking`: `\"Yes\"` 或 `\"No\"`\n\n     * `\"Yes\"` → 静态画面、口播重点。\n     * `\"No\"` → 有画面变化或分镜切换，同时口播**继续播放**。\n   * 当 `\"speaking\":\"No\"` 时，**必须额外添加 `visual` 字段**，用来生成 Veo3 的视觉提示。\n\n---\n\n## 🧩 输出模板\n\n```\n{\n  \"storyboards\": [\n    {\n      \"scene_id\": 1,\n      \"narration_script\": \"\",\n      \"speaking\": \"Yes\"\n    },\n    {\n      \"scene_id\": 2,\n      \"narration_script\": \"\",\n      \"speaking\": \"Yes\"\n    }\n  ],\n  \"analysis_summary\": {\n    \"structure_logic\": \"反常识→破旧观→立新知→多维论证→升华→回归个体\",\n    \"emotion_curve\": \"焦虑→共鸣→释然→希望\",\n    \"target_audience\": \"被社会节奏压迫、渴望意义的年轻职场人\",\n    \"human_insight\": \"他们不是不想努力，而是努力失去了意义感。\",\n    \"video_duration_estimate\": \"AI 推算总时长（1–7分钟）\"\n  }\n}\n```\n\n---\n\n## 🧠 操作逻辑\n\n1. 按语义节奏切分脚本。\n2. 每段都放入 `narration_script`（原文逐字保留）。\n3. 判定：* 若该段需口播为主 → `\"speaking\":\"Yes\"`\n4. 所有句段必须被覆盖，不得重复或遗漏。\n5. `analysis_summary` 按下列说明填写：\n   * `structure_logic`: `\"反常识→破旧观→立新知→多维论证→升华→回归个体\"`\n   * `emotion_curve`: 以 3–5 个情绪词串联\n   * `target_audience`: 用一句话概括受众群体\n   * `human_insight`: 一句话揭示心理洞察\n   * `video_duration_estimate`: `\"约 X 分钟\"`（1–7 分钟范围内估计）\n\n---\n\n## ✅ 检查清单（内部校验）\n* 所有 `narration_script` 逐字保真\n* `scene_id` 连续递增\n* `\"speaking\"` 仅为 `\"Yes\"` 或 `\"No\"`\n* 当 `\"No\"` 时，`visual` 必须存在且合规\n* 输出为**单一 JSON 对象**，无任何多余文字",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1552,
+        480
+      ],
+      "id": "7e642c51-3fcc-4b1d-abb6-e0704d84c626",
+      "name": "自定义脚本"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $('提交内容').item.json[\"视频内容\"] }}"
+            }
+          ]
+        },
+        "options": {
+          "systemMessage": "={{ $json['脚本'] }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        1776,
+        480
+      ],
+      "id": "31ebe9a0-fd67-44b0-b858-378d71ac8844",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "RzWCy4Le1VMm7gtf",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const results = [];\n\nconst textInput = $input.first().json.content.parts[0].text;\n\nconst jsonMatch = textInput.match(/```json\\s*([\\s\\S]*?)```/); \n\nlet jsonString;\nif (jsonMatch && jsonMatch[1]) {\n    jsonString = jsonMatch[1].trim();\n} else {\n    jsonString = textInput.trim(); \n}\n\nlet parsedData;\nlet cleanJsonString = jsonString; \n\ntry {\n    const contentMatch = cleanJsonString.match(/\\{[\\s\\S]*\\}/);\n    if (contentMatch) {\n        cleanJsonString = contentMatch[0].trim();\n    } else {\n        throw new Error(\"Cannot find valid JSON object structure {}.\");\n    }\n\n    cleanJsonString = cleanJsonString.replace(/narration\\s*Ascript/g, 'narration_script');\n    \n    cleanJsonString = cleanJsonString.replace(/scenscenescene_id|scenescene_id/g, 'scene_id');\n\n    cleanJsonString = cleanJsonString.replace(/([\\{\\,]\\s*)(scene_id|e_id|_id)\\s*:\\s*(\\d+)/g, '$1\"scene_id\":$3');\n\n    cleanJsonString = cleanJsonString.replace(/([\\{\\,]\\s*)scene_id\\s*:\\s*(\\d+)/g, '$1\"scene_id\":$2');\n\n    cleanJsonString = cleanJsonString.replace(/(\\r\\n|\\n|\\r)/gm, ' ').trim();\n\n    cleanJsonString = cleanJsonString.replace(/,\\s*([}\\]])/g, '$1');\n\n    cleanJsonString = cleanJsonString.replace(/([{,]\\s*)'([a-zA-Z0-9_]+)'\\s*:/g, '$1\"$2\":'); \n    cleanJsonString = cleanJsonString.replace(/([{,]\\s*)([a-zA-Z0-9_]+)\\s*:/g, '$1\"$2\":'); \n\n    cleanJsonString = cleanJsonString.replace(/\\/\\*[\\s\\S]*?\\*\\/|\\/\\/.*/g, '').trim();\n\n    cleanJsonString = cleanJsonString.replace(/\\s{2,}/g, ' '); \n\n    cleanJsonString = cleanJsonString.replace(/([\\\"}\\]0-9])\\s+[-\\s]*\\s*([,}\\]])/g, '$1$2');\n\n    parsedData = JSON.parse(cleanJsonString); \n\n    results.push({\n        json: {\n            \"旁白\": parsedData, \n            \"完整旁白\": textInput \n        }\n    });\n\n} catch (e) {\n    console.error(\"JSON Parsing Failed:\", e.message);\n    \n    results.push({ \n        json: { \n            \"error\": `JSON Parse Error: ${e.message}`, \n            \"debug_input_full\": cleanJsonString,\n            \"debug_input_start\": cleanJsonString.substring(0, 500) + '...' \n        } \n    });\n}\n\nreturn results;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2128,
+        480
+      ],
+      "id": "bbc4d744-9c1f-4148-aa42-7edb0e666e41",
+      "name": "提取旁白"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "['旁白'].storyboards",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        2352,
+        480
+      ],
+      "id": "7144ce1b-7258-4b53-a1a4-8bd340b9c026",
+      "name": "遍历"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        2576,
+        480
+      ],
+      "id": "22147214-363d-4f32-a8be-dd72c87f484f",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.minimax.io/v1/t2a_v2",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer sk-api-vekESrm_vFTFZJV6JT7oJMKwj66SYAr0FxfMuqc2wSuS3VPLcjAOQ396rYpwAOZvcYa6KAZOkV6UvmT17b55ZBN4_Ys7YNZK9_gMR4GQLqphD0g-1y1iIS8"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"model\":\"speech-2.6-hd\",\n    \"text\": \"{{ $('遍历').item.json.narration_script }}\",\n    \"stream\":false,\n    \"language_boost\":\"auto\",\n    \"output_format\":\"url\",\n    \"voice_setting\":{\n        \"voice_id\":\"English_AttractiveGirl\",\n        \"speed\":1.4,\n        \"vol\":1.2,\n        \"pitch\":0\n    },\n    \"pronunciation_dict\":{\n        \"tone\":[\n            \"\"\n        ]\n    },\n    \"audio_setting\":{\n        \"sample_rate\":44100,\n        \"bitrate\":256000,\n        \"format\":\"mp3\",\n        \"channel\":2\n    },\n    \"voice_modify\":{\n      \"pitch\":0,\n      \"intensity\":0,\n      \"timbre\":0\n    }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2800,
+        480
+      ],
+      "id": "cd0687eb-58f8-44df-a8e9-bef882f86a66",
+      "name": "生成音频",
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "amount": 1,
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        3616,
+        224
+      ],
+      "id": "6787de72-c093-43af-a97e-6e50af7baefe",
+      "name": "等待提交",
+      "webhookId": "ac2dd6ab-7e30-4253-899d-a5a56bbfffbf"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.msg }}",
+                    "rightValue": "success",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "a8415637-7674-432d-93d7-7918aceabf55"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "success"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2cdf2e6e-7936-4c05-9e1f-93fa0c445792",
+                    "leftValue": "={{ $json.msg }}",
+                    "rightValue": "TASK_QUEUE_MAXED",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "TASK_QUEUE_MAXED"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        3248,
+        208
+      ],
+      "id": "87de3553-ecb8-49f3-ba34-5928d3c25bfe",
+      "name": "接任务"
+    },
+    {
+      "parameters": {
+        "amount": 120
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        3456,
+        64
+      ],
+      "id": "7ef7e119-d3d6-43ab-8ce7-9610d00de16f",
+      "name": "等待生成视频",
+      "webhookId": "1697154e-1e29-4137-baa7-c06d4f1abd61"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.runninghub.ai/task/openapi/status",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Host",
+              "value": "www.runninghub.ai"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "apiKey",
+              "value": "={{ $('设置参数-综合').first().json['Running Hub API_KEY'] }}"
+            },
+            {
+              "name": "taskId",
+              "value": "={{ $('对嘴视频编辑').item.json.data.taskId }}"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3696,
+        64
+      ],
+      "id": "21cfd940-4eb5-4703-8b64-e35acfcdd5e7",
+      "name": "任务状态-对嘴",
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.runninghub.ai/task/openapi/outputs",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Host",
+              "value": "www.runninghub.ai"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "apiKey",
+              "value": "={{ $('设置参数-综合').first().json['Running Hub API_KEY'] }}"
+            },
+            {
+              "name": "taskId",
+              "value": "={{ $('对嘴视频编辑').item.json.data.taskId }}"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4128,
+        448
+      ],
+      "id": "905db4cb-da83-447d-baf3-2943b3f2d79c",
+      "name": "获取视频",
+      "retryOnFail": true,
+      "maxTries": 5
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3ca92e30-f172-4f8d-a589-81a6c3165f4f",
+              "name": "设置参数-视频网址",
+              "value": "={{ $json.data[0].fileUrl }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4320,
+        464
+      ],
+      "id": "f0ac01a9-c8cc-4447-a417-2b1656bed2e4",
+      "name": "设置参数-视频网址"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        2800,
+        304
+      ],
+      "id": "945a6e4c-a14e-4b47-80a5-63bf13b0419d",
+      "name": "聚合"
+    },
+    {
+      "parameters": {
+        "resource": "object",
+        "operation": "create",
+        "bucketName": "=n8n-website",
+        "objectName": "={{ $workflow.id }}.png",
+        "createBinaryPropertyName": "Image",
+        "createData": {},
+        "createQuery": {},
+        "encryptionHeaders": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.googleCloudStorage",
+      "typeVersion": 1,
+      "position": [
+        1104,
+        480
+      ],
+      "id": "10731a2b-9f52-42b7-be1c-e6b0fc8ca012",
+      "name": "上传图片",
+      "credentials": {
+        "googleCloudStorageOAuth2Api": {
+          "id": "NbDcUZkrVBPdzAVc",
+          "name": "n8n"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "OddsFlow 口播视频",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Image",
+              "fieldType": "file",
+              "acceptFileTypes": ".jpg, .jpeg, .png"
+            },
+            {
+              "fieldLabel": "视频内容",
+              "fieldType": "textarea"
+            },
+            {
+              "fieldLabel": "submissionId",
+              "fieldType": "text"
+            },
+            {
+              "fieldLabel": "callbackUrl",
+              "fieldType": "text"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        880,
+        480
+      ],
+      "id": "d26116f8-6852-409a-ac7e-8ef68fa708e5",
+      "name": "提交内容",
+      "webhookId": "a10e0d8f-1a9c-478f-9108-e98789783996"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.runninghub.ai/task/openapi/ai-app/run",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Host",
+              "value": "www.runninghub.ai"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"webappId\": \"1962418130934960130\",\n  \"apiKey\": \"{{ $('设置参数-综合').first().json['Running Hub API_KEY'] }}\",\n  \"nodeInfoList\": [\n    {\n      \"nodeId\": \"133\",\n      \"fieldName\": \"image\",\n      \"fieldValue\": \"{{ $('上传图片').first().json.mediaLink }}\",\n      \"description\": \"image\"\n    },\n    {\n      \"nodeId\": \"135\",\n      \"fieldName\": \"positive_prompt\",\n      \"fieldValue\": \"一个人在说话\",\n      \"description\": \"positive_prompt\"\n    },\n    {\n      \"nodeId\": \"125\",\n      \"fieldName\": \"audio\",\n      \"fieldValue\": \"{{ $('生成音频').item.json.data.audio }}\",\n      \"description\": \"audio\"\n    }\n  ]\n}",
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3056,
+        432
+      ],
+      "id": "3378f9ac-1a50-4b9c-b111-52cf62e77e8d",
+      "name": "对嘴视频编辑",
+      "retryOnFail": true,
+      "maxTries": 3
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.data }}",
+                    "rightValue": "QUEUED",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "a8415637-7674-432d-93d7-7918aceabf55"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "QUEUED"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "acfc59b6-6d87-4899-8ead-c84a4877a873",
+                    "leftValue": "={{ $json.data }}",
+                    "rightValue": "RUNNING",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "RUNNING"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "6e3fffa5-a3a3-41b6-a9c0-4a9b7c76e0c6",
+                    "leftValue": "={{ $json.data }}",
+                    "rightValue": "SUCCESS",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "SUCCESS"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f9edde64-be39-4a18-ace9-133018c2edcd",
+                    "leftValue": "={{ $json.data }}",
+                    "rightValue": "FAILED",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "FAILED"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        3888,
+        320
+      ],
+      "id": "3ff7102b-afd7-4fc6-9b54-9228f3b5ba5e",
+      "name": "任务路由"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('提交内容').first().json.callbackUrl }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"submissionId\": \"{{ $('提交内容').first().json.submissionId }}\",\n  \"status\": \"completed\",\n  \"progress\": 100,\n  \"currentStep\": \"Lip sync video ready\",\n  \"videoUrl\": \"{{ $json.data[0]['设置参数-视频网址'] }}\",\n  \"videoTitle\": \"Lip Sync Video - {{ $now.format('yyyy-MM-dd HH:mm') }}\"\n}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3024,
+        304
+      ],
+      "id": "callback-to-website",
+      "name": "Callback to Website"
+    }
+  ],
+  "connections": {
+    "设置参数-综合": {
+      "main": [
+        [
+          {
+            "node": "自定义脚本",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "自定义脚本": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "提取旁白",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "提取旁白": {
+      "main": [
+        [
+          {
+            "node": "遍历",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "遍历": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "聚合",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "生成音频",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "生成音频": {
+      "main": [
+        [
+          {
+            "node": "对嘴视频编辑",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "等待提交": {
+      "main": [
+        [
+          {
+            "node": "对嘴视频编辑",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "接任务": {
+      "main": [
+        [
+          {
+            "node": "等待生成视频",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "等待提交",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "等待生成视频": {
+      "main": [
+        [
+          {
+            "node": "任务状态-对嘴",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "任务状态-对嘴": {
+      "main": [
+        [
+          {
+            "node": "任务路由",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "获取视频": {
+      "main": [
+        [
+          {
+            "node": "设置参数-视频网址",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "设置参数-视频网址": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "上传图片": {
+      "main": [
+        [
+          {
+            "node": "设置参数-综合",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "提交内容": {
+      "main": [
+        [
+          {
+            "node": "上传图片",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "对嘴视频编辑": {
+      "main": [
+        [
+          {
+            "node": "接任务",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "任务路由": {
+      "main": [
+        [
+          {
+            "node": "等待生成视频",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "等待生成视频",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "获取视频",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "对嘴视频编辑",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "聚合": {
+      "main": [
+        [
+          {
+            "node": "Callback to Website",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "05e3543f68c394ceb082bf8d2ef8d2b149f35ecddcbc0afb7e81bd6933faf98c"
+  }
+}
