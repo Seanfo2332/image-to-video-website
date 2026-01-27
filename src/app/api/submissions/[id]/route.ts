@@ -78,13 +78,23 @@ export async function DELETE(
     const n8nBaseUrl = process.env.N8N_BASE_URL || "https://autoskz.app.n8n.cloud";
 
     if (n8nApiKey && submission.n8nExecutionId) {
+      const execId = submission.n8nExecutionId;
+      const headers = { "X-N8N-API-KEY": n8nApiKey };
+
       try {
-        await fetch(`${n8nBaseUrl}/api/v1/executions/${submission.n8nExecutionId}/stop`, {
+        // Try to stop the running execution first
+        const stopRes = await fetch(`${n8nBaseUrl}/api/v1/executions/${execId}/stop`, {
           method: "POST",
-          headers: {
-            "X-N8N-API-KEY": n8nApiKey,
-          },
+          headers,
         });
+
+        // If stop didn't work (e.g. execution is waiting, not running), delete it
+        if (!stopRes.ok) {
+          await fetch(`${n8nBaseUrl}/api/v1/executions/${execId}`, {
+            method: "DELETE",
+            headers,
+          });
+        }
       } catch (n8nError) {
         console.error("Failed to stop n8n execution:", n8nError);
         // Continue with cancellation even if n8n stop fails
