@@ -129,6 +129,28 @@ export default function HistoryPage() {
     fetchSubmissions();
   }, []);
 
+  // Auto-poll for progress updates when there are processing/queued submissions
+  useEffect(() => {
+    const hasActiveJobs = submissions.some(
+      (s) => s.status === "processing" || s.status === "queued"
+    );
+    if (!hasActiveJobs) return;
+
+    const interval = setInterval(async () => {
+      try {
+        const response = await fetch("/api/submissions");
+        if (response.ok) {
+          const data = await response.json();
+          setSubmissions(data);
+        }
+      } catch (error) {
+        console.error("Failed to poll submissions:", error);
+      }
+    }, 5000); // Poll every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [submissions]);
+
   const displaySubmissions = showExamples ? exampleSubmissions : submissions;
 
   const filteredSubmissions = displaySubmissions.filter((sub) => {
@@ -181,16 +203,61 @@ export default function HistoryPage() {
 
   const handleCancel = async (id: string) => {
     setCancellingId(id);
-    // Simulate API call - will be replaced with actual API
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setCancellingId(null);
-    // In real implementation, this would update the submission status
-    alert("Cancel functionality will be connected to n8n workflow API");
+    try {
+      const response = await fetch(`/api/submissions/${id}`, {
+        method: "DELETE",
+      });
+      if (response.ok) {
+        // Update the local state
+        setSubmissions((prev) =>
+          prev.map((s) =>
+            s.id === id
+              ? { ...s, status: "cancelled" as WorkflowStatus, currentStep: "Cancelled by user" }
+              : s
+          )
+        );
+      } else {
+        const data = await response.json();
+        alert(data.error || "Failed to cancel");
+      }
+    } catch (error) {
+      alert("Network error. Please try again.");
+    } finally {
+      setCancellingId(null);
+    }
   };
 
   const handleRetry = async (id: string) => {
-    // Will be connected to API to retry failed submissions
-    alert("Retry functionality will be connected to n8n workflow API");
+    try {
+      // Optimistically update UI
+      setSubmissions((prev) =>
+        prev.map((s) =>
+          s.id === id
+            ? { ...s, status: "processing" as WorkflowStatus, progress: 0, currentStep: "Retrying...", error: undefined }
+            : s
+        )
+      );
+
+      const response = await fetch(`/api/submissions/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "retry" }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        setSubmissions((prev) =>
+          prev.map((s) =>
+            s.id === id
+              ? { ...s, status: "failed" as WorkflowStatus, error: data.error || "Retry failed" }
+              : s
+          )
+        );
+        alert(data.error || "Failed to retry");
+      }
+    } catch (error) {
+      alert("Network error. Please try again.");
+    }
   };
 
   const statusCounts = {

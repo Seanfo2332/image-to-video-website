@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "../../../../../auth";
+import prisma from "@/lib/prisma";
 
 // GET /api/submissions/[id]
 // Returns a specific submission
@@ -16,21 +17,18 @@ export async function GET(
 
     const { id } = await params;
 
-    // TODO: Get submission from database
-    // const submission = await prisma.promptSubmission.findUnique({
-    //   where: {
-    //     id,
-    //     userId: session.user.id
-    //   }
-    // });
-    //
-    // if (!submission) {
-    //   return NextResponse.json({ error: "Not found" }, { status: 404 });
-    // }
-
-    return NextResponse.json({
-      message: `Submission ${id} details will be available when database is connected`,
+    const submission = await prisma.promptSubmission.findUnique({
+      where: {
+        id,
+        userId: session.user.id,
+      },
     });
+
+    if (!submission) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(submission);
   } catch (error) {
     console.error("Error fetching submission:", error);
     return NextResponse.json(
@@ -55,42 +53,59 @@ export async function DELETE(
 
     const { id } = await params;
 
-    // TODO: Cancel workflow in n8n and update database
     // 1. Get the submission
-    // const submission = await prisma.promptSubmission.findUnique({
-    //   where: {
-    //     id,
-    //     userId: session.user.id
-    //   }
-    // });
-    //
-    // if (!submission) {
-    //   return NextResponse.json({ error: "Not found" }, { status: 404 });
-    // }
-    //
+    const submission = await prisma.promptSubmission.findUnique({
+      where: {
+        id,
+        userId: session.user.id,
+      },
+    });
+
+    if (!submission) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+
     // 2. Only allow cancelling queued or processing workflows
-    // if (!['queued', 'processing'].includes(submission.status)) {
-    //   return NextResponse.json(
-    //     { error: "Cannot cancel completed workflow" },
-    //     { status: 400 }
-    //   );
-    // }
-    //
-    // 3. Call n8n API to cancel the workflow
-    // await fetch(`${N8N_URL}/api/v1/executions/${submission.n8nExecutionId}/stop`, {
-    //   method: 'POST',
-    //   headers: { 'X-N8N-API-KEY': process.env.N8N_API_KEY }
-    // });
-    //
-    // 4. Update submission status
-    // await prisma.promptSubmission.update({
-    //   where: { id },
-    //   data: { status: 'cancelled' }
-    // });
+    if (!["queued", "processing"].includes(submission.status)) {
+      return NextResponse.json(
+        { error: "Cannot cancel a workflow that is not queued or processing" },
+        { status: 400 }
+      );
+    }
+
+    // 3. Try to stop the n8n execution if we have an execution ID
+    const n8nApiKey = process.env.N8N_API_KEY;
+    const n8nBaseUrl = process.env.N8N_BASE_URL || "https://autoskz.app.n8n.cloud";
+
+    if (n8nApiKey && submission.videoUrl) {
+      // videoUrl might store the n8n execution ID during processing
+      try {
+        await fetch(`${n8nBaseUrl}/api/v1/executions/${submission.videoUrl}/stop`, {
+          method: "POST",
+          headers: {
+            "X-N8N-API-KEY": n8nApiKey,
+          },
+        });
+      } catch (n8nError) {
+        console.error("Failed to stop n8n execution:", n8nError);
+        // Continue with cancellation even if n8n stop fails
+      }
+    }
+
+    // 4. Update submission status to cancelled
+    const updated = await prisma.promptSubmission.update({
+      where: { id },
+      data: {
+        status: "cancelled",
+        currentStep: "Cancelled by user",
+        error: null,
+      },
+    });
 
     return NextResponse.json({
-      message: `Workflow ${id} cancel functionality will be connected to n8n`,
       success: true,
+      message: "Workflow cancelled",
+      submission: updated,
     });
   } catch (error) {
     console.error("Error cancelling workflow:", error);
@@ -118,34 +133,92 @@ export async function PATCH(
     const body = await request.json();
 
     if (body.action === "retry") {
-      // TODO: Retry failed workflow
       // 1. Get the submission
-      // const submission = await prisma.promptSubmission.findUnique({
-      //   where: {
-      //     id,
-      //     userId: session.user.id
-      //   }
-      // });
-      //
-      // 2. Only allow retrying failed workflows
-      // if (submission.status !== 'failed') {
-      //   return NextResponse.json(
-      //     { error: "Can only retry failed workflows" },
-      //     { status: 400 }
-      //   );
-      // }
-      //
-      // 3. Reset status and trigger n8n again
-      // await prisma.promptSubmission.update({
-      //   where: { id },
-      //   data: { status: 'queued', error: null }
-      // });
-      //
-      // 4. Trigger n8n webhook again with submission data
+      const submission = await prisma.promptSubmission.findUnique({
+        where: {
+          id,
+          userId: session.user.id,
+        },
+      });
+
+      if (!submission) {
+        return NextResponse.json({ error: "Not found" }, { status: 404 });
+      }
+
+      // 2. Only allow retrying failed or cancelled workflows
+      if (!["failed", "cancelled"].includes(submission.status)) {
+        return NextResponse.json(
+          { error: "Can only retry failed or cancelled workflows" },
+          { status: 400 }
+        );
+      }
+
+      // 3. Reset status
+      await prisma.promptSubmission.update({
+        where: { id },
+        data: {
+          status: "processing",
+          progress: 0,
+          currentStep: "Retrying - Submitting to workflow...",
+          error: null,
+          videoUrl: null,
+        },
+      });
+
+      // 4. Re-trigger the n8n webhook
+      const n8nWebhookUrl = process.env.N8N_LIP_SYNC_WEBHOOK ||
+        "https://autoskz.app.n8n.cloud/webhook/e7bbdce5-71ee-498e-9198-260e2cc50b92";
+
+      const callbackUrl = process.env.NEXT_PUBLIC_APP_URL
+        ? `${process.env.NEXT_PUBLIC_APP_URL}/api/n8n/callback`
+        : "https://image-to-video-website.vercel.app/api/n8n/callback";
+
+      // Build the form data for retry using stored data
+      const n8nFormData = new FormData();
+      n8nFormData.append("视频内容", submission.videoMaterial || "");
+      n8nFormData.append("submissionId", submission.id);
+      n8nFormData.append("callbackUrl", callbackUrl);
+
+      // Note: For retry, the original image is not stored.
+      // If image is needed, user should create a new submission.
+      // This retry only works if the n8n workflow can handle text-only input.
+
+      try {
+        const response = await fetch(n8nWebhookUrl, {
+          method: "POST",
+          body: n8nFormData,
+        });
+
+        if (!response.ok) {
+          await prisma.promptSubmission.update({
+            where: { id },
+            data: {
+              status: "failed",
+              error: "Failed to re-trigger workflow",
+            },
+          });
+          return NextResponse.json(
+            { error: "Failed to re-trigger workflow" },
+            { status: 500 }
+          );
+        }
+      } catch (fetchError) {
+        await prisma.promptSubmission.update({
+          where: { id },
+          data: {
+            status: "failed",
+            error: "Network error when retrying",
+          },
+        });
+        return NextResponse.json(
+          { error: "Network error when retrying" },
+          { status: 500 }
+        );
+      }
 
       return NextResponse.json({
-        message: `Workflow ${id} retry functionality will be connected to n8n`,
         success: true,
+        message: "Workflow retry started",
       });
     }
 
