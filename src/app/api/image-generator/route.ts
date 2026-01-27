@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "../../../../auth";
 import prisma from "@/lib/prisma";
+import { checkAndDeductCredits, InsufficientCreditsError } from "@/lib/credits";
 
 // n8n Webhook URL - no spaces in path
 const N8N_WEBHOOK_URL = process.env.N8N_IMAGE_GENERATOR_WEBHOOK || "https://autoskz.app.n8n.cloud/webhook/image-generator-api";
@@ -39,6 +40,23 @@ export async function POST(request: NextRequest) {
           currentStep: "Sending to n8n workflow...",
         },
       });
+
+      // Deduct credits
+      try {
+        await checkAndDeductCredits(session.user.id, "image", submission.id);
+      } catch (err) {
+        await prisma.promptSubmission.update({
+          where: { id: submission.id },
+          data: { status: "failed", error: "Insufficient credits" },
+        });
+        if (err instanceof InsufficientCreditsError) {
+          return NextResponse.json(
+            { error: "Insufficient credits", required: err.required, available: err.available },
+            { status: 402 }
+          );
+        }
+        throw err;
+      }
     }
 
     try {

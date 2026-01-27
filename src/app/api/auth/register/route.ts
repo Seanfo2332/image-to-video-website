@@ -44,13 +44,23 @@ export async function POST(request: Request) {
     );
     const isAdmin = adminEmails?.includes(email.toLowerCase());
 
-    // Create user
+    // Create user and record signup bonus transaction
     const user = await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
         name,
         role: isAdmin ? "admin" : "user",
+      },
+    });
+
+    // Record the signup bonus credit transaction
+    await prisma.creditTransaction.create({
+      data: {
+        userId: user.id,
+        amount: 10,
+        type: "signup_bonus",
+        description: "Welcome bonus credits",
       },
     });
 

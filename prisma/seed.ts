@@ -1,61 +1,24 @@
 import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log("Seeding database...");
-
-  // Create admin user
-  const adminEmail = "admin@example.com";
-  const adminPassword = "AdminPassword123!";
-  const hashedPassword = await bcrypt.hash(adminPassword, 12);
-
-  const admin = await prisma.user.upsert({
-    where: { email: adminEmail },
-    update: {},
-    create: {
-      email: adminEmail,
-      name: "Admin User",
-      password: hashedPassword,
-      role: "admin",
-      isActive: true,
-    },
-  });
-
-  console.log(`Admin user created/updated:`);
-  console.log(`  Email: ${admin.email}`);
-  console.log(`  Password: ${adminPassword}`);
-  console.log(`  Role: ${admin.role}`);
-
-  // Optionally create some test users
-  const testUsers = [
-    { email: "user1@example.com", name: "Test User 1" },
-    { email: "user2@example.com", name: "Test User 2" },
-    { email: "user3@example.com", name: "Test User 3" },
+  // Seed default credit configs
+  const defaults = [
+    { workflowType: "lip-sync", cost: 2, label: "Lip Sync Video" },
+    { workflowType: "image", cost: 1, label: "Image Generation" },
+    { workflowType: "video", cost: 3, label: "Video Generation" },
   ];
 
-  const testPassword = await bcrypt.hash("TestPassword123!", 12);
-
-  for (const testUser of testUsers) {
-    const user = await prisma.user.upsert({
-      where: { email: testUser.email },
+  for (const config of defaults) {
+    await prisma.creditConfig.upsert({
+      where: { workflowType: config.workflowType },
       update: {},
-      create: {
-        email: testUser.email,
-        name: testUser.name,
-        password: testPassword,
-        role: "user",
-        isActive: true,
-      },
+      create: config,
     });
-    console.log(`Test user created: ${user.email}`);
   }
 
-  console.log("\nSeeding completed!");
-  console.log("\n--- Login Credentials ---");
-  console.log(`Admin: ${adminEmail} / ${adminPassword}`);
-  console.log(`Test Users: user1@example.com, user2@example.com, user3@example.com / TestPassword123!`);
+  console.log("Seeded credit configs:", defaults.map((d) => `${d.workflowType}=${d.cost}`).join(", "));
 }
 
 main()

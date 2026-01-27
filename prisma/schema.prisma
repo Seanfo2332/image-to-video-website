@@ -22,11 +22,16 @@ model User {
   createdAt     DateTime  @default(now())
   lastLoginAt   DateTime?
 
+  credits       Int       @default(10)
+
   accounts      Account[]
   sessions      Session[]
   submissions   PromptSubmission[]
   videos        Video[]
   images        Image[]
+  creditTransactions CreditTransaction[]
+  voucherRedemptions VoucherRedemption[]
+  topUpOrders        TopUpOrder[]
 }
 
 model Account {
@@ -115,6 +120,67 @@ model Image {
   submissionId String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model CreditConfig {
+  id           String @id @default(cuid())
+  workflowType String @unique // "lip-sync", "image", "video"
+  cost         Int
+  label        String // Display name e.g. "Lip Sync Video"
+}
+
+model CreditTransaction {
+  id           String   @id @default(cuid())
+  userId       String
+  amount       Int      // positive = add, negative = deduct
+  type         String   // deduction, refund, admin_adjustment, voucher_redemption, signup_bonus
+  description  String
+  submissionId String?
+  voucherId    String?
+  createdAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Voucher {
+  id        String    @id @default(cuid())
+  code      String    @unique
+  credits   Int
+  maxUses   Int       @default(1)
+  usedCount Int       @default(0)
+  isActive  Boolean   @default(true)
+  expiresAt DateTime?
+  createdAt DateTime  @default(now())
+
+  redemptions VoucherRedemption[]
+}
+
+model VoucherRedemption {
+  id           String   @id @default(cuid())
+  userId       String
+  voucherId    String
+  creditsAdded Int
+  createdAt    DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  voucher Voucher @relation(fields: [voucherId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, voucherId])
+}
+
+model TopUpOrder {
+  id               String   @id @default(cuid())
+  userId           String
+  credits          Int
+  amount           Float
+  currency         String   @default("USD")
+  status           String   @default("pending") // pending, completed, failed, cancelled
+  paymentMethod    String?
+  paymentReference String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

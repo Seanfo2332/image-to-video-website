@@ -31,6 +31,7 @@ export async function GET(
         image: true,
         role: true,
         isActive: true,
+        credits: true,
         createdAt: true,
         lastLoginAt: true,
         accounts: {

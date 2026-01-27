@@ -19,6 +19,7 @@ import {
   ImageIcon,
   Images,
   Mic2,
+  Coins,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -31,6 +32,7 @@ const navItems = [
   { name: "My Images", href: "/dashboard/images", icon: Images },
   { name: "My Videos", href: "/dashboard/videos", icon: FileVideo },
   { name: "History", href: "/dashboard/history", icon: History },
+  { name: "Billing", href: "/dashboard/billing", icon: Coins },
 ];
 
 export function DashboardSidebar() {

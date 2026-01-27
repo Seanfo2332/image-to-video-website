@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "../../../../auth";
 import prisma from "@/lib/prisma";
+import { checkAndDeductCredits, InsufficientCreditsError } from "@/lib/credits";
 
 export async function POST(request: NextRequest) {
   try {
@@ -36,6 +37,23 @@ export async function POST(request: NextRequest) {
           currentStep: "Submitting to video workflow...",
         },
       });
+
+      // Deduct credits
+      try {
+        await checkAndDeductCredits(session.user.id, "video", submission.id);
+      } catch (err) {
+        await prisma.promptSubmission.update({
+          where: { id: submission.id },
+          data: { status: "failed", error: "Insufficient credits" },
+        });
+        if (err instanceof InsufficientCreditsError) {
+          return NextResponse.json(
+            { error: "Insufficient credits", required: err.required, available: err.available },
+            { status: 402 }
+          );
+        }
+        throw err;
+      }
     }
 
     // n8n webhook URL for video generator

@@ -10,12 +10,16 @@ import {
   Home,
   LogOut,
   Shield,
+  Gift,
+  Coins,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 
 const navItems = [
   { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
   { name: "Users", href: "/admin/users", icon: Users },
+  { name: "Vouchers", href: "/admin/vouchers", icon: Gift },
+  { name: "Credit Config", href: "/admin/credits", icon: Coins },
 ];
 
 export function AdminSidebar() {

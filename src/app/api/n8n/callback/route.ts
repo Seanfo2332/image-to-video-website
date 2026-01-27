@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { refundCredits } from "@/lib/credits";
 
 // POST /api/n8n/callback
 // n8n calls this endpoint when workflow status changes
@@ -76,6 +77,15 @@ export async function POST(request: Request) {
         n8nExecutionId: executionId || submission.n8nExecutionId,
       },
     });
+
+    // Refund credits if workflow failed
+    if (status === "failed") {
+      try {
+        await refundCredits(submission.userId, submissionId);
+      } catch (refundError) {
+        console.error("Credit refund error:", refundError);
+      }
+    }
 
     // If video is completed, create a Video record
     if (status === "completed" && videoUrl) {
