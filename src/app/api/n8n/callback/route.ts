@@ -42,6 +42,7 @@ export async function POST(request: Request) {
       videoDuration,
       videoSize,
       thumbnailUrl,
+      executionId,
     } = body;
 
     if (!submissionId) {
@@ -72,6 +73,7 @@ export async function POST(request: Request) {
         currentStep: currentStep || submission.currentStep,
         error: error || null,
         videoUrl: videoUrl || submission.videoUrl,
+        n8nExecutionId: executionId || submission.n8nExecutionId,
       },
     });
 

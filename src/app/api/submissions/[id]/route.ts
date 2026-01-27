@@ -77,10 +77,9 @@ export async function DELETE(
     const n8nApiKey = process.env.N8N_API_KEY;
     const n8nBaseUrl = process.env.N8N_BASE_URL || "https://autoskz.app.n8n.cloud";
 
-    if (n8nApiKey && submission.videoUrl) {
-      // videoUrl might store the n8n execution ID during processing
+    if (n8nApiKey && submission.n8nExecutionId) {
       try {
-        await fetch(`${n8nBaseUrl}/api/v1/executions/${submission.videoUrl}/stop`, {
+        await fetch(`${n8nBaseUrl}/api/v1/executions/${submission.n8nExecutionId}/stop`, {
           method: "POST",
           headers: {
             "X-N8N-API-KEY": n8nApiKey,

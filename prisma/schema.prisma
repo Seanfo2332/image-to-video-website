@@ -80,6 +80,7 @@ model PromptSubmission {
   currentStep   String?
   error         String?
   videoUrl      String?  // URL to download completed video
+  n8nExecutionId String? // n8n execution ID for stopping workflows
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
