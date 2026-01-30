@@ -1,0 +1,427 @@
+"use client";
+
+import { useState, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  MapPin,
+  Upload,
+  X,
+  Image as ImageIcon,
+  FileText,
+  Loader2,
+  CheckCircle,
+  AlertCircle,
+  Globe,
+  Building2,
+  ChevronDown,
+} from "lucide-react";
+
+const CATEGORIES = [
+  { value: "F&B", label: "Food & Beverage", icon: "🍽️" },
+  { value: "Crypto", label: "Crypto & Web3", icon: "₿" },
+  { value: "Beauty", label: "Beauty & Wellness", icon: "💄" },
+  { value: "Property", label: "Property & Real Estate", icon: "🏠" },
+  { value: "Finance", label: "Finance & Investment", icon: "💰" },
+  { value: "Other/News", label: "Other / News", icon: "📰" },
+];
+
+const LANGUAGES = [
+  { value: "English", label: "English", flag: "🇺🇸" },
+  { value: "Chinese", label: "Chinese (中文)", flag: "🇨🇳" },
+];
+
+export default function GeoContentPage() {
+  const [language, setLanguage] = useState("English");
+  const [category, setCategory] = useState("");
+  const [businessTitle, setBusinessTitle] = useState("");
+  const [businessContent, setBusinessContent] = useState("");
+  const [coverImage, setCoverImage] = useState<File | null>(null);
+  const [coverPreview, setCoverPreview] = useState<string | null>(null);
+  const [contentImages, setContentImages] = useState<File[]>([]);
+  const [contentPreviews, setContentPreviews] = useState<string[]>([]);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const [isLangOpen, setIsLangOpen] = useState(false);
+  const [isCatOpen, setIsCatOpen] = useState(false);
+
+  const coverInputRef = useRef<HTMLInputElement>(null);
+  const contentInputRef = useRef<HTMLInputElement>(null);
+
+  const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setCoverImage(file);
+      setCoverPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleContentImagesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length > 0) {
+      setContentImages((prev) => [...prev, ...files]);
+      const newPreviews = files.map((file) => URL.createObjectURL(file));
+      setContentPreviews((prev) => [...prev, ...newPreviews]);
+    }
+  };
+
+  const removeCoverImage = () => {
+    setCoverImage(null);
+    setCoverPreview(null);
+    if (coverInputRef.current) coverInputRef.current.value = "";
+  };
+
+  const removeContentImage = (index: number) => {
+    setContentImages((prev) => prev.filter((_, i) => i !== index));
+    setContentPreviews((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!category || !businessTitle || !businessContent) {
+      setError("Please fill in all required fields");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      const formData = new FormData();
+      formData.append("language", language);
+      formData.append("category", category);
+      formData.append("businessTitle", businessTitle);
+      formData.append("businessContent", businessContent);
+
+      if (coverImage) {
+        formData.append("coverImage", coverImage);
+      }
+
+      contentImages.forEach((file, index) => {
+        formData.append(`contentImage_${index}`, file);
+      });
+
+      const response = await fetch("/api/geo-content/submit", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        setSuccess(true);
+        // Reset form
+        setCategory("");
+        setBusinessTitle("");
+        setBusinessContent("");
+        setCoverImage(null);
+        setCoverPreview(null);
+        setContentImages([]);
+        setContentPreviews([]);
+
+        setTimeout(() => setSuccess(false), 5000);
+      } else {
+        const data = await response.json();
+        setError(data.error || "Failed to submit");
+      }
+    } catch (err) {
+      setError("Failed to submit. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const selectedCategory = CATEGORIES.find((c) => c.value === category);
+  const selectedLanguage = LANGUAGES.find((l) => l.value === language);
+
+  return (
+    <div className="max-w-3xl mx-auto pb-20">
+      {/* Header */}
+      <div className="mb-8">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
+            <MapPin className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold text-white">GEO Content</h1>
+            <p className="text-neutral-400">Submit your business to multiple websites</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Success Message */}
+      <AnimatePresence>
+        {success && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="mb-6 p-4 rounded-xl bg-green-500/10 border border-green-500/20 flex items-center gap-3"
+          >
+            <CheckCircle className="w-5 h-5 text-green-400" />
+            <span className="text-green-400">Content submitted successfully!</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Error Message */}
+      {error && (
+        <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center gap-3">
+          <AlertCircle className="w-5 h-5 text-red-400" />
+          <span className="text-red-400">{error}</span>
+        </div>
+      )}
+
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Language & Category Row */}
+        <div className="grid md:grid-cols-2 gap-4">
+          {/* Language Dropdown */}
+          <div className="relative">
+            <label className="block text-sm font-medium text-neutral-300 mb-2">
+              Language
+            </label>
+            <button
+              type="button"
+              onClick={() => setIsLangOpen(!isLangOpen)}
+              className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <span className="text-xl">{selectedLanguage?.flag}</span>
+                <span>{selectedLanguage?.label}</span>
+              </div>
+              <ChevronDown className={`w-4 h-4 text-neutral-400 transition-transform ${isLangOpen ? "rotate-180" : ""}`} />
+            </button>
+
+            {isLangOpen && (
+              <>
+                <div className="fixed inset-0 z-10" onClick={() => setIsLangOpen(false)} />
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="absolute top-full left-0 right-0 mt-2 py-2 rounded-xl bg-[#1a1a1f] border border-white/10 shadow-xl z-20"
+                >
+                  {LANGUAGES.map((lang) => (
+                    <button
+                      key={lang.value}
+                      type="button"
+                      onClick={() => {
+                        setLanguage(lang.value);
+                        setIsLangOpen(false);
+                      }}
+                      className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors ${
+                        language === lang.value ? "bg-green-500/10" : ""
+                      }`}
+                    >
+                      <span className="text-xl">{lang.flag}</span>
+                      <span className="text-white">{lang.label}</span>
+                    </button>
+                  ))}
+                </motion.div>
+              </>
+            )}
+          </div>
+
+          {/* Category Dropdown */}
+          <div className="relative">
+            <label className="block text-sm font-medium text-neutral-300 mb-2">
+              Category <span className="text-red-400">*</span>
+            </label>
+            <button
+              type="button"
+              onClick={() => setIsCatOpen(!isCatOpen)}
+              className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                {selectedCategory ? (
+                  <>
+                    <span className="text-xl">{selectedCategory.icon}</span>
+                    <span>{selectedCategory.label}</span>
+                  </>
+                ) : (
+                  <span className="text-neutral-500">Select a category</span>
+                )}
+              </div>
+              <ChevronDown className={`w-4 h-4 text-neutral-400 transition-transform ${isCatOpen ? "rotate-180" : ""}`} />
+            </button>
+
+            {isCatOpen && (
+              <>
+                <div className="fixed inset-0 z-10" onClick={() => setIsCatOpen(false)} />
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="absolute top-full left-0 right-0 mt-2 py-2 rounded-xl bg-[#1a1a1f] border border-white/10 shadow-xl z-20 max-h-64 overflow-y-auto"
+                >
+                  {CATEGORIES.map((cat) => (
+                    <button
+                      key={cat.value}
+                      type="button"
+                      onClick={() => {
+                        setCategory(cat.value);
+                        setIsCatOpen(false);
+                      }}
+                      className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors ${
+                        category === cat.value ? "bg-green-500/10" : ""
+                      }`}
+                    >
+                      <span className="text-xl">{cat.icon}</span>
+                      <span className="text-white">{cat.label}</span>
+                    </button>
+                  ))}
+                </motion.div>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Business Title */}
+        <div>
+          <label className="block text-sm font-medium text-neutral-300 mb-2">
+            <Building2 className="w-4 h-4 inline mr-2" />
+            Business Title <span className="text-red-400">*</span>
+          </label>
+          <input
+            type="text"
+            value={businessTitle}
+            onChange={(e) => setBusinessTitle(e.target.value)}
+            placeholder="Enter your business or article title"
+            className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-neutral-500 focus:outline-none focus:border-green-500/50 transition-colors"
+          />
+        </div>
+
+        {/* Business Content */}
+        <div>
+          <label className="block text-sm font-medium text-neutral-300 mb-2">
+            <FileText className="w-4 h-4 inline mr-2" />
+            Business Content <span className="text-red-400">*</span>
+          </label>
+          <textarea
+            value={businessContent}
+            onChange={(e) => setBusinessContent(e.target.value)}
+            placeholder="Describe your business, products, services, or write your article content..."
+            rows={6}
+            className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-neutral-500 focus:outline-none focus:border-green-500/50 transition-colors resize-none"
+          />
+          <p className="text-xs text-neutral-500 mt-2">
+            {businessContent.length} characters
+          </p>
+        </div>
+
+        {/* Cover Image */}
+        <div>
+          <label className="block text-sm font-medium text-neutral-300 mb-2">
+            <ImageIcon className="w-4 h-4 inline mr-2" />
+            Cover Image
+          </label>
+
+          {coverPreview ? (
+            <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-white/5 border border-white/10">
+              <img
+                src={coverPreview}
+                alt="Cover preview"
+                className="w-full h-full object-cover"
+              />
+              <button
+                type="button"
+                onClick={removeCoverImage}
+                className="absolute top-2 right-2 p-2 rounded-lg bg-black/50 text-white hover:bg-black/70 transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => coverInputRef.current?.click()}
+              className="w-full aspect-video rounded-xl border-2 border-dashed border-white/10 hover:border-green-500/30 bg-white/5 hover:bg-white/10 transition-all flex flex-col items-center justify-center gap-3"
+            >
+              <Upload className="w-8 h-8 text-neutral-400" />
+              <div className="text-center">
+                <p className="text-neutral-300 font-medium">Click to upload cover image</p>
+                <p className="text-xs text-neutral-500">PNG, JPG, WEBP (Max 10MB)</p>
+              </div>
+            </button>
+          )}
+          <input
+            ref={coverInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleCoverChange}
+            className="hidden"
+          />
+        </div>
+
+        {/* Content Images */}
+        <div>
+          <label className="block text-sm font-medium text-neutral-300 mb-2">
+            <ImageIcon className="w-4 h-4 inline mr-2" />
+            Content Images (Optional)
+          </label>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {contentPreviews.map((preview, index) => (
+              <div key={index} className="relative aspect-square rounded-xl overflow-hidden bg-white/5 border border-white/10">
+                <img
+                  src={preview}
+                  alt={`Content ${index + 1}`}
+                  className="w-full h-full object-cover"
+                />
+                <button
+                  type="button"
+                  onClick={() => removeContentImage(index)}
+                  className="absolute top-1 right-1 p-1.5 rounded-lg bg-black/50 text-white hover:bg-black/70 transition-colors"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            ))}
+
+            <button
+              type="button"
+              onClick={() => contentInputRef.current?.click()}
+              className="aspect-square rounded-xl border-2 border-dashed border-white/10 hover:border-green-500/30 bg-white/5 hover:bg-white/10 transition-all flex flex-col items-center justify-center gap-2"
+            >
+              <Upload className="w-5 h-5 text-neutral-400" />
+              <span className="text-xs text-neutral-400">Add more</span>
+            </button>
+          </div>
+          <input
+            ref={contentInputRef}
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleContentImagesChange}
+            className="hidden"
+          />
+        </div>
+
+        {/* Submit Button */}
+        <motion.button
+          type="submit"
+          disabled={isSubmitting}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="w-full py-4 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold text-lg flex items-center justify-center gap-2 hover:from-green-600 hover:to-emerald-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isSubmitting ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              Submitting...
+            </>
+          ) : (
+            <>
+              <Globe className="w-5 h-5" />
+              Submit to Websites
+            </>
+          )}
+        </motion.button>
+
+        <p className="text-center text-xs text-neutral-500">
+          Your content will be submitted to multiple websites for maximum exposure
+        </p>
+      </form>
+    </div>
+  );
+}

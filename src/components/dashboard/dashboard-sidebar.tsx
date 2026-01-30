@@ -21,18 +21,29 @@ import {
   Mic2,
   Coins,
   PenTool,
+  Globe,
+  MapPin,
 } from "lucide-react";
 import { useState } from "react";
 
-const navItems = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+// SEO & GEO category
+const seoGeoItems = [
   { name: "SEO Writer", href: "/seo-writer", icon: PenTool },
+  { name: "GEO Content", href: "/dashboard/geo-content", icon: MapPin },
+];
+
+// Image & Video category
+const mediaItems = [
   { name: "Prompt Generator", href: "/dashboard/create", icon: Wand2 },
   { name: "Image Generator", href: "/dashboard/image-generator", icon: ImageIcon },
   { name: "Video Generator", href: "/dashboard/video-generator", icon: Video },
   { name: "Lip Sync Video", href: "/dashboard/lip-sync", icon: Mic2 },
   { name: "My Images", href: "/dashboard/images", icon: Images },
   { name: "My Videos", href: "/dashboard/videos", icon: FileVideo },
+];
+
+// Other items
+const otherItems = [
   { name: "History", href: "/dashboard/history", icon: History },
   { name: "Billing", href: "/dashboard/billing", icon: Coins },
 ];
@@ -41,6 +52,29 @@ export function DashboardSidebar() {
   const pathname = usePathname();
   const { data: session } = useSession();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+
+  const isActive = (href: string) => {
+    return pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
+  };
+
+  const NavItem = ({ item, onClick }: { item: { name: string; href: string; icon: any }; onClick?: () => void }) => {
+    const active = isActive(item.href);
+    return (
+      <Link href={item.href} onClick={onClick}>
+        <motion.div
+          whileHover={{ x: 4 }}
+          className={`flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all ${
+            active
+              ? "bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-white border border-purple-500/30"
+              : "text-neutral-400 hover:text-white hover:bg-white/5"
+          }`}
+        >
+          <item.icon className="w-4 h-4" />
+          <span className="font-medium text-sm">{item.name}</span>
+        </motion.div>
+      </Link>
+    );
+  };
 
   const SidebarContent = () => (
     <>
@@ -52,7 +86,7 @@ export function DashboardSidebar() {
           </div>
           <div>
             <span className="text-lg font-bold text-white">AvatarAI</span>
-            <p className="text-xs text-cyan-400">Video Generator</p>
+            <p className="text-xs text-cyan-400">Content Studio</p>
           </div>
         </Link>
       </div>
@@ -87,47 +121,77 @@ export function DashboardSidebar() {
       )}
 
       {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-2">
-        <p className="px-4 py-2 text-xs font-semibold text-neutral-500 uppercase tracking-wider">
-          Main Menu
-        </p>
-        {navItems.map((item) => {
-          const isActive = pathname === item.href ||
-            (item.href !== "/dashboard" && pathname.startsWith(item.href));
-          return (
-            <Link key={item.href} href={item.href} onClick={() => setIsMobileOpen(false)}>
-              <motion.div
-                whileHover={{ x: 4 }}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-                  isActive
-                    ? "bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-white border border-purple-500/30"
-                    : "text-neutral-400 hover:text-white hover:bg-white/5"
-                }`}
-              >
-                <item.icon className="w-5 h-5" />
-                <span className="font-medium">{item.name}</span>
-              </motion.div>
-            </Link>
-          );
-        })}
+      <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+        {/* Dashboard Home */}
+        <Link href="/dashboard" onClick={() => setIsMobileOpen(false)}>
+          <motion.div
+            whileHover={{ x: 4 }}
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all ${
+              pathname === "/dashboard"
+                ? "bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-white border border-purple-500/30"
+                : "text-neutral-400 hover:text-white hover:bg-white/5"
+            }`}
+          >
+            <LayoutDashboard className="w-4 h-4" />
+            <span className="font-medium text-sm">Dashboard</span>
+          </motion.div>
+        </Link>
+
+        {/* SEO & GEO Category */}
+        <div className="pt-4">
+          <p className="px-4 py-2 text-xs font-semibold text-green-400 uppercase tracking-wider flex items-center gap-2">
+            <Globe className="w-3 h-3" />
+            SEO & GEO
+          </p>
+          <div className="space-y-1">
+            {seoGeoItems.map((item) => (
+              <NavItem key={item.href} item={item} onClick={() => setIsMobileOpen(false)} />
+            ))}
+          </div>
+        </div>
+
+        {/* Image & Video Category */}
+        <div className="pt-4">
+          <p className="px-4 py-2 text-xs font-semibold text-purple-400 uppercase tracking-wider flex items-center gap-2">
+            <Video className="w-3 h-3" />
+            Image & Video
+          </p>
+          <div className="space-y-1">
+            {mediaItems.map((item) => (
+              <NavItem key={item.href} item={item} onClick={() => setIsMobileOpen(false)} />
+            ))}
+          </div>
+        </div>
+
+        {/* Other */}
+        <div className="pt-4">
+          <p className="px-4 py-2 text-xs font-semibold text-neutral-500 uppercase tracking-wider">
+            Other
+          </p>
+          <div className="space-y-1">
+            {otherItems.map((item) => (
+              <NavItem key={item.href} item={item} onClick={() => setIsMobileOpen(false)} />
+            ))}
+          </div>
+        </div>
 
         {/* Admin Link (if admin) */}
         {session?.user?.role === "admin" && (
-          <>
-            <div className="my-4 border-t border-white/5" />
-            <p className="px-4 py-2 text-xs font-semibold text-neutral-500 uppercase tracking-wider">
+          <div className="pt-4">
+            <p className="px-4 py-2 text-xs font-semibold text-red-400 uppercase tracking-wider flex items-center gap-2">
+              <Shield className="w-3 h-3" />
               Administration
             </p>
             <Link href="/admin/dashboard" onClick={() => setIsMobileOpen(false)}>
               <motion.div
                 whileHover={{ x: 4 }}
-                className="flex items-center gap-3 px-4 py-3 rounded-xl text-purple-400 hover:text-purple-300 hover:bg-purple-500/10 transition-all"
+                className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-purple-400 hover:text-purple-300 hover:bg-purple-500/10 transition-all"
               >
-                <Shield className="w-5 h-5" />
-                <span className="font-medium">Admin Panel</span>
+                <Shield className="w-4 h-4" />
+                <span className="font-medium text-sm">Admin Panel</span>
               </motion.div>
             </Link>
-          </>
+          </div>
         )}
       </nav>
 
@@ -136,10 +200,10 @@ export function DashboardSidebar() {
         <Link href="/" onClick={() => setIsMobileOpen(false)}>
           <motion.div
             whileHover={{ x: 4 }}
-            className="flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-400 hover:text-white hover:bg-white/5 transition-all"
+            className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-neutral-400 hover:text-white hover:bg-white/5 transition-all"
           >
-            <Home className="w-5 h-5" />
-            <span className="font-medium">Back to Site</span>
+            <Home className="w-4 h-4" />
+            <span className="font-medium text-sm">Back to Site</span>
           </motion.div>
         </Link>
         <button
@@ -148,10 +212,10 @@ export function DashboardSidebar() {
         >
           <motion.div
             whileHover={{ x: 4 }}
-            className="flex items-center gap-3 px-4 py-3 rounded-xl text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all"
+            className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all"
           >
-            <LogOut className="w-5 h-5" />
-            <span className="font-medium">Sign Out</span>
+            <LogOut className="w-4 h-4" />
+            <span className="font-medium text-sm">Sign Out</span>
           </motion.div>
         </button>
       </div>
