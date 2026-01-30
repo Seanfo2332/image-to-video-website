@@ -32,6 +32,7 @@ model User {
   creditTransactions CreditTransaction[]
   voucherRedemptions VoucherRedemption[]
   topUpOrders        TopUpOrder[]
+  wordPressSites     WordPressSite[]
 }
 
 model Account {
@@ -183,5 +184,123 @@ model TopUpOrder {
   updatedAt        DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// SEO Writer Models
+model WordPressSite {
+  id              String    @id @default(cuid())
+  userId          String
+  name            String
+  url             String
+  username        String
+  appPassword     String    // WordPress Application Password
+  isConnected     Boolean   @default(false)
+  lastTestedAt    DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  brandProfile    BrandProfile?
+  articles        Article[]
+  googleSearchConsole GoogleSearchConsole?
+  pageSpeedCache      PageSpeedCache?
+  autoPublishSettings AutoPublishSettings?
+
+  @@unique([userId, url])
+}
+
+// Google Search Console OAuth tokens
+model GoogleSearchConsole {
+  id           String   @id @default(cuid())
+  siteId       String   @unique
+  accessToken  String   @db.Text
+  refreshToken String   @db.Text
+  expiresAt    DateTime
+  propertyUrl  String   // GSC property URL
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  site         WordPressSite @relation(fields: [siteId], references: [id], onDelete: Cascade)
+}
+
+// Cache PageSpeed scores
+model PageSpeedCache {
+  id           String   @id @default(cuid())
+  siteId       String   @unique
+  score        Int
+  loadTime     Float
+  contentTime  Float
+  pageJump     Boolean  @default(false)
+  checkedAt    DateTime @default(now())
+  site         WordPressSite @relation(fields: [siteId], references: [id], onDelete: Cascade)
+}
+
+// Auto-publish settings per site
+model AutoPublishSettings {
+  id           String   @id @default(cuid())
+  siteId       String   @unique
+  enabled      Boolean  @default(true)
+  publishTime  String   @default("09:00")
+  timezone     String   @default("Asia/Kuala_Lumpur")
+  daysAhead    Int      @default(7)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  site         WordPressSite @relation(fields: [siteId], references: [id], onDelete: Cascade)
+}
+
+model BrandProfile {
+  id               String   @id @default(cuid())
+  siteId           String   @unique
+  brandName        String
+  brandDescription String   @db.Text
+  tone             String
+  targetAudience   String   @db.Text
+  contentStyle     String   @db.Text
+  brandVoice       String   @db.Text
+  keyThemes        String[] // Array of theme strings
+  language         String   @default("English")
+  imageStyle       String   @default("photorealistic")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  site             WordPressSite @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  keywords         Keyword[]
+}
+
+model Keyword {
+  id             String   @id @default(cuid())
+  profileId      String
+  keyword        String
+  searchVolume   Int?
+  difficulty     Int?
+  trafficBoost   Int?     // Estimated monthly traffic boost
+  status         String   @default("pending") // pending, scheduled, published, skipped
+  createdAt      DateTime @default(now())
+
+  profile        BrandProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  articles       Article[]
+
+  @@unique([profileId, keyword])
+}
+
+model Article {
+  id              String    @id @default(cuid())
+  siteId          String
+  keywordId       String?
+  title           String
+  slug            String
+  content         String    @db.Text
+  metaDescription String?
+  featuredImage   String?   // URL to generated/uploaded image
+  wordCount       Int       @default(0)
+  articleLength   String    @default("medium") // short, medium, long, guide
+  status          String    @default("draft") // draft, scheduled, publishing, published, failed
+  wpPostId        String?   // WordPress post ID after publishing
+  scheduledFor    DateTime?
+  publishedAt     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  site            WordPressSite @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  keyword         Keyword?      @relation(fields: [keywordId], references: [id], onDelete: SetNull)
 }
 

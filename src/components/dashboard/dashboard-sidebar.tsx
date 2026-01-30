@@ -20,11 +20,13 @@ import {
   Images,
   Mic2,
   Coins,
+  PenTool,
 } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { name: "SEO Writer", href: "/seo-writer", icon: PenTool },
   { name: "Prompt Generator", href: "/dashboard/create", icon: Wand2 },
   { name: "Image Generator", href: "/dashboard/image-generator", icon: ImageIcon },
   { name: "Video Generator", href: "/dashboard/video-generator", icon: Video },
