@@ -75,10 +75,13 @@ export function SEOWriterSidebar() {
       if (site) {
         setSelectedSite(site);
       }
-    } else if (sites.length > 0 && !selectedSite) {
+    } else if (sites.length > 0 && !siteIdParam) {
+      // Auto-select first site and update URL
       setSelectedSite(sites[0]);
+      const newUrl = `${pathname}?siteId=${sites[0].id}`;
+      window.history.replaceState({}, "", newUrl);
     }
-  }, [sites, siteIdParam]);
+  }, [sites, siteIdParam, pathname]);
 
   const fetchSites = async () => {
     try {
@@ -112,11 +115,13 @@ export function SEOWriterSidebar() {
   const handleSiteChange = (site: Site) => {
     setSelectedSite(site);
     setIsDropdownOpen(false);
-    const newUrl = `${pathname}?siteId=${site.id}`;
-    window.history.replaceState({}, "", newUrl);
+    // Use router.push to properly update the URL and trigger re-renders
+    const basePath = pathname.split("?")[0];
+    window.location.href = `${basePath}?siteId=${site.id}`;
   };
 
-  const siteId = selectedSite?.id;
+  // Use URL param as primary source, fallback to selectedSite
+  const siteId = siteIdParam || selectedSite?.id;
 
   const navItems = [
     {
