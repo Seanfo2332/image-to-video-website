@@ -107,12 +107,13 @@ export default function CalendarPage() {
         grouped[dateKey].articles.push(article);
       });
 
-      // Assign pending keywords to empty future days (next 14 days)
+      // Assign pending keywords to empty days (today + next 14 days)
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       let keywordIndex = 0;
 
-      for (let i = 1; i <= 14 && keywordIndex < pending.length; i++) {
+      // Start from i = 0 (today) instead of i = 1 (tomorrow)
+      for (let i = 0; i <= 14 && keywordIndex < pending.length; i++) {
         const futureDate = new Date(today);
         futureDate.setDate(futureDate.getDate() + i);
         const dateKey = futureDate.toISOString().split("T")[0];

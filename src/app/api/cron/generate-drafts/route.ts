@@ -86,9 +86,9 @@ export async function POST(request: NextRequest) {
         )
       );
 
-      // Find empty days that need articles
+      // Find empty days that need articles (including today)
       const emptyDays: Date[] = [];
-      for (let i = 1; i <= daysAhead; i++) {
+      for (let i = 0; i <= daysAhead; i++) {
         const date = new Date();
         date.setDate(date.getDate() + i);
         const dateStr = date.toISOString().split("T")[0];
