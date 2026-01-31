@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "../../../../../auth";
+import { prisma } from "@/lib/prisma";
 
 // n8n webhook URL for GEO content submission
-const N8N_GEO_WEBHOOK = process.env.N8N_GEO_CONTENT_WEBHOOK || "";
+const N8N_GEO_WEBHOOK = process.env.N8N_GEO_CONTENT_WEBHOOK || "https://n8nb30.app.n8n.cloud/webhook/news";
 
 export async function POST(request: NextRequest) {
   try {
@@ -51,12 +52,26 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Prepare payload for n8n
+    // Create submission record in database
+    const submission = await prisma.geoSubmission.create({
+      data: {
+        userId: session.user.id,
+        language,
+        category,
+        businessTitle,
+        businessContent,
+        coverImageUrl: coverImageBase64 ? "pending" : null,
+        status: "processing",
+      },
+    });
+
+    // Prepare payload for n8n (matching your form trigger fields)
     const payload = {
+      submissionId: submission.id,
+      Category: category,
+      "企业标题": businessTitle,
+      "企业内容": businessContent,
       language,
-      category,
-      businessTitle,
-      businessContent,
       coverImage: coverImageBase64,
       contentImages: contentImagesBase64,
       userId: session.user.id,
@@ -65,7 +80,7 @@ export async function POST(request: NextRequest) {
     };
 
     // Send to n8n webhook
-    if (N8N_GEO_WEBHOOK) {
+    try {
       const n8nResponse = await fetch(N8N_GEO_WEBHOOK, {
         method: "POST",
         headers: {
@@ -76,34 +91,38 @@ export async function POST(request: NextRequest) {
 
       if (!n8nResponse.ok) {
         console.error("n8n webhook failed:", await n8nResponse.text());
+        // Update submission status to failed
+        await prisma.geoSubmission.update({
+          where: { id: submission.id },
+          data: {
+            status: "failed",
+            error: "Failed to send to workflow"
+          },
+        });
         return NextResponse.json(
           { error: "Failed to submit to workflow" },
           { status: 500 }
         );
       }
 
-      const result = await n8nResponse.json().catch(() => ({}));
-
       return NextResponse.json({
         success: true,
         message: "Content submitted successfully",
-        result,
+        submissionId: submission.id,
       });
-    } else {
-      // If no webhook configured, just return success (for testing)
-      console.log("GEO Content submission (no webhook configured):", {
-        language,
-        category,
-        businessTitle,
-        contentLength: businessContent.length,
-        hasCoverImage: !!coverImageBase64,
-        contentImagesCount: contentImagesBase64.length,
+    } catch (webhookError) {
+      console.error("Webhook error:", webhookError);
+      await prisma.geoSubmission.update({
+        where: { id: submission.id },
+        data: {
+          status: "failed",
+          error: "Webhook connection failed"
+        },
       });
-
-      return NextResponse.json({
-        success: true,
-        message: "Content submitted successfully (webhook not configured)",
-      });
+      return NextResponse.json(
+        { error: "Failed to connect to workflow" },
+        { status: 500 }
+      );
     }
   } catch (error) {
     console.error("Error submitting GEO content:", error);

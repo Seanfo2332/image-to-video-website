@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import {
   MapPin,
   Upload,
@@ -14,6 +15,8 @@ import {
   Globe,
   Building2,
   ChevronDown,
+  History,
+  ArrowRight,
 } from "lucide-react";
 
 const CATEGORIES = [
@@ -139,14 +142,24 @@ export default function GeoContentPage() {
     <div className="max-w-3xl mx-auto pb-20">
       {/* Header */}
       <div className="mb-8">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
-            <MapPin className="w-6 h-6 text-white" />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
+              <MapPin className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-white">GEO Content</h1>
+              <p className="text-neutral-400">Submit your business to multiple websites</p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-3xl font-bold text-white">GEO Content</h1>
-            <p className="text-neutral-400">Submit your business to multiple websites</p>
-          </div>
+          <Link
+            href="/dashboard/geo-content/submissions"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-neutral-300 hover:text-white hover:bg-white/10 transition-colors"
+          >
+            <History className="w-4 h-4" />
+            <span className="hidden sm:inline">My Submissions</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
       </div>
 
@@ -157,10 +170,19 @@ export default function GeoContentPage() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="mb-6 p-4 rounded-xl bg-green-500/10 border border-green-500/20 flex items-center gap-3"
+            className="mb-6 p-4 rounded-xl bg-green-500/10 border border-green-500/20"
           >
-            <CheckCircle className="w-5 h-5 text-green-400" />
-            <span className="text-green-400">Content submitted successfully!</span>
+            <div className="flex items-center gap-3 mb-2">
+              <CheckCircle className="w-5 h-5 text-green-400" />
+              <span className="text-green-400 font-medium">Content submitted successfully!</span>
+            </div>
+            <p className="text-sm text-green-400/70 ml-8">
+              Your content is being processed.
+              <Link href="/dashboard/geo-content/submissions" className="underline hover:text-green-300 ml-1">
+                View your submissions
+              </Link>
+              {" "}to track progress and see published links.
+            </p>
           </motion.div>
         )}
       </AnimatePresence>
