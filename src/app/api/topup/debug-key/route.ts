@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
+import forge from "node-forge";
 
 export async function GET() {
   try {
@@ -13,8 +14,7 @@ export async function GET() {
     }
 
     const rawLength = privateKeyPem.length;
-    const rawStart = privateKeyPem.substring(0, 60);
-    const rawEnd = privateKeyPem.substring(privateKeyPem.length - 60);
+    const rawStart = privateKeyPem.substring(0, 80);
 
     // Handle escaped newlines
     privateKeyPem = privateKeyPem
@@ -37,47 +37,40 @@ export async function GET() {
       .replace(/[\s\n\r]/g, "");
 
     const base64Length = keyContent.length;
-    const base64Start = keyContent.substring(0, 40);
-
-    // Try to parse the key
-    let parseResult = "not_attempted";
-    let keyType = "unknown";
+    const base64Start = keyContent.substring(0, 50);
+    const base64End = keyContent.substring(keyContent.length - 50);
 
     // Rebuild PEM
-    const header = hasPKCS8Header
-      ? "-----BEGIN PRIVATE KEY-----"
-      : "-----BEGIN RSA PRIVATE KEY-----";
-    const footer = hasPKCS8Header
-      ? "-----END PRIVATE KEY-----"
-      : "-----END RSA PRIVATE KEY-----";
     const lines = keyContent.match(/.{1,64}/g) || [];
-    const rebuiltPem = `${header}\n${lines.join("\n")}\n${footer}`;
+    const rebuiltPem = `-----BEGIN RSA PRIVATE KEY-----\n${lines.join("\n")}\n-----END RSA PRIVATE KEY-----`;
 
+    // Test signing with different methods
+    let forgeResult = "not_tested";
+    let cryptoResult = "not_tested";
+    let keyType = "unknown";
+
+    // Test with node-forge
     try {
-      const privateKey = crypto.createPrivateKey({
-        key: rebuiltPem,
-        format: "pem",
-      });
-      parseResult = "success";
-      keyType = privateKey.asymmetricKeyType || "unknown";
+      const privateKey = forge.pki.privateKeyFromPem(rebuiltPem);
+      const md = forge.md.sha256.create();
+      md.update("test data", "utf8");
+      const signature = privateKey.sign(md);
+      const b64Sig = forge.util.encode64(signature);
+      forgeResult = `success (sig length: ${b64Sig.length})`;
+      keyType = `RSA ${privateKey.n.bitLength()} bit`;
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : String(err);
-      parseResult = `failed: ${errorMsg}`;
+      forgeResult = `failed: ${err instanceof Error ? err.message : String(err)}`;
+    }
 
-      // Try PKCS#8 if PKCS#1 failed
-      if (!hasPKCS8Header) {
-        try {
-          const pkcs8Pem = `-----BEGIN PRIVATE KEY-----\n${lines.join("\n")}\n-----END PRIVATE KEY-----`;
-          const privateKey = crypto.createPrivateKey({
-            key: pkcs8Pem,
-            format: "pem",
-          });
-          parseResult = "success_as_pkcs8";
-          keyType = privateKey.asymmetricKeyType || "unknown";
-        } catch (err2) {
-          parseResult = `both_failed: PKCS#1: ${errorMsg}, PKCS#8: ${err2 instanceof Error ? err2.message : String(err2)}`;
-        }
-      }
+    // Test with native crypto
+    try {
+      const sign = crypto.createSign("RSA-SHA256");
+      sign.update("test data");
+      sign.end();
+      const signature = sign.sign(rebuiltPem, "base64");
+      cryptoResult = `success (sig length: ${signature.length})`;
+    } catch (err) {
+      cryptoResult = `failed: ${err instanceof Error ? err.message : String(err)}`;
     }
 
     return NextResponse.json({
@@ -85,7 +78,6 @@ export async function GET() {
       raw: {
         length: rawLength,
         start: rawStart,
-        end: rawEnd,
       },
       processed: {
         length: processedLength,
@@ -99,12 +91,16 @@ export async function GET() {
       base64: {
         length: base64Length,
         start: base64Start,
-        expectedLengthFor2048bit: 1624, // Approximately
+        end: base64End,
+        expectedLengthFor2048bit: "~1624",
       },
-      parseResult,
-      keyType,
       rebuiltPemLength: rebuiltPem.length,
       rebuiltLineCount: lines.length,
+      signingTests: {
+        forge: forgeResult,
+        crypto: cryptoResult,
+      },
+      keyType,
     });
   } catch (error) {
     return NextResponse.json({

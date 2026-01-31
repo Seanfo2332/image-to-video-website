@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import forge from "node-forge";
 
 // Revenue Monster API - Direct implementation with signature
 let accessToken: string | null = null;
@@ -42,40 +43,59 @@ function preparePrivateKey(): string {
   return preparedPrivateKeyPem;
 }
 
-// Generate signature using the raw sign function (more compatible)
-function signData(data: string): string {
+// Generate signature using node-forge (more compatible with various key formats)
+function signDataWithForge(data: string): string {
   const privateKeyPem = preparePrivateKey();
 
-  // Use the sign function directly with the PEM string
-  // This is more compatible across Node.js versions
+  try {
+    // Use node-forge which is more forgiving with key formats
+    const privateKey = forge.pki.privateKeyFromPem(privateKeyPem);
+    const md = forge.md.sha256.create();
+    md.update(data, "utf8");
+
+    // Sign with RSASSA-PKCS1-v1_5
+    const signature = privateKey.sign(md);
+
+    // Convert to base64
+    return forge.util.encode64(signature);
+  } catch (err) {
+    console.error("Forge signing error:", err);
+    throw new Error(`Failed to sign with forge: ${err instanceof Error ? err.message : String(err)}`);
+  }
+}
+
+// Generate signature using native crypto (fallback)
+function signDataWithCrypto(data: string): string {
+  const privateKeyPem = preparePrivateKey();
+
   const sign = crypto.createSign("RSA-SHA256");
   sign.update(data);
   sign.end();
 
   try {
-    // Try signing directly with the PEM string (Node.js handles parsing internally)
     const signature = sign.sign(privateKeyPem, "base64");
     return signature;
   } catch (err) {
-    console.error("Sign error with PKCS#1:", err);
+    console.error("Native crypto sign error:", err);
+    throw err;
+  }
+}
 
-    // Try with PKCS#8 format
-    const keyContent = privateKeyPem
-      .replace(/-----BEGIN[\w\s]+-----/g, "")
-      .replace(/-----END[\w\s]+-----/g, "")
-      .replace(/[\s\n\r]/g, "");
-    const lines = keyContent.match(/.{1,64}/g) || [];
-    const pkcs8Pem = `-----BEGIN PRIVATE KEY-----\n${lines.join("\n")}\n-----END PRIVATE KEY-----`;
+// Main signing function - tries forge first, then native crypto
+function signData(data: string): string {
+  try {
+    // Try node-forge first (more compatible)
+    return signDataWithForge(data);
+  } catch (forgeErr) {
+    console.log("Forge failed, trying native crypto...");
 
     try {
-      const sign2 = crypto.createSign("RSA-SHA256");
-      sign2.update(data);
-      sign2.end();
-      const signature = sign2.sign(pkcs8Pem, "base64");
-      return signature;
-    } catch (err2) {
-      console.error("Sign error with PKCS#8:", err2);
-      throw new Error(`Failed to sign data: ${err instanceof Error ? err.message : String(err)}`);
+      return signDataWithCrypto(data);
+    } catch (cryptoErr) {
+      console.error("Both signing methods failed");
+      console.error("Forge error:", forgeErr);
+      console.error("Crypto error:", cryptoErr);
+      throw new Error(`Failed to sign data: ${forgeErr instanceof Error ? forgeErr.message : String(forgeErr)}`);
     }
   }
 }
