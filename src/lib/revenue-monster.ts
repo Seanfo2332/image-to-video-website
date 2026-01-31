@@ -196,7 +196,8 @@ async function getAccessToken(): Promise<string> {
     throw new Error("Revenue Monster credentials not configured");
   }
 
-  const isProduction = process.env.NODE_ENV === "production";
+  // Use RM_ENVIRONMENT to control sandbox vs production (default to sandbox for safety)
+  const isProduction = process.env.RM_ENVIRONMENT === "production";
   const authUrl = isProduction
     ? "https://oauth.revenuemonster.my/v1/token"
     : "https://sb-oauth.revenuemonster.my/v1/token";
@@ -258,7 +259,8 @@ export async function createCheckout(
   try {
     const token = await getAccessToken();
     const storeId = process.env.RM_STORE_ID;
-    const isProduction = process.env.NODE_ENV === "production";
+    // Use RM_ENVIRONMENT to control sandbox vs production (default to sandbox for safety)
+    const isProduction = process.env.RM_ENVIRONMENT === "production";
 
     if (!storeId) {
       throw new Error("RM_STORE_ID not configured");
@@ -350,7 +352,8 @@ export async function verifyCheckout(
 ): Promise<VerifyPaymentResult> {
   try {
     const token = await getAccessToken();
-    const isProduction = process.env.NODE_ENV === "production";
+    // Use RM_ENVIRONMENT to control sandbox vs production
+    const isProduction = process.env.RM_ENVIRONMENT === "production";
     const baseUrl = isProduction
       ? "https://open.revenuemonster.my"
       : "https://sb-open.revenuemonster.my";
