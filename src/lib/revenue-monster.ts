@@ -11,20 +11,43 @@ function getPrivateKey(): crypto.KeyObject {
     throw new Error("RM_PRIVATE_KEY not configured");
   }
 
-  // Handle escaped newlines from Vercel
+  console.log("Raw key length:", privateKeyPem.length);
+  console.log("Raw key starts with:", privateKeyPem.substring(0, 50));
+
+  // Handle escaped newlines from Vercel (both \\n and literal \n)
   privateKeyPem = privateKeyPem
     .replace(/\\n/g, "\n")
     .replace(/\\r/g, "")
     .trim();
 
-  const header = "-----BEGIN RSA PRIVATE KEY-----";
-  const footer = "-----END RSA PRIVATE KEY-----";
+  // Detect key format - support both PKCS#1 and PKCS#8
+  const isPKCS1 = privateKeyPem.includes("BEGIN RSA PRIVATE KEY");
+  const isPKCS8 = privateKeyPem.includes("BEGIN PRIVATE KEY");
 
-  // Extract just the base64 content
+  let header: string;
+  let footer: string;
+
+  if (isPKCS1) {
+    header = "-----BEGIN RSA PRIVATE KEY-----";
+    footer = "-----END RSA PRIVATE KEY-----";
+  } else if (isPKCS8) {
+    header = "-----BEGIN PRIVATE KEY-----";
+    footer = "-----END PRIVATE KEY-----";
+  } else {
+    // Assume it's raw base64 content without headers - add PKCS#1 headers
+    console.log("No PEM headers found, treating as raw base64");
+    header = "-----BEGIN RSA PRIVATE KEY-----";
+    footer = "-----END RSA PRIVATE KEY-----";
+  }
+
+  // Extract base64 content
   let keyContent = privateKeyPem
-    .replace(header, "")
-    .replace(footer, "")
-    .replace(/[\s\n\r-]/g, ""); // Remove all whitespace, newlines, and dashes
+    .replace(/-----BEGIN[\w\s]+-----/g, "")
+    .replace(/-----END[\w\s]+-----/g, "")
+    .replace(/[\s\n\r]/g, ""); // Only remove whitespace, NOT dashes
+
+  console.log("Base64 content length:", keyContent.length);
+  console.log("Base64 starts with:", keyContent.substring(0, 30));
 
   // Rebuild proper PEM format with 64-char lines
   const lines = keyContent.match(/.{1,64}/g) || [];
@@ -39,11 +62,31 @@ function getPrivateKey(): crypto.KeyObject {
       key: privateKeyPem,
       format: "pem",
     });
+    console.log("Private key parsed successfully");
     return privateKey;
   } catch (err) {
-    console.error("Failed to parse private key:", err);
-    console.error("Key preview:", privateKeyPem.substring(0, 100));
-    throw new Error("Invalid private key format");
+    const errorMessage = err instanceof Error ? err.message : String(err);
+    console.error("Failed to parse private key:", errorMessage);
+    console.error("Key preview (first 200 chars):", privateKeyPem.substring(0, 200));
+    console.error("Key preview (last 100 chars):", privateKeyPem.substring(privateKeyPem.length - 100));
+
+    // Try as PKCS#8 if PKCS#1 failed
+    if (isPKCS1) {
+      console.log("Trying PKCS#8 format instead...");
+      try {
+        const pkcs8Pem = `-----BEGIN PRIVATE KEY-----\n${lines.join("\n")}\n-----END PRIVATE KEY-----`;
+        const privateKey = crypto.createPrivateKey({
+          key: pkcs8Pem,
+          format: "pem",
+        });
+        console.log("Private key parsed successfully as PKCS#8");
+        return privateKey;
+      } catch (err2) {
+        console.error("PKCS#8 also failed:", err2 instanceof Error ? err2.message : String(err2));
+      }
+    }
+
+    throw new Error(`Invalid private key format: ${errorMessage}`);
   }
 }
 
