@@ -111,6 +111,34 @@ function signData(data: string): string {
   }
 }
 
+// Sort object keys alphabetically (recursive for nested objects)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function sortObject(obj: any): any {
+  if (obj === null || typeof obj !== "object") {
+    return obj;
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.map(sortObject);
+  }
+
+  const sorted: Record<string, unknown> = {};
+  Object.keys(obj)
+    .sort()
+    .forEach((key) => {
+      sorted[key] = sortObject(obj[key]);
+    });
+  return sorted;
+}
+
+// Escape special characters as per Revenue Monster docs
+function escapeSpecialChars(str: string): string {
+  return str
+    .replace(/</g, "\\u003c")
+    .replace(/>/g, "\\u003e")
+    .replace(/&/g, "\\u0026");
+}
+
 // Generate signature for Revenue Monster API
 function generateSignature(
   method: string,
@@ -123,8 +151,14 @@ function generateSignature(
   let dataToSign = "";
 
   if (body && Object.keys(body).length > 0) {
-    // Sort and encode body data
-    const encodedData = Buffer.from(JSON.stringify(body)).toString("base64");
+    // 1. Sort keys alphabetically (including nested objects)
+    const sortedBody = sortObject(body);
+    // 2. Convert to JSON string
+    const jsonString = JSON.stringify(sortedBody);
+    // 3. Escape special characters
+    const escapedJson = escapeSpecialChars(jsonString);
+    // 4. Base64 encode
+    const encodedData = Buffer.from(escapedJson).toString("base64");
     dataToSign = `data=${encodedData}&`;
   }
 
@@ -134,7 +168,7 @@ function generateSignature(
   dataToSign += `signType=sha256&`;
   dataToSign += `timestamp=${timestamp}`;
 
-  console.log("Signing data:", dataToSign.substring(0, 100) + "...");
+  console.log("Signing data:", dataToSign.substring(0, 200) + "...");
 
   // Sign with private key using the new function
   const signature = signData(dataToSign);
