@@ -189,15 +189,15 @@ async function getAccessToken(): Promise<string> {
     return accessToken;
   }
 
-  const clientId = process.env.RM_CLIENT_ID;
-  const clientSecret = process.env.RM_CLIENT_SECRET;
+  const clientId = process.env.RM_CLIENT_ID?.trim();
+  const clientSecret = process.env.RM_CLIENT_SECRET?.trim();
 
   if (!clientId || !clientSecret) {
     throw new Error("Revenue Monster credentials not configured");
   }
 
   // Use RM_ENVIRONMENT to control sandbox vs production (default to sandbox for safety)
-  const isProduction = process.env.RM_ENVIRONMENT === "production";
+  const isProduction = process.env.RM_ENVIRONMENT?.trim() === "production";
   const authUrl = isProduction
     ? "https://oauth.revenuemonster.my/v1/token"
     : "https://sb-oauth.revenuemonster.my/v1/token";
@@ -258,9 +258,9 @@ export async function createCheckout(
 ): Promise<CheckoutResult> {
   try {
     const token = await getAccessToken();
-    const storeId = process.env.RM_STORE_ID;
+    const storeId = process.env.RM_STORE_ID?.trim();
     // Use RM_ENVIRONMENT to control sandbox vs production (default to sandbox for safety)
-    const isProduction = process.env.RM_ENVIRONMENT === "production";
+    const isProduction = process.env.RM_ENVIRONMENT?.trim() === "production";
 
     if (!storeId) {
       throw new Error("RM_STORE_ID not configured");
@@ -353,7 +353,7 @@ export async function verifyCheckout(
   try {
     const token = await getAccessToken();
     // Use RM_ENVIRONMENT to control sandbox vs production
-    const isProduction = process.env.RM_ENVIRONMENT === "production";
+    const isProduction = process.env.RM_ENVIRONMENT?.trim() === "production";
     const baseUrl = isProduction
       ? "https://open.revenuemonster.my"
       : "https://sb-open.revenuemonster.my";
