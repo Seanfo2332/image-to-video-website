@@ -4,17 +4,50 @@ import crypto from "crypto";
 let accessToken: string | null = null;
 let tokenExpiry: number = 0;
 
-// Get private key from environment
-function getPrivateKey(): string {
-  let privateKey = process.env.RM_PRIVATE_KEY;
-  if (!privateKey) {
+// Get private key from environment and create key object
+function getPrivateKey(): crypto.KeyObject {
+  let privateKeyPem = process.env.RM_PRIVATE_KEY;
+  if (!privateKeyPem) {
     throw new Error("RM_PRIVATE_KEY not configured");
   }
 
-  // Handle different newline formats
-  privateKey = privateKey.replace(/\\n/g, "\n").trim();
+  // Handle different newline formats from Vercel
+  privateKeyPem = privateKeyPem
+    .replace(/\\n/g, "\n")
+    .replace(/\\r/g, "")
+    .trim();
 
-  return privateKey;
+  // Ensure proper line breaks in the key content
+  if (!privateKeyPem.includes("\n")) {
+    // Key might be on single line, need to reformat
+    const header = "-----BEGIN RSA PRIVATE KEY-----";
+    const footer = "-----END RSA PRIVATE KEY-----";
+
+    if (privateKeyPem.includes(header)) {
+      let keyContent = privateKeyPem
+        .replace(header, "")
+        .replace(footer, "")
+        .replace(/\s/g, "");
+
+      // Split into 64-char lines
+      const lines = keyContent.match(/.{1,64}/g) || [];
+      privateKeyPem = `${header}\n${lines.join("\n")}\n${footer}`;
+    }
+  }
+
+  console.log("Private key starts with:", privateKeyPem.substring(0, 50));
+
+  // Create key object with proper format specification
+  try {
+    const privateKey = crypto.createPrivateKey({
+      key: privateKeyPem,
+      format: "pem",
+    });
+    return privateKey;
+  } catch (err) {
+    console.error("Failed to parse private key:", err);
+    throw new Error("Invalid private key format");
+  }
 }
 
 // Generate signature for Revenue Monster API
@@ -27,7 +60,7 @@ function generateSignature(
 ): string {
   const privateKey = getPrivateKey();
 
-  // Build signature data
+  // Build signature data according to Revenue Monster docs
   let signData = "";
 
   if (body && Object.keys(body).length > 0) {
@@ -41,6 +74,8 @@ function generateSignature(
   signData += `requestUrl=${requestUrl}&`;
   signData += `signType=sha256&`;
   signData += `timestamp=${timestamp}`;
+
+  console.log("Signing data:", signData.substring(0, 100) + "...");
 
   // Sign with private key
   const sign = crypto.createSign("SHA256");
