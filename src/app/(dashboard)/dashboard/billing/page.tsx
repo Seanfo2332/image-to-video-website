@@ -14,6 +14,7 @@ import {
   CreditCard,
   X,
   Sparkles,
+  ExternalLink,
 } from "lucide-react";
 
 interface Transaction {
@@ -106,24 +107,23 @@ export default function BillingPage() {
     setTopUpMessage(null);
 
     try {
-      const res = await fetch("/api/topup", {
+      // Create checkout session with Revenue Monster
+      const res = await fetch("/api/topup/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ packageId: selectedPackage }),
       });
       const data = await res.json();
 
-      if (res.ok) {
-        setTopUpMessage({ type: "success", text: `Added ${data.creditsAdded} credits! New balance: ${data.newBalance}` });
-        setCredits(data.newBalance);
-        fetchTransactions(1);
-        setTimeout(() => setShowTopUpModal(false), 1500);
+      if (res.ok && data.checkoutUrl) {
+        // Redirect to Revenue Monster payment page
+        window.location.href = data.checkoutUrl;
       } else {
-        setTopUpMessage({ type: "error", text: data.error });
+        setTopUpMessage({ type: "error", text: data.error || "Failed to create checkout" });
+        setIsProcessingTopUp(false);
       }
     } catch {
       setTopUpMessage({ type: "error", text: "Failed to process top-up" });
-    } finally {
       setIsProcessingTopUp(false);
     }
   };
@@ -341,9 +341,9 @@ export default function BillingPage() {
                   )}
                   <p className="text-2xl font-bold text-white">{pkg.credits}</p>
                   <p className="text-sm text-neutral-400">credits</p>
-                  <p className="text-lg font-semibold text-emerald-400 mt-2">${pkg.price}</p>
+                  <p className="text-lg font-semibold text-emerald-400 mt-2">RM{pkg.price}</p>
                   <p className="text-xs text-neutral-500">
-                    ${(pkg.price / pkg.credits).toFixed(3)}/credit
+                    RM{(pkg.price / pkg.credits).toFixed(2)}/credit
                   </p>
                 </button>
               ))}
@@ -357,12 +357,18 @@ export default function BillingPage() {
               {isProcessingTopUp ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  Processing...
+                  Redirecting to Payment...
                 </>
               ) : (
-                "Confirm Purchase"
+                <>
+                  Proceed to Payment
+                  <ExternalLink className="w-4 h-4" />
+                </>
               )}
             </button>
+            <p className="text-xs text-neutral-500 text-center mt-2">
+              You will be redirected to Revenue Monster to complete payment
+            </p>
           </motion.div>
         </div>
       )}

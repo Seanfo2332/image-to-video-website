@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 
 const packages = [
-  { id: "pkg_50", credits: 50, price: 5, currency: "USD", popular: false },
-  { id: "pkg_120", credits: 120, price: 10, currency: "USD", popular: true },
-  { id: "pkg_300", credits: 300, price: 20, currency: "USD", popular: false },
-  { id: "pkg_800", credits: 800, price: 50, currency: "USD", popular: false },
+  { id: "pkg_50", credits: 50, price: 22, currency: "MYR", popular: false },
+  { id: "pkg_120", credits: 120, price: 44, currency: "MYR", popular: true },
+  { id: "pkg_300", credits: 300, price: 88, currency: "MYR", popular: false },
+  { id: "pkg_800", credits: 800, price: 220, currency: "MYR", popular: false },
 ];
 
 export async function GET() {
