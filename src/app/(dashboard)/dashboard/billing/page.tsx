@@ -341,9 +341,9 @@ export default function BillingPage() {
                   )}
                   <p className="text-2xl font-bold text-white">{pkg.credits}</p>
                   <p className="text-sm text-neutral-400">credits</p>
-                  <p className="text-lg font-semibold text-emerald-400 mt-2">RM{pkg.price}</p>
+                  <p className="text-lg font-semibold text-emerald-400 mt-2">RM{pkg.price.toFixed(2)}</p>
                   <p className="text-xs text-neutral-500">
-                    RM{(pkg.price / pkg.credits).toFixed(2)}/credit
+                    RM{(pkg.price / pkg.credits).toFixed(4)}/credit
                   </p>
                 </button>
               ))}

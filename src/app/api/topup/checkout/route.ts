@@ -3,12 +3,12 @@ import { auth } from "../../../../../auth";
 import prisma from "@/lib/prisma";
 import { createCheckout } from "@/lib/revenue-monster";
 
-// Credit packages with MYR pricing
+// Credit packages with MYR pricing (priceMYR in cents)
 const PACKAGES: Record<string, { credits: number; price: number; priceMYR: number }> = {
-  pkg_50: { credits: 50, price: 5, priceMYR: 2200 }, // RM22.00
-  pkg_120: { credits: 120, price: 10, priceMYR: 4400 }, // RM44.00
-  pkg_300: { credits: 300, price: 20, priceMYR: 8800 }, // RM88.00
-  pkg_800: { credits: 800, price: 50, priceMYR: 22000 }, // RM220.00
+  pkg_50: { credits: 50, price: 0.10, priceMYR: 10 }, // RM0.10
+  pkg_120: { credits: 120, price: 0.30, priceMYR: 30 }, // RM0.30
+  pkg_300: { credits: 300, price: 0.50, priceMYR: 50 }, // RM0.50
+  pkg_800: { credits: 800, price: 1.00, priceMYR: 100 }, // RM1.00
 };
 
 export async function POST(request: NextRequest) {

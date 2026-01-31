@@ -10,16 +10,28 @@ function getSDK() {
   if (!rmSDK) {
     const clientId = process.env.RM_CLIENT_ID;
     const clientSecret = process.env.RM_CLIENT_SECRET;
-    const privateKey = process.env.RM_PRIVATE_KEY;
+    let privateKey = process.env.RM_PRIVATE_KEY;
 
     if (!clientId || !clientSecret || !privateKey) {
       throw new Error("Revenue Monster credentials not configured");
     }
 
+    // Handle different newline formats from environment variables
+    // Vercel may store as literal \n or actual newlines
+    privateKey = privateKey
+      .replace(/\\n/g, "\n")  // Handle escaped \n
+      .replace(/\\r/g, "")    // Remove any \r
+      .trim();
+
+    // Ensure proper PEM format
+    if (!privateKey.includes("-----BEGIN")) {
+      privateKey = `-----BEGIN RSA PRIVATE KEY-----\n${privateKey}\n-----END RSA PRIVATE KEY-----`;
+    }
+
     rmSDK = RMSDK({
       clientId,
       clientSecret,
-      privateKey: privateKey.replace(/\\n/g, "\n"), // Handle escaped newlines
+      privateKey,
       isProduction: process.env.NODE_ENV === "production",
       timeout: 30000,
     });
