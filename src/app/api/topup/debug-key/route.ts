@@ -15,6 +15,17 @@ export async function GET() {
 
     const rawLength = privateKeyPem.length;
     const rawStart = privateKeyPem.substring(0, 80);
+    let wasBase64Encoded = false;
+
+    // Check if the key is base64 encoded (doesn't start with -----)
+    if (!privateKeyPem.trim().startsWith("-----")) {
+      try {
+        privateKeyPem = Buffer.from(privateKeyPem, "base64").toString("utf-8");
+        wasBase64Encoded = true;
+      } catch (e) {
+        // Not base64, continue
+      }
+    }
 
     // Handle escaped newlines
     privateKeyPem = privateKeyPem
@@ -75,6 +86,7 @@ export async function GET() {
 
     return NextResponse.json({
       configured: true,
+      wasBase64Encoded,
       raw: {
         length: rawLength,
         start: rawStart,

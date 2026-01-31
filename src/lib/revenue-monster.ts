@@ -21,6 +21,17 @@ function preparePrivateKey(): string {
 
   console.log("Raw key length:", privateKeyPem.length);
 
+  // Check if the key is base64 encoded (doesn't start with -----)
+  if (!privateKeyPem.trim().startsWith("-----")) {
+    // Decode from base64 first
+    try {
+      privateKeyPem = Buffer.from(privateKeyPem, "base64").toString("utf-8");
+      console.log("Decoded from base64, new length:", privateKeyPem.length);
+    } catch (e) {
+      console.log("Not base64 encoded, using as-is");
+    }
+  }
+
   // Handle escaped newlines from Vercel
   privateKeyPem = privateKeyPem
     .replace(/\\n/g, "\n")
