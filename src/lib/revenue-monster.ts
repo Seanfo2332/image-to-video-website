@@ -1,46 +1,8 @@
-import { RMSDK } from "rm-api-sdk";
-
-// Revenue Monster SDK instance
-let rmSDK: ReturnType<typeof RMSDK> | null = null;
+// Revenue Monster API - Direct implementation without SDK
 let accessToken: string | null = null;
 let tokenExpiry: number = 0;
 
-// Initialize the SDK
-function getSDK() {
-  if (!rmSDK) {
-    const clientId = process.env.RM_CLIENT_ID;
-    const clientSecret = process.env.RM_CLIENT_SECRET;
-    let privateKey = process.env.RM_PRIVATE_KEY;
-
-    if (!clientId || !clientSecret || !privateKey) {
-      throw new Error("Revenue Monster credentials not configured");
-    }
-
-    // Handle different newline formats from environment variables
-    // Vercel may store as literal \n or actual newlines
-    privateKey = privateKey
-      .replace(/\\n/g, "\n")  // Handle escaped \n
-      .replace(/\\r/g, "")    // Remove any \r
-      .trim();
-
-    // Ensure proper PEM format
-    if (!privateKey.includes("-----BEGIN")) {
-      privateKey = `-----BEGIN RSA PRIVATE KEY-----\n${privateKey}\n-----END RSA PRIVATE KEY-----`;
-    }
-
-    rmSDK = RMSDK({
-      clientId,
-      clientSecret,
-      privateKey,
-      isProduction: process.env.NODE_ENV === "production",
-      timeout: 30000,
-    });
-  }
-
-  return rmSDK;
-}
-
-// Get or refresh access token
+// Get or refresh access token using direct API call
 async function getAccessToken(): Promise<string> {
   const now = Date.now();
 
@@ -49,14 +11,47 @@ async function getAccessToken(): Promise<string> {
     return accessToken;
   }
 
-  const sdk = getSDK();
-  const result = await sdk.getClientCredentials();
+  const clientId = process.env.RM_CLIENT_ID;
+  const clientSecret = process.env.RM_CLIENT_SECRET;
 
-  if (!result.accessToken) {
-    throw new Error("Failed to get Revenue Monster access token");
+  if (!clientId || !clientSecret) {
+    throw new Error("Revenue Monster credentials not configured");
   }
 
-  accessToken = result.accessToken;
+  const isProduction = process.env.NODE_ENV === "production";
+  const authUrl = isProduction
+    ? "https://oauth.revenuemonster.my/v1/token"
+    : "https://sb-oauth.revenuemonster.my/v1/token";
+
+  // Create Basic auth header
+  const credentials = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
+
+  console.log("Getting access token from:", authUrl);
+
+  const response = await fetch(authUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Basic ${credentials}`,
+    },
+    body: JSON.stringify({
+      grantType: "client_credentials",
+    }),
+  });
+
+  const data = await response.json();
+  console.log("Token response status:", response.status);
+
+  if (!response.ok) {
+    console.error("Token error:", data);
+    throw new Error(data.error?.message || "Failed to get access token");
+  }
+
+  if (!data.accessToken) {
+    throw new Error("No access token in response");
+  }
+
+  accessToken = data.accessToken;
   // Token expires in 2 hours, set expiry
   tokenExpiry = now + 7200000;
 
@@ -83,44 +78,65 @@ export async function createCheckout(
   options: CreateCheckoutOptions
 ): Promise<CheckoutResult> {
   try {
-    const sdk = getSDK();
     const token = await getAccessToken();
     const storeId = process.env.RM_STORE_ID;
+    const isProduction = process.env.NODE_ENV === "production";
 
     if (!storeId) {
       throw new Error("RM_STORE_ID not configured");
     }
 
-    // Create online payment checkout
-    const response = await sdk.Payment.createTransactionUrl(token, {
-      amount: options.amount,
-      currencyType: "MYR",
-      expiry: {
-        type: "PERMANENT",
-      },
-      isPreFillAmount: true,
-      method: [], // Empty array allows all payment methods
+    const baseUrl = isProduction
+      ? "https://open.revenuemonster.my"
+      : "https://sb-open.revenuemonster.my";
+
+    // Create online payment checkout via direct API call
+    const payload = {
       order: {
-        id: options.orderId.substring(0, 24), // Max 24 chars
+        id: options.orderId.substring(0, 24),
         title: options.title,
         detail: options.details,
+        amount: options.amount,
+        currencyType: "MYR",
       },
-      redirectUrl: options.redirectUrl,
+      type: "WEB_PAYMENT",
       storeId: storeId,
-      type: "DYNAMIC",
+      redirectUrl: options.redirectUrl,
+      notifyUrl: options.notifyUrl,
+      layoutVersion: "v3",
+    };
+
+    console.log("Creating checkout with payload:", JSON.stringify(payload, null, 2));
+    console.log("Using base URL:", baseUrl);
+
+    const response = await fetch(`${baseUrl}/v3/payment/online`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
     });
 
-    if (response && response.item) {
+    const data = await response.json();
+    console.log("Revenue Monster response:", JSON.stringify(data, null, 2));
+
+    if (!response.ok) {
+      console.error("Revenue Monster API error:", data);
+      throw new Error(data.error?.message || data.message || `API returned ${response.status}`);
+    }
+
+    if (data && data.item) {
       return {
         success: true,
-        checkoutId: response.item.checkoutId,
-        checkoutUrl: response.item.url,
+        checkoutId: data.item.checkoutId,
+        checkoutUrl: data.item.url,
       };
     }
 
     return {
       success: false,
-      error: "Failed to create checkout",
+      error: "No checkout URL returned",
     };
   } catch (error) {
     console.error("Revenue Monster checkout error:", error);
