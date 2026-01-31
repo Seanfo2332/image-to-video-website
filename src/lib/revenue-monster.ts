@@ -1,6 +1,60 @@
-// Revenue Monster API - Direct implementation without SDK
+import crypto from "crypto";
+
+// Revenue Monster API - Direct implementation with signature
 let accessToken: string | null = null;
 let tokenExpiry: number = 0;
+
+// Get private key from environment
+function getPrivateKey(): string {
+  let privateKey = process.env.RM_PRIVATE_KEY;
+  if (!privateKey) {
+    throw new Error("RM_PRIVATE_KEY not configured");
+  }
+
+  // Handle different newline formats
+  privateKey = privateKey.replace(/\\n/g, "\n").trim();
+
+  return privateKey;
+}
+
+// Generate signature for Revenue Monster API
+function generateSignature(
+  method: string,
+  requestUrl: string,
+  timestamp: string,
+  nonce: string,
+  body: object | null
+): string {
+  const privateKey = getPrivateKey();
+
+  // Build signature data
+  let signData = "";
+
+  if (body && Object.keys(body).length > 0) {
+    // Sort and encode body data
+    const encodedData = Buffer.from(JSON.stringify(body)).toString("base64");
+    signData = `data=${encodedData}&`;
+  }
+
+  signData += `method=${method.toLowerCase()}&`;
+  signData += `nonceStr=${nonce}&`;
+  signData += `requestUrl=${requestUrl}&`;
+  signData += `signType=sha256&`;
+  signData += `timestamp=${timestamp}`;
+
+  // Sign with private key
+  const sign = crypto.createSign("SHA256");
+  sign.update(signData);
+  sign.end();
+
+  const signature = sign.sign(privateKey, "base64");
+  return signature;
+}
+
+// Generate random nonce
+function generateNonce(): string {
+  return crypto.randomBytes(16).toString("hex");
+}
 
 // Get or refresh access token using direct API call
 async function getAccessToken(): Promise<string> {
@@ -90,6 +144,8 @@ export async function createCheckout(
       ? "https://open.revenuemonster.my"
       : "https://sb-open.revenuemonster.my";
 
+    const requestUrl = `${baseUrl}/v3/payment/online`;
+
     // Create online payment checkout via direct API call
     const payload = {
       order: {
@@ -106,14 +162,22 @@ export async function createCheckout(
       layoutVersion: "v3",
     };
 
-    console.log("Creating checkout with payload:", JSON.stringify(payload, null, 2));
-    console.log("Using base URL:", baseUrl);
+    // Generate signature headers
+    const timestamp = Math.floor(Date.now() / 1000).toString();
+    const nonce = generateNonce();
+    const signature = generateSignature("POST", requestUrl, timestamp, nonce, payload);
 
-    const response = await fetch(`${baseUrl}/v3/payment/online`, {
+    console.log("Creating checkout with payload:", JSON.stringify(payload, null, 2));
+    console.log("Request URL:", requestUrl);
+
+    const response = await fetch(requestUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
+        "X-Nonce-Str": nonce,
+        "X-Signature": `sha256 ${signature}`,
+        "X-Timestamp": timestamp,
       },
       body: JSON.stringify(payload),
     });
@@ -165,17 +229,24 @@ export async function verifyCheckout(
       ? "https://open.revenuemonster.my"
       : "https://sb-open.revenuemonster.my";
 
+    const requestUrl = `${baseUrl}/v3/payment/online?checkoutId=${checkoutId}`;
+
+    // Generate signature headers for GET request
+    const timestamp = Math.floor(Date.now() / 1000).toString();
+    const nonce = generateNonce();
+    const signature = generateSignature("GET", requestUrl, timestamp, nonce, null);
+
     // Query checkout status via direct API call
-    const response = await fetch(
-      `${baseUrl}/v3/payment/online?checkoutId=${checkoutId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const response = await fetch(requestUrl, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        "X-Nonce-Str": nonce,
+        "X-Signature": `sha256 ${signature}`,
+        "X-Timestamp": timestamp,
+      },
+    });
 
     if (!response.ok) {
       throw new Error(`API returned ${response.status}`);
