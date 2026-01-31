@@ -282,7 +282,16 @@ export async function createCheckout(
         amount: options.amount,
         currencyType: "MYR",
       },
-      method: [] as string[], // Empty array = all payment methods
+      method: [
+        "FPX_MY",           // FPX Online Banking
+        "TNG_MY",           // Touch 'n Go
+        "BOOST_MY",         // Boost
+        "SHOPEEPAY_MY",     // ShopeePay
+        "WECHATPAY_MY",     // WeChat Pay
+        "WECHATPAY_CN",     // WeChat Pay China
+        "ALIPAY_CN",        // AliPay
+        "CARD",             // Credit/Debit Card
+      ],
       type: "WEB_PAYMENT",
       storeId: storeId,
       redirectUrl: options.redirectUrl,
