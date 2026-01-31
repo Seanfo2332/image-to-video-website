@@ -48,7 +48,7 @@ async function getAccessToken(): Promise<string> {
   // Token expires in 2 hours, set expiry
   tokenExpiry = now + 7200000;
 
-  return accessToken;
+  return accessToken as string;
 }
 
 export interface CreateCheckoutOptions {
