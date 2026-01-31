@@ -131,14 +131,32 @@ export async function verifyCheckout(
   checkoutId: string
 ): Promise<VerifyPaymentResult> {
   try {
-    const sdk = getSDK();
     const token = await getAccessToken();
+    const isProduction = process.env.NODE_ENV === "production";
+    const baseUrl = isProduction
+      ? "https://open.revenuemonster.my"
+      : "https://sb-open.revenuemonster.my";
 
-    // Query checkout status
-    const response = await sdk.Payment.getTransactionUrl(token, checkoutId);
+    // Query checkout status via direct API call
+    const response = await fetch(
+      `${baseUrl}/v3/payment/online?checkoutId=${checkoutId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
-    if (response && response.item) {
-      const item = response.item;
+    if (!response.ok) {
+      throw new Error(`API returned ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (data && data.item) {
+      const item = data.item;
 
       return {
         success: item.status === "SUCCESS",
