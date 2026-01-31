@@ -11,31 +11,27 @@ function getPrivateKey(): crypto.KeyObject {
     throw new Error("RM_PRIVATE_KEY not configured");
   }
 
-  // Handle different newline formats from Vercel
+  // Handle escaped newlines from Vercel
   privateKeyPem = privateKeyPem
     .replace(/\\n/g, "\n")
     .replace(/\\r/g, "")
     .trim();
 
-  // Ensure proper line breaks in the key content
-  if (!privateKeyPem.includes("\n")) {
-    // Key might be on single line, need to reformat
-    const header = "-----BEGIN RSA PRIVATE KEY-----";
-    const footer = "-----END RSA PRIVATE KEY-----";
+  const header = "-----BEGIN RSA PRIVATE KEY-----";
+  const footer = "-----END RSA PRIVATE KEY-----";
 
-    if (privateKeyPem.includes(header)) {
-      let keyContent = privateKeyPem
-        .replace(header, "")
-        .replace(footer, "")
-        .replace(/\s/g, "");
+  // Extract just the base64 content
+  let keyContent = privateKeyPem
+    .replace(header, "")
+    .replace(footer, "")
+    .replace(/[\s\n\r-]/g, ""); // Remove all whitespace, newlines, and dashes
 
-      // Split into 64-char lines
-      const lines = keyContent.match(/.{1,64}/g) || [];
-      privateKeyPem = `${header}\n${lines.join("\n")}\n${footer}`;
-    }
-  }
+  // Rebuild proper PEM format with 64-char lines
+  const lines = keyContent.match(/.{1,64}/g) || [];
+  privateKeyPem = `${header}\n${lines.join("\n")}\n${footer}`;
 
-  console.log("Private key starts with:", privateKeyPem.substring(0, 50));
+  console.log("Reformatted key length:", privateKeyPem.length);
+  console.log("Key lines:", lines.length);
 
   // Create key object with proper format specification
   try {
@@ -46,6 +42,7 @@ function getPrivateKey(): crypto.KeyObject {
     return privateKey;
   } catch (err) {
     console.error("Failed to parse private key:", err);
+    console.error("Key preview:", privateKeyPem.substring(0, 100));
     throw new Error("Invalid private key format");
   }
 }
