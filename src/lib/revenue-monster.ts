@@ -276,9 +276,11 @@ export async function createCheckout(
         id: options.orderId.substring(0, 24),
         title: options.title,
         detail: options.details,
+        additionalData: "",
         amount: options.amount,
         currencyType: "MYR",
       },
+      method: [] as string[], // Empty array = all payment methods
       type: "WEB_PAYMENT",
       storeId: storeId,
       redirectUrl: options.redirectUrl,
