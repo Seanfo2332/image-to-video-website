@@ -4,89 +4,79 @@ import crypto from "crypto";
 let accessToken: string | null = null;
 let tokenExpiry: number = 0;
 
-// Get private key from environment and create key object
-function getPrivateKey(): crypto.KeyObject {
+// Store the prepared PEM string for signing
+let preparedPrivateKeyPem: string | null = null;
+
+// Prepare the private key PEM string
+function preparePrivateKey(): string {
+  if (preparedPrivateKeyPem) {
+    return preparedPrivateKeyPem;
+  }
+
   let privateKeyPem = process.env.RM_PRIVATE_KEY;
   if (!privateKeyPem) {
     throw new Error("RM_PRIVATE_KEY not configured");
   }
 
   console.log("Raw key length:", privateKeyPem.length);
-  console.log("Raw key starts with:", privateKeyPem.substring(0, 50));
 
-  // Handle escaped newlines from Vercel (both \\n and literal \n)
+  // Handle escaped newlines from Vercel
   privateKeyPem = privateKeyPem
     .replace(/\\n/g, "\n")
     .replace(/\\r/g, "")
     .trim();
 
-  // Detect key format - support both PKCS#1 and PKCS#8
-  const isPKCS1 = privateKeyPem.includes("BEGIN RSA PRIVATE KEY");
-  const isPKCS8 = privateKeyPem.includes("BEGIN PRIVATE KEY");
-
-  let header: string;
-  let footer: string;
-
-  if (isPKCS1) {
-    header = "-----BEGIN RSA PRIVATE KEY-----";
-    footer = "-----END RSA PRIVATE KEY-----";
-  } else if (isPKCS8) {
-    header = "-----BEGIN PRIVATE KEY-----";
-    footer = "-----END PRIVATE KEY-----";
-  } else {
-    // Assume it's raw base64 content without headers - add PKCS#1 headers
-    console.log("No PEM headers found, treating as raw base64");
-    header = "-----BEGIN RSA PRIVATE KEY-----";
-    footer = "-----END RSA PRIVATE KEY-----";
-  }
-
-  // Extract base64 content
+  // Extract base64 content (remove any headers/footers and whitespace)
   let keyContent = privateKeyPem
     .replace(/-----BEGIN[\w\s]+-----/g, "")
     .replace(/-----END[\w\s]+-----/g, "")
-    .replace(/[\s\n\r]/g, ""); // Only remove whitespace, NOT dashes
+    .replace(/[\s\n\r]/g, "");
 
   console.log("Base64 content length:", keyContent.length);
-  console.log("Base64 starts with:", keyContent.substring(0, 30));
 
-  // Rebuild proper PEM format with 64-char lines
+  // Rebuild proper PEM format with 64-char lines using PKCS#1 format
   const lines = keyContent.match(/.{1,64}/g) || [];
-  privateKeyPem = `${header}\n${lines.join("\n")}\n${footer}`;
+  preparedPrivateKeyPem = `-----BEGIN RSA PRIVATE KEY-----\n${lines.join("\n")}\n-----END RSA PRIVATE KEY-----`;
 
-  console.log("Reformatted key length:", privateKeyPem.length);
-  console.log("Key lines:", lines.length);
+  console.log("Prepared key lines:", lines.length);
+  return preparedPrivateKeyPem;
+}
 
-  // Create key object with proper format specification
+// Generate signature using the raw sign function (more compatible)
+function signData(data: string): string {
+  const privateKeyPem = preparePrivateKey();
+
+  // Use the sign function directly with the PEM string
+  // This is more compatible across Node.js versions
+  const sign = crypto.createSign("RSA-SHA256");
+  sign.update(data);
+  sign.end();
+
   try {
-    const privateKey = crypto.createPrivateKey({
-      key: privateKeyPem,
-      format: "pem",
-    });
-    console.log("Private key parsed successfully");
-    return privateKey;
+    // Try signing directly with the PEM string (Node.js handles parsing internally)
+    const signature = sign.sign(privateKeyPem, "base64");
+    return signature;
   } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : String(err);
-    console.error("Failed to parse private key:", errorMessage);
-    console.error("Key preview (first 200 chars):", privateKeyPem.substring(0, 200));
-    console.error("Key preview (last 100 chars):", privateKeyPem.substring(privateKeyPem.length - 100));
+    console.error("Sign error with PKCS#1:", err);
 
-    // Try as PKCS#8 if PKCS#1 failed
-    if (isPKCS1) {
-      console.log("Trying PKCS#8 format instead...");
-      try {
-        const pkcs8Pem = `-----BEGIN PRIVATE KEY-----\n${lines.join("\n")}\n-----END PRIVATE KEY-----`;
-        const privateKey = crypto.createPrivateKey({
-          key: pkcs8Pem,
-          format: "pem",
-        });
-        console.log("Private key parsed successfully as PKCS#8");
-        return privateKey;
-      } catch (err2) {
-        console.error("PKCS#8 also failed:", err2 instanceof Error ? err2.message : String(err2));
-      }
+    // Try with PKCS#8 format
+    const keyContent = privateKeyPem
+      .replace(/-----BEGIN[\w\s]+-----/g, "")
+      .replace(/-----END[\w\s]+-----/g, "")
+      .replace(/[\s\n\r]/g, "");
+    const lines = keyContent.match(/.{1,64}/g) || [];
+    const pkcs8Pem = `-----BEGIN PRIVATE KEY-----\n${lines.join("\n")}\n-----END PRIVATE KEY-----`;
+
+    try {
+      const sign2 = crypto.createSign("RSA-SHA256");
+      sign2.update(data);
+      sign2.end();
+      const signature = sign2.sign(pkcs8Pem, "base64");
+      return signature;
+    } catch (err2) {
+      console.error("Sign error with PKCS#8:", err2);
+      throw new Error(`Failed to sign data: ${err instanceof Error ? err.message : String(err)}`);
     }
-
-    throw new Error(`Invalid private key format: ${errorMessage}`);
   }
 }
 
@@ -98,31 +88,25 @@ function generateSignature(
   nonce: string,
   body: object | null
 ): string {
-  const privateKey = getPrivateKey();
-
   // Build signature data according to Revenue Monster docs
-  let signData = "";
+  let dataToSign = "";
 
   if (body && Object.keys(body).length > 0) {
     // Sort and encode body data
     const encodedData = Buffer.from(JSON.stringify(body)).toString("base64");
-    signData = `data=${encodedData}&`;
+    dataToSign = `data=${encodedData}&`;
   }
 
-  signData += `method=${method.toLowerCase()}&`;
-  signData += `nonceStr=${nonce}&`;
-  signData += `requestUrl=${requestUrl}&`;
-  signData += `signType=sha256&`;
-  signData += `timestamp=${timestamp}`;
+  dataToSign += `method=${method.toLowerCase()}&`;
+  dataToSign += `nonceStr=${nonce}&`;
+  dataToSign += `requestUrl=${requestUrl}&`;
+  dataToSign += `signType=sha256&`;
+  dataToSign += `timestamp=${timestamp}`;
 
-  console.log("Signing data:", signData.substring(0, 100) + "...");
+  console.log("Signing data:", dataToSign.substring(0, 100) + "...");
 
-  // Sign with private key
-  const sign = crypto.createSign("SHA256");
-  sign.update(signData);
-  sign.end();
-
-  const signature = sign.sign(privateKey, "base64");
+  // Sign with private key using the new function
+  const signature = signData(dataToSign);
   return signature;
 }
 
