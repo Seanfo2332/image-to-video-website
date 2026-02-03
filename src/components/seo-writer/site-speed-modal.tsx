@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, RefreshCw, Clock, Zap, MousePointer, ArrowUpDown } from "lucide-react";
+import { X, RefreshCw, Clock, Zap, ArrowUpDown } from "lucide-react";
 
 interface SiteSpeedModalProps {
   isOpen: boolean;
@@ -58,15 +58,15 @@ export function SiteSpeedModal({
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 90) return { ring: "stroke-green-500", text: "text-green-400", bg: "bg-green-500" };
-    if (score >= 50) return { ring: "stroke-yellow-500", text: "text-yellow-400", bg: "bg-yellow-500" };
-    return { ring: "stroke-red-500", text: "text-red-400", bg: "bg-red-500" };
+    if (score >= 90) return { ring: "stroke-[#0ABAB5]", text: "text-[#0ABAB5]", bg: "bg-[#0ABAB5]" };
+    if (score >= 50) return { ring: "stroke-[#D4AF37]", text: "text-[#D4AF37]", bg: "bg-[#D4AF37]" };
+    return { ring: "stroke-red-500", text: "text-red-500", bg: "bg-red-500" };
   };
 
   const getMetricStatus = (value: number, thresholds: { good: number; fair: number }) => {
-    if (value <= thresholds.good) return { color: "text-green-400", label: "Good" };
-    if (value <= thresholds.fair) return { color: "text-yellow-400", label: "Needs work" };
-    return { color: "text-red-400", label: "Poor" };
+    if (value <= thresholds.good) return { color: "text-[#0ABAB5]", label: "Good" };
+    if (value <= thresholds.fair) return { color: "text-[#D4AF37]", label: "Needs work" };
+    return { color: "text-red-500", label: "Poor" };
   };
 
   const formatTime = (dateString: string) => {
@@ -91,7 +91,7 @@ export function SiteSpeedModal({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50"
           />
 
           {/* Modal */}
@@ -99,19 +99,19 @@ export function SiteSpeedModal({
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-[#1a1a1f] border border-white/10 rounded-2xl shadow-2xl z-50 overflow-hidden"
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white border border-[#E2E8F0] rounded-2xl shadow-premium-lg z-50 overflow-hidden"
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-white/10">
+            <div className="flex items-center justify-between p-4 border-b border-[#E2E8F0]">
               <div>
-                <h2 className="text-lg font-semibold text-white">Site Speed</h2>
-                <p className="text-sm text-neutral-400 truncate">{siteName}</p>
+                <h2 className="text-lg font-semibold text-[#1A1A2E]">Site Speed</h2>
+                <p className="text-sm text-[#334155] truncate">{siteName}</p>
               </div>
               <button
                 onClick={onClose}
-                className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+                className="p-2 rounded-lg hover:bg-[#F1F5F9] transition-colors"
               >
-                <X className="w-5 h-5 text-neutral-400" />
+                <X className="w-5 h-5 text-[#334155]" />
               </button>
             </div>
 
@@ -119,15 +119,15 @@ export function SiteSpeedModal({
             <div className="p-6">
               {isLoading && !speedData ? (
                 <div className="flex flex-col items-center justify-center py-12">
-                  <RefreshCw className="w-8 h-8 text-green-400 animate-spin mb-4" />
-                  <p className="text-neutral-400">Analyzing site speed...</p>
+                  <RefreshCw className="w-8 h-8 text-[#0ABAB5] animate-spin mb-4" />
+                  <p className="text-[#334155]">Analyzing site speed...</p>
                 </div>
               ) : error ? (
                 <div className="text-center py-12">
-                  <p className="text-red-400 mb-4">{error}</p>
+                  <p className="text-red-500 mb-4">{error}</p>
                   <button
                     onClick={() => fetchSpeedData(true)}
-                    className="px-4 py-2 rounded-lg bg-green-500/20 text-green-400 text-sm font-medium hover:bg-green-500/30 transition-colors"
+                    className="px-4 py-2 rounded-lg bg-[#D1F5F3] text-[#0ABAB5] text-sm font-medium hover:bg-[#0ABAB5]/20 transition-colors"
                   >
                     Try Again
                   </button>
@@ -146,7 +146,7 @@ export function SiteSpeedModal({
                           fill="none"
                           stroke="currentColor"
                           strokeWidth="8"
-                          className="text-white/10"
+                          className="text-[#E2E8F0]"
                         />
                         {/* Progress circle */}
                         <circle
@@ -166,7 +166,7 @@ export function SiteSpeedModal({
                         <span className={`text-4xl font-bold ${scoreColors.text}`}>
                           {speedData.score}
                         </span>
-                        <span className="text-xs text-neutral-400">/ 100</span>
+                        <span className="text-xs text-[#334155]">/ 100</span>
                       </div>
                     </div>
                     <p className={`mt-2 text-sm font-medium ${scoreColors.text}`}>
@@ -181,14 +181,14 @@ export function SiteSpeedModal({
                   {/* Metrics Grid */}
                   <div className="space-y-3">
                     {/* Load Time */}
-                    <div className="flex items-center justify-between p-3 rounded-xl bg-white/5">
+                    <div className="flex items-center justify-between p-3 rounded-xl bg-[#F1F5F9]">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
-                          <Clock className="w-5 h-5 text-blue-400" />
+                        <div className="w-10 h-10 rounded-lg bg-[#1E3A5F]/10 flex items-center justify-center">
+                          <Clock className="w-5 h-5 text-[#1E3A5F]" />
                         </div>
                         <div>
-                          <p className="text-sm text-white font-medium">Load Time</p>
-                          <p className="text-xs text-neutral-500">Time to fully load</p>
+                          <p className="text-sm text-[#1A1A2E] font-medium">Load Time</p>
+                          <p className="text-xs text-[#334155]">Time to fully load</p>
                         </div>
                       </div>
                       <div className="text-right">
@@ -202,14 +202,14 @@ export function SiteSpeedModal({
                     </div>
 
                     {/* Content Appearance */}
-                    <div className="flex items-center justify-between p-3 rounded-xl bg-white/5">
+                    <div className="flex items-center justify-between p-3 rounded-xl bg-[#F1F5F9]">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
-                          <Zap className="w-5 h-5 text-purple-400" />
+                        <div className="w-10 h-10 rounded-lg bg-[#D4AF37]/10 flex items-center justify-center">
+                          <Zap className="w-5 h-5 text-[#D4AF37]" />
                         </div>
                         <div>
-                          <p className="text-sm text-white font-medium">Content Appearance</p>
-                          <p className="text-xs text-neutral-500">First contentful paint</p>
+                          <p className="text-sm text-[#1A1A2E] font-medium">Content Appearance</p>
+                          <p className="text-xs text-[#334155]">First contentful paint</p>
                         </div>
                       </div>
                       <div className="text-right">
@@ -223,21 +223,21 @@ export function SiteSpeedModal({
                     </div>
 
                     {/* Page Jump */}
-                    <div className="flex items-center justify-between p-3 rounded-xl bg-white/5">
+                    <div className="flex items-center justify-between p-3 rounded-xl bg-[#F1F5F9]">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center">
-                          <ArrowUpDown className="w-5 h-5 text-orange-400" />
+                        <div className="w-10 h-10 rounded-lg bg-[#D1F5F3] flex items-center justify-center">
+                          <ArrowUpDown className="w-5 h-5 text-[#0ABAB5]" />
                         </div>
                         <div>
-                          <p className="text-sm text-white font-medium">Layout Shift</p>
-                          <p className="text-xs text-neutral-500">Content movement</p>
+                          <p className="text-sm text-[#1A1A2E] font-medium">Layout Shift</p>
+                          <p className="text-xs text-[#334155]">Content movement</p>
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className={`text-lg font-semibold ${speedData.pageJump ? "text-red-400" : "text-green-400"}`}>
+                        <p className={`text-lg font-semibold ${speedData.pageJump ? "text-red-500" : "text-[#0ABAB5]"}`}>
                           {speedData.pageJump ? "Yes" : "No"}
                         </p>
-                        <p className={`text-xs ${speedData.pageJump ? "text-red-400" : "text-green-400"}`}>
+                        <p className={`text-xs ${speedData.pageJump ? "text-red-500" : "text-[#0ABAB5]"}`}>
                           {speedData.pageJump ? "Detected" : "Stable"}
                         </p>
                       </div>
@@ -245,14 +245,14 @@ export function SiteSpeedModal({
                   </div>
 
                   {/* Last Checked */}
-                  <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
-                    <p className="text-xs text-neutral-500">
+                  <div className="mt-6 pt-4 border-t border-[#E2E8F0] flex items-center justify-between">
+                    <p className="text-xs text-[#334155]">
                       Last checked: {formatTime(speedData.checkedAt)}
                     </p>
                     <button
                       onClick={() => fetchSpeedData(true)}
                       disabled={isLoading}
-                      className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 text-neutral-400 text-sm hover:bg-white/10 hover:text-white transition-colors disabled:opacity-50"
+                      className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#F1F5F9] text-[#334155] text-sm hover:bg-[#E2E8F0] hover:text-[#1A1A2E] transition-colors disabled:opacity-50"
                     >
                       <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
                       Check again
@@ -261,10 +261,10 @@ export function SiteSpeedModal({
                 </>
               ) : (
                 <div className="text-center py-12">
-                  <p className="text-neutral-400 mb-4">No speed data available</p>
+                  <p className="text-[#334155] mb-4">No speed data available</p>
                   <button
                     onClick={() => fetchSpeedData(true)}
-                    className="px-4 py-2 rounded-lg bg-green-500/20 text-green-400 text-sm font-medium hover:bg-green-500/30 transition-colors"
+                    className="px-4 py-2 rounded-lg bg-[#D1F5F3] text-[#0ABAB5] text-sm font-medium hover:bg-[#0ABAB5]/20 transition-colors"
                   >
                     Analyze Site Speed
                   </button>

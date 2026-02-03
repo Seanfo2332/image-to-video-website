@@ -87,7 +87,7 @@ export function NewArticleModal({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={handleClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50"
           />
 
           {/* Modal */}
@@ -95,25 +95,25 @@ export function NewArticleModal({
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-[#1a1a1f] border border-white/10 rounded-2xl shadow-2xl z-50 overflow-hidden"
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-white border border-[#E2E8F0] rounded-2xl shadow-premium-lg z-50 overflow-hidden"
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-white/10">
+            <div className="flex items-center justify-between p-4 border-b border-[#E2E8F0]">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0ABAB5] to-[#089691] flex items-center justify-center shadow-lg shadow-[#0ABAB5]/20">
                   <Sparkles className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-semibold text-white">New Article</h2>
-                  <p className="text-sm text-neutral-400">Generate with AI</p>
+                  <h2 className="text-lg font-semibold text-[#1A1A2E]">New Article</h2>
+                  <p className="text-sm text-[#334155]">Generate with AI</p>
                 </div>
               </div>
               <button
                 onClick={handleClose}
                 disabled={isGenerating}
-                className="p-2 rounded-lg hover:bg-white/10 transition-colors disabled:opacity-50"
+                className="p-2 rounded-lg hover:bg-[#F1F5F9] transition-colors disabled:opacity-50"
               >
-                <X className="w-5 h-5 text-neutral-400" />
+                <X className="w-5 h-5 text-[#334155]" />
               </button>
             </div>
 
@@ -121,8 +121,8 @@ export function NewArticleModal({
             <form onSubmit={handleSubmit} className="p-6 space-y-6">
               {/* Target Keyword */}
               <div>
-                <label className="block text-sm font-medium text-white mb-2">
-                  Target Keyword <span className="text-red-400">*</span>
+                <label className="block text-sm font-medium text-[#1A1A2E] mb-2">
+                  Target Keyword <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -130,17 +130,17 @@ export function NewArticleModal({
                   onChange={(e) => setKeyword(e.target.value)}
                   placeholder="e.g., best coffee makers 2024"
                   disabled={isGenerating}
-                  className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-neutral-500 focus:outline-none focus:border-green-500/50 disabled:opacity-50"
+                  className="w-full px-4 py-3 rounded-xl bg-[#F1F5F9] border border-[#E2E8F0] text-[#1A1A2E] placeholder-[#334155] focus:outline-none focus:border-[#0ABAB5] disabled:opacity-50 transition-colors"
                 />
-                <p className="mt-1.5 text-xs text-neutral-500">
+                <p className="mt-1.5 text-xs text-[#334155]">
                   The main keyword your article will target for SEO
                 </p>
               </div>
 
               {/* Custom Title (Optional) */}
               <div>
-                <label className="block text-sm font-medium text-white mb-2">
-                  Custom Title <span className="text-neutral-500">(optional)</span>
+                <label className="block text-sm font-medium text-[#1A1A2E] mb-2">
+                  Custom Title <span className="text-[#334155]">(optional)</span>
                 </label>
                 <input
                   type="text"
@@ -148,16 +148,16 @@ export function NewArticleModal({
                   onChange={(e) => setCustomTitle(e.target.value)}
                   placeholder="Leave blank for AI-generated title"
                   disabled={isGenerating}
-                  className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-neutral-500 focus:outline-none focus:border-green-500/50 disabled:opacity-50"
+                  className="w-full px-4 py-3 rounded-xl bg-[#F1F5F9] border border-[#E2E8F0] text-[#1A1A2E] placeholder-[#334155] focus:outline-none focus:border-[#0ABAB5] disabled:opacity-50 transition-colors"
                 />
-                <p className="mt-1.5 text-xs text-neutral-500">
+                <p className="mt-1.5 text-xs text-[#334155]">
                   AI will generate an SEO-optimized title if left blank
                 </p>
               </div>
 
               {/* Article Length */}
               <div>
-                <label className="block text-sm font-medium text-white mb-3">
+                <label className="block text-sm font-medium text-[#1A1A2E] mb-3">
                   Article Length
                 </label>
                 <div className="grid grid-cols-2 gap-3">
@@ -173,26 +173,26 @@ export function NewArticleModal({
                         disabled={isGenerating}
                         className={`p-4 rounded-xl border text-left transition-all disabled:opacity-50 ${
                           isSelected
-                            ? "bg-green-500/20 border-green-500/50"
-                            : "bg-white/5 border-white/10 hover:bg-white/10"
+                            ? "bg-[#D1F5F3] border-[#0ABAB5]/50"
+                            : "bg-[#F1F5F9] border-[#E2E8F0] hover:bg-[#E2E8F0]"
                         }`}
                       >
                         <div className="flex items-center gap-2 mb-2">
                           <Icon
                             className={`w-5 h-5 ${
-                              isSelected ? "text-green-400" : "text-neutral-400"
+                              isSelected ? "text-[#0ABAB5]" : "text-[#334155]"
                             }`}
                           />
                           <span
                             className={`font-medium ${
-                              isSelected ? "text-green-400" : "text-white"
+                              isSelected ? "text-[#0ABAB5]" : "text-[#1A1A2E]"
                             }`}
                           >
                             {length.label}
                           </span>
                         </div>
-                        <p className="text-xs text-neutral-400">{length.words}</p>
-                        <p className="text-xs text-neutral-500 mt-1">{length.description}</p>
+                        <p className="text-xs text-[#334155]">{length.words}</p>
+                        <p className="text-xs text-[#334155] mt-1">{length.description}</p>
                       </button>
                     );
                   })}
@@ -203,7 +203,7 @@ export function NewArticleModal({
               <button
                 type="submit"
                 disabled={!keyword.trim() || isGenerating}
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 text-white font-medium shadow-lg shadow-green-500/25 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full py-3 rounded-xl bg-[#0ABAB5] hover:bg-[#089691] text-white font-medium shadow-lg shadow-[#0ABAB5]/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors"
               >
                 <Sparkles className="w-5 h-5" />
                 Generate Article

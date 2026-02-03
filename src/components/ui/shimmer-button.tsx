@@ -11,6 +11,7 @@ export interface ShimmerButtonProps
   background?: string;
   className?: string;
   children?: React.ReactNode;
+  variant?: "default" | "tiffany" | "gold";
 }
 
 export const ShimmerButton = React.forwardRef<HTMLButtonElement, ShimmerButtonProps>(
@@ -19,29 +20,51 @@ export const ShimmerButton = React.forwardRef<HTMLButtonElement, ShimmerButtonPr
       shimmerColor = "#ffffff",
       shimmerSize = "0.05em",
       shimmerDuration = "3s",
-      borderRadius = "100px",
+      borderRadius = "12px",
       background = "rgba(0, 0, 0, 1)",
+      variant = "default",
       className,
       children,
       ...props
     },
     ref
   ) => {
+    // Apply variant-specific styles
+    const variantStyles = {
+      default: {
+        background: "rgba(0, 0, 0, 1)",
+        shimmerColor: "#ffffff",
+      },
+      tiffany: {
+        background: "#0ABAB5",
+        shimmerColor: "#D1F5F3",
+      },
+      gold: {
+        background: "#D4AF37",
+        shimmerColor: "#E8D48A",
+      },
+    };
+
+    const styles = variantStyles[variant];
+
     return (
       <button
         style={
           {
             "--spread": "90deg",
-            "--shimmer-color": shimmerColor,
+            "--shimmer-color": styles.shimmerColor,
             "--radius": borderRadius,
             "--speed": shimmerDuration,
             "--cut": shimmerSize,
-            "--bg": background,
+            "--bg": styles.background,
           } as CSSProperties
         }
         className={cn(
-          "group relative z-0 flex cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap border border-white/10 px-6 py-3 text-white [background:var(--bg)] [border-radius:var(--radius)]",
-          "transform-gpu transition-transform duration-300 ease-in-out active:translate-y-px",
+          "group relative z-0 flex cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap px-6 py-3 text-white font-medium [background:var(--bg)] [border-radius:var(--radius)]",
+          "transform-gpu transition-all duration-200 active:translate-y-px",
+          "shadow-lg",
+          variant === "tiffany" && "shadow-[#0ABAB5]/20 hover:shadow-[#0ABAB5]/30",
+          variant === "gold" && "shadow-[#D4AF37]/20 hover:shadow-[#D4AF37]/30 text-[#1A1A2E]",
           className
         )}
         ref={ref}
@@ -66,8 +89,8 @@ export const ShimmerButton = React.forwardRef<HTMLButtonElement, ShimmerButtonPr
         <div
           className={cn(
             "insert-0 absolute size-full",
-            "rounded-2xl px-4 py-1.5 text-sm font-medium shadow-[inset_0_-8px_10px_#ffffff1f]",
-            "transform-gpu transition-all duration-300 ease-in-out",
+            "rounded-xl px-4 py-1.5 text-sm font-medium shadow-[inset_0_-8px_10px_#ffffff1f]",
+            "transform-gpu transition-all duration-200",
             "group-hover:shadow-[inset_0_-6px_10px_#ffffff3f]",
             "group-active:shadow-[inset_0_-10px_10px_#ffffff3f]"
           )}
@@ -85,3 +108,64 @@ export const ShimmerButton = React.forwardRef<HTMLButtonElement, ShimmerButtonPr
 );
 
 ShimmerButton.displayName = "ShimmerButton";
+
+// Premium Button variants for easy use
+export function PrimaryButton({
+  children,
+  className,
+  ...props
+}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+  return (
+    <button
+      className={cn(
+        "px-6 py-3 rounded-xl bg-[#0ABAB5] hover:bg-[#089691] text-white font-medium",
+        "shadow-lg shadow-[#0ABAB5]/20 hover:shadow-[#0ABAB5]/30",
+        "transition-all duration-200",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+}
+
+export function SecondaryButton({
+  children,
+  className,
+  ...props
+}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+  return (
+    <button
+      className={cn(
+        "px-6 py-3 rounded-xl border border-[#E2E8F0] bg-white text-[#1A1A2E] font-medium",
+        "hover:border-[#0ABAB5] hover:bg-[#D1F5F3]/30",
+        "transition-all duration-200",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+}
+
+export function GoldButton({
+  children,
+  className,
+  ...props
+}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+  return (
+    <button
+      className={cn(
+        "px-6 py-3 rounded-xl bg-[#D4AF37] hover:bg-[#E8D48A] text-[#1A1A2E] font-semibold",
+        "shadow-lg shadow-[#D4AF37]/20 hover:shadow-[#D4AF37]/30",
+        "transition-all duration-200",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+}

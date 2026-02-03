@@ -1,255 +1,288 @@
 "use client";
 import { motion } from "framer-motion";
-import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
 import {
-  Users,
-  Globe,
-  Mic,
+  Search,
+  Bot,
+  TrendingUp,
+  FileText,
+  Link2,
+  BarChart3,
   Sparkles,
-  Video,
-  Zap,
-  Palette,
-  MessageSquare,
+  Globe,
+  Target,
 } from "lucide-react";
 
 const features = [
   {
-    title: "100+ Lifelike AI Avatars",
+    title: "AI-Powered Content Generation",
     description:
-      "Choose from our diverse library of photorealistic AI avatars. Each avatar features natural expressions, gestures, and movements that are indistinguishable from real humans.",
-    icon: <Users className="w-6 h-6 text-[#0ABAB5]" />,
-    className: "md:col-span-2",
-    gradient: "from-[#D1F5F3] to-[#0ABAB5]/10",
-    demo: <AvatarGridDemo />,
+      "Create SEO-optimized articles that rank on Google and get cited by AI platforms like ChatGPT and Perplexity.",
+    icon: Sparkles,
+    size: "large",
+    demo: <ContentDemo />,
   },
   {
-    title: "175+ Languages",
+    title: "GEO Optimization",
     description:
-      "Create videos in any language with perfect lip-sync. Our AI understands tone and emotion across all languages.",
-    icon: <Globe className="w-6 h-6 text-emerald-500" />,
-    className: "md:col-span-1",
-    gradient: "from-emerald-100 to-emerald-50",
-    demo: <LanguageDemo />,
+      "Optimize your content for Generative Engine Optimization. Get cited by AI search engines.",
+    icon: Bot,
+    size: "small",
+    demo: <GEODemo />,
   },
   {
-    title: "Natural Voice Cloning",
+    title: "Keyword Research",
     description:
-      "Clone any voice or choose from 300+ AI voices. Perfect pronunciation, natural pauses, and emotional delivery.",
-    icon: <Mic className="w-6 h-6 text-violet-500" />,
-    className: "md:col-span-1",
-    gradient: "from-violet-100 to-violet-50",
-    demo: <VoiceWaveDemo />,
+      "Discover high-value keywords with search volume, difficulty, and traffic potential data.",
+    icon: Search,
+    size: "small",
+    demo: <KeywordDemo />,
   },
   {
-    title: "Script to Video in Minutes",
+    title: "Internal Linking",
     description:
-      "Simply paste your script and our AI handles everything - avatar selection, voice synthesis, lip-sync, gestures, and rendering.",
-    icon: <Sparkles className="w-6 h-6 text-amber-500" />,
-    className: "md:col-span-2",
-    gradient: "from-amber-100 to-amber-50",
-    demo: <ScriptDemo />,
+      "Automatically find and suggest internal linking opportunities to boost your site's SEO structure.",
+    icon: Link2,
+    size: "medium",
+    demo: <LinkingDemo />,
   },
   {
-    title: "4K Video Quality",
+    title: "Rank Tracking",
     description:
-      "Export in stunning 4K resolution. Perfect for professional presentations, marketing, and social media.",
-    icon: <Video className="w-6 h-6 text-rose-500" />,
-    className: "md:col-span-1",
-    gradient: "from-rose-100 to-rose-50",
+      "Monitor your keyword rankings and track progress over time with detailed analytics.",
+    icon: TrendingUp,
+    size: "small",
   },
   {
-    title: "Custom Avatar Creation",
+    title: "Content Briefs",
     description:
-      "Create your own digital twin from just a short video. Your personal AI avatar that speaks any language.",
-    icon: <Palette className="w-6 h-6 text-indigo-500" />,
-    className: "md:col-span-1",
-    gradient: "from-indigo-100 to-indigo-50",
+      "Generate comprehensive content briefs with outlines, FAQs, and competitor analysis.",
+    icon: FileText,
+    size: "small",
   },
   {
-    title: "AI Script Writer",
+    title: "Performance Analytics",
     description:
-      "Not sure what to say? Our AI helps write engaging scripts tailored to your audience and goals.",
-    icon: <MessageSquare className="w-6 h-6 text-[#0ABAB5]" />,
-    className: "md:col-span-1",
-    gradient: "from-[#D1F5F3] to-[#0ABAB5]/5",
+      "Track clicks, impressions, CTR, and rankings with Google Search Console integration.",
+    icon: BarChart3,
+    size: "small",
   },
 ];
 
-// Avatar images for the demo
-const avatarImages = [
-  "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop&crop=face",
-  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
-  "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&h=100&fit=crop&crop=face",
-  "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
-  "https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=100&h=100&fit=crop&crop=face",
-  "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop&crop=face",
-  "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face",
-  "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face",
-];
-
-// Avatar grid demo component
-function AvatarGridDemo() {
+// Content generation demo component
+function ContentDemo() {
   return (
-    <div className="flex flex-wrap gap-2 p-4">
-      {avatarImages.map((src, i) => (
+    <div className="p-5 space-y-3">
+      <div className="flex items-center gap-2 mb-3">
+        <div className="w-3 h-3 rounded-full bg-red-400/60" />
+        <div className="w-3 h-3 rounded-full bg-yellow-400/60" />
+        <div className="w-3 h-3 rounded-full bg-green-400/60" />
+        <span className="text-xs text-[#334155] ml-2">SEO Writer</span>
+      </div>
+      <div className="space-y-2">
+        <div className="flex items-center gap-2">
+          <Target className="w-4 h-4 text-[#0ABAB5]" />
+          <span className="text-xs text-[#334155]">Target Keyword:</span>
+          <span className="text-xs text-[#1A1A2E] font-medium px-2 py-0.5 bg-[#D1F5F3] rounded">best SEO tools 2026</span>
+        </div>
+        <div className="mt-3 space-y-2">
+          <motion.div
+            className="h-3 bg-[#E2E8F0] rounded"
+            initial={{ width: 0 }}
+            whileInView={{ width: "95%" }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+          />
+          <motion.div
+            className="h-3 bg-[#F1F5F9] rounded"
+            initial={{ width: 0 }}
+            whileInView={{ width: "80%" }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            viewport={{ once: true }}
+          />
+          <motion.div
+            className="h-3 bg-[#F1F5F9] rounded"
+            initial={{ width: 0 }}
+            whileInView={{ width: "70%" }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            viewport={{ once: true }}
+          />
+        </div>
+      </div>
+      <div className="relative h-1.5 bg-[#F1F5F9] rounded-full overflow-hidden mt-4">
         <motion.div
-          key={i}
-          className="w-12 h-12 rounded-full overflow-hidden ring-2 ring-slate-200 hover:ring-[#0ABAB5] transition-all"
-          initial={{ scale: 0, opacity: 0 }}
-          whileInView={{ scale: 1, opacity: 1 }}
-          transition={{ delay: i * 0.08, type: "spring", stiffness: 200 }}
-          whileHover={{ scale: 1.15, y: -5, zIndex: 10 }}
+          className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#0ABAB5] to-[#089691] rounded-full"
+          initial={{ width: 0 }}
+          whileInView={{ width: "100%" }}
+          transition={{ duration: 2, ease: "easeOut" }}
+          viewport={{ once: true }}
+        />
+      </div>
+      <div className="flex items-center justify-between text-xs">
+        <span className="text-[#0ABAB5]">Generating article...</span>
+        <span className="text-[#334155]">2,500 words</span>
+      </div>
+    </div>
+  );
+}
+
+// GEO demo component
+function GEODemo() {
+  const aiPlatforms = [
+    { name: "ChatGPT", status: "Cited" },
+    { name: "Perplexity", status: "Cited" },
+    { name: "Claude", status: "Cited" },
+  ];
+  return (
+    <div className="p-4 space-y-2">
+      {aiPlatforms.map((platform, i) => (
+        <motion.div
+          key={platform.name}
+          initial={{ opacity: 0, x: -10 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ delay: i * 0.1 }}
+          viewport={{ once: true }}
+          className="flex items-center justify-between px-3 py-2 rounded-lg bg-[#F1F5F9]"
         >
-          <img src={src} alt={`Avatar ${i + 1}`} className="w-full h-full object-cover" />
+          <span className="text-xs text-[#1A1A2E] font-medium">{platform.name}</span>
+          <span className="text-xs text-[#0ABAB5] font-medium flex items-center gap-1">
+            <div className="w-1.5 h-1.5 rounded-full bg-[#0ABAB5]" />
+            {platform.status}
+          </span>
         </motion.div>
       ))}
     </div>
   );
 }
 
-// Language demo component with flags
-function LanguageDemo() {
-  const languages = [
-    { code: "EN", flag: "🇺🇸" },
-    { code: "ES", flag: "🇪🇸" },
-    { code: "FR", flag: "🇫🇷" },
-    { code: "DE", flag: "🇩🇪" },
-    { code: "中文", flag: "🇨🇳" },
-    { code: "日本語", flag: "🇯🇵" },
-    { code: "한국어", flag: "🇰🇷" },
-    { code: "PT", flag: "🇧🇷" },
-  ];
+// Keyword demo component
+function KeywordDemo() {
   return (
-    <div className="flex flex-wrap gap-1.5 p-3">
-      {languages.map((lang, i) => (
-        <motion.span
-          key={lang.code}
-          className="px-2.5 py-1.5 text-xs rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1.5 hover:bg-emerald-100 transition-colors cursor-pointer"
+    <div className="p-4 flex flex-col items-center justify-center h-full">
+      <div className="w-full space-y-2">
+        <div className="flex items-center justify-between text-xs">
+          <span className="text-[#334155]">Search Volume</span>
+          <span className="text-[#1A1A2E] font-bold">12,400</span>
+        </div>
+        <div className="h-2 bg-[#F1F5F9] rounded-full overflow-hidden">
+          <motion.div
+            className="h-full bg-[#0ABAB5] rounded-full"
+            initial={{ width: 0 }}
+            whileInView={{ width: "78%" }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+          />
+        </div>
+        <div className="flex items-center justify-between text-xs mt-3">
+          <span className="text-[#334155]">Difficulty</span>
+          <span className="text-[#D4AF37] font-bold">Medium</span>
+        </div>
+        <div className="h-2 bg-[#F1F5F9] rounded-full overflow-hidden">
+          <motion.div
+            className="h-full bg-[#D4AF37] rounded-full"
+            initial={{ width: 0 }}
+            whileInView={{ width: "45%" }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            viewport={{ once: true }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Internal linking demo component
+function LinkingDemo() {
+  return (
+    <div className="p-5 space-y-3">
+      <div className="text-xs font-medium text-[#1A1A2E] mb-2">Internal Link Opportunities</div>
+      {[
+        { anchor: "SEO best practices", target: "/blog/seo-guide" },
+        { anchor: "keyword research", target: "/blog/keyword-research" },
+        { anchor: "content optimization", target: "/blog/content-tips" },
+      ].map((link, i) => (
+        <motion.div
+          key={i}
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ delay: i * 0.08 }}
-          whileHover={{ scale: 1.05 }}
+          transition={{ delay: i * 0.1 }}
+          viewport={{ once: true }}
+          className="flex items-center gap-2 p-2 rounded-lg bg-[#F1F5F9]"
         >
-          <span>{lang.flag}</span>
-          <span>{lang.code}</span>
-        </motion.span>
+          <Link2 className="w-3 h-3 text-[#0ABAB5]" />
+          <span className="text-xs text-[#0ABAB5] font-medium">{link.anchor}</span>
+          <span className="text-xs text-[#334155]">→</span>
+          <span className="text-xs text-[#334155] truncate">{link.target}</span>
+        </motion.div>
       ))}
     </div>
   );
 }
 
-// Voice wave demo with mic visualization
-function VoiceWaveDemo() {
+function FeatureCard({ feature, index }: { feature: typeof features[0]; index: number }) {
+  const isLarge = feature.size === "large";
+  const isMedium = feature.size === "medium";
+
   return (
-    <div className="p-4 h-20 flex flex-col items-center justify-center">
-      {/* Voice selector */}
-      <div className="flex items-center gap-2 mb-3">
-        <div className="w-8 h-8 rounded-full bg-violet-100 border border-violet-200 flex items-center justify-center">
-          <Mic className="w-4 h-4 text-violet-500" />
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: index * 0.05 }}
+      viewport={{ once: true }}
+      className={`
+        group relative bg-white rounded-2xl border border-[#E2E8F0] overflow-hidden
+        transition-all duration-300 hover:shadow-premium-lg hover:border-[#0ABAB5]/20
+        ${isLarge ? "md:col-span-2 md:row-span-2" : ""}
+        ${isMedium ? "md:col-span-2" : ""}
+      `}
+    >
+      {/* Subtle gold accent line for featured cards */}
+      {isLarge && (
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent opacity-60" />
+      )}
+
+      {/* Content */}
+      <div className={`p-6 ${isLarge ? "md:p-8" : ""}`}>
+        {/* Icon */}
+        <div className={`
+          w-12 h-12 rounded-xl bg-[#D1F5F3] border border-[#0ABAB5]/10
+          flex items-center justify-center mb-4
+          group-hover:bg-[#0ABAB5] transition-colors duration-300
+        `}>
+          <feature.icon className="w-6 h-6 text-[#0ABAB5] group-hover:text-white transition-colors duration-300" />
         </div>
-        <div className="text-xs">
-          <div className="text-[#1E293B] font-medium">Sarah Voice</div>
-          <div className="text-violet-500">English • Female</div>
-        </div>
+
+        {/* Title */}
+        <h3 className={`
+          font-semibold text-[#1A1A2E] mb-2
+          ${isLarge ? "text-xl md:text-2xl" : "text-lg"}
+        `}>
+          {feature.title}
+        </h3>
+
+        {/* Description */}
+        <p className="text-[#334155] text-sm leading-relaxed">
+          {feature.description}
+        </p>
       </div>
 
-      {/* Waveform */}
-      <div className="flex items-center justify-center gap-0.5">
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="w-1 bg-gradient-to-t from-violet-500 to-violet-300 rounded-full"
-            animate={{
-              height: [4, Math.random() * 20 + 8, 4],
-            }}
-            transition={{
-              duration: 0.5 + Math.random() * 0.3,
-              repeat: Infinity,
-              delay: i * 0.05,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
-      </div>
-    </div>
+      {/* Demo area */}
+      {feature.demo && (
+        <div className={`
+          border-t border-[#E2E8F0] bg-[#FAFBFC]
+          ${isLarge ? "min-h-[180px]" : "min-h-[100px]"}
+        `}>
+          {feature.demo}
+        </div>
+      )}
+    </motion.div>
   );
 }
-
-// Script demo with realistic UI
-function ScriptDemo() {
-  return (
-    <div className="p-4 space-y-3">
-      {/* Script header */}
-      <div className="flex items-center gap-2 mb-2">
-        <div className="w-3 h-3 rounded-full bg-red-400" />
-        <div className="w-3 h-3 rounded-full bg-yellow-400" />
-        <div className="w-3 h-3 rounded-full bg-green-400" />
-        <span className="text-xs text-slate-400 ml-2">script.txt</span>
-      </div>
-
-      {/* Script content with avatar */}
-      <div className="flex gap-3">
-        <div className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-[#0ABAB5]/30 flex-shrink-0">
-          <img
-            src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop&crop=face"
-            alt="Avatar"
-            className="w-full h-full object-cover"
-          />
-        </div>
-        <div className="flex-1 space-y-1.5">
-          <motion.div
-            className="h-2 bg-slate-300 rounded"
-            initial={{ width: 0 }}
-            whileInView={{ width: "90%" }}
-            transition={{ duration: 0.5 }}
-          />
-          <motion.div
-            className="h-2 bg-slate-200 rounded"
-            initial={{ width: 0 }}
-            whileInView={{ width: "75%" }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          />
-          <motion.div
-            className="h-2 bg-slate-100 rounded"
-            initial={{ width: 0 }}
-            whileInView={{ width: "60%" }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          />
-        </div>
-      </div>
-
-      {/* Progress bar */}
-      <div className="relative h-1.5 bg-slate-100 rounded-full overflow-hidden">
-        <motion.div
-          className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#0ABAB5] via-[#089691] to-emerald-400 rounded-full"
-          initial={{ width: 0 }}
-          whileInView={{ width: "100%" }}
-          transition={{ duration: 2.5, ease: "easeOut" }}
-        />
-      </div>
-
-      {/* Status */}
-      <div className="flex items-center justify-between text-xs">
-        <span className="text-[#0ABAB5]">Generating video...</span>
-        <span className="text-slate-400">00:45</span>
-      </div>
-    </div>
-  );
-}
-
-const FeatureHeader = ({ gradient, demo }: { gradient: string; demo?: React.ReactNode }) => (
-  <div
-    className={`flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br ${gradient} border border-slate-100 overflow-hidden`}
-  >
-    {demo}
-  </div>
-);
 
 export function Features() {
   return (
-    <section className="py-24 px-4 relative overflow-hidden bg-white">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#F8FAFC] via-white to-[#F8FAFC]" />
+    <section id="features" className="py-24 px-4 relative overflow-hidden" style={{ background: "var(--pearl)" }}>
+      {/* Subtle background pattern */}
+      <div className="absolute inset-0 pattern-dots opacity-30" />
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section header */}
@@ -260,39 +293,38 @@ export function Features() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <motion.span
-            className="inline-block px-4 py-1 rounded-full bg-[#D1F5F3] border border-[#0ABAB5]/20 text-[#089691] text-sm mb-4 font-medium"
+          {/* Badge */}
+          <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-[#E2E8F0] shadow-sm mb-6"
           >
-            Powerful Features
-          </motion.span>
-          <h2 className="text-3xl md:text-5xl font-bold text-[#1E293B]">
-            Everything You Need to Create
-            <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0ABAB5] to-slate-400">
-              Professional AI Videos
+            <div className="w-2 h-2 rounded-full bg-[#0ABAB5]" />
+            <span className="text-xs font-medium text-[#334155] uppercase tracking-wider">
+              Powerful Features
             </span>
+          </motion.div>
+
+          {/* Title with serif font */}
+          <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl font-semibold text-[#1A1A2E] mb-4">
+            Everything You Need for
+            <br />
+            <span className="gradient-text-tiffany">SEO & GEO Success</span>
           </h2>
-          <p className="mt-4 text-lg text-slate-500 max-w-2xl mx-auto">
-            From script to screen in minutes. Our AI handles all the complex work.
+
+          <p className="text-lg text-[#334155] max-w-2xl mx-auto">
+            From keyword research to AI-optimized content. Rank higher and get cited by AI.
           </p>
         </motion.div>
 
-        {/* Bento grid */}
-        <BentoGrid className="max-w-6xl mx-auto">
+        {/* Magazine-style grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-6xl mx-auto">
           {features.map((feature, i) => (
-            <BentoGridItem
-              key={i}
-              title={feature.title}
-              description={feature.description}
-              header={<FeatureHeader gradient={feature.gradient} demo={feature.demo} />}
-              icon={feature.icon}
-              className={`${feature.className} bg-white border-slate-200 hover:border-[#0ABAB5]/30 hover:shadow-lg transition-all`}
-            />
+            <FeatureCard key={i} feature={feature} index={i} />
           ))}
-        </BentoGrid>
+        </div>
       </div>
     </section>
   );

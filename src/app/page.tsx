@@ -1,5 +1,7 @@
 import { Navbar } from "@/components/landing/Navbar";
 import { Hero } from "@/components/landing/Hero";
+import { LogoCarousel } from "@/components/landing/LogoCarousel";
+import { SEOResults } from "@/components/landing/SEOResults";
 import { Features } from "@/components/landing/Features";
 import { HowItWorks } from "@/components/landing/HowItWorks";
 import { Testimonials } from "@/components/landing/Testimonials";
@@ -11,6 +13,8 @@ export default function Home() {
     <main className="min-h-screen bg-[#F8FAFC]">
       <Navbar />
       <Hero />
+      <LogoCarousel />
+      <SEOResults />
       <section id="features">
         <Features />
       </section>

@@ -15,7 +15,6 @@ import {
   Trash2,
   Eye,
   Edit3,
-  MoreVertical,
   Image as ImageIcon,
 } from "lucide-react";
 import { NewArticleModal } from "@/components/seo-writer/new-article-modal";
@@ -182,34 +181,34 @@ export default function ArticlesPage() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "published":
-        return <CheckCircle className="w-4 h-4 text-green-400" />;
+        return <CheckCircle className="w-4 h-4 text-[#0ABAB5]" />;
       case "draft":
-        return <Edit3 className="w-4 h-4 text-neutral-400" />;
+        return <Edit3 className="w-4 h-4 text-[#334155]" />;
       case "scheduled":
-        return <Clock className="w-4 h-4 text-blue-400" />;
+        return <Clock className="w-4 h-4 text-[#D4AF37]" />;
       case "publishing":
-        return <Loader2 className="w-4 h-4 text-yellow-400 animate-spin" />;
+        return <Loader2 className="w-4 h-4 text-[#0ABAB5] animate-spin" />;
       case "failed":
-        return <AlertCircle className="w-4 h-4 text-red-400" />;
+        return <AlertCircle className="w-4 h-4 text-red-500" />;
       default:
-        return <FileText className="w-4 h-4 text-neutral-400" />;
+        return <FileText className="w-4 h-4 text-[#334155]" />;
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case "published":
-        return "bg-green-500/10 text-green-400 border-green-500/20";
+        return "bg-[#D1F5F3] text-[#0ABAB5] border-[#0ABAB5]/20";
       case "draft":
-        return "bg-neutral-500/10 text-neutral-400 border-neutral-500/20";
+        return "bg-[#F1F5F9] text-[#334155] border-[#E2E8F0]";
       case "scheduled":
-        return "bg-blue-500/10 text-blue-400 border-blue-500/20";
+        return "bg-[#D4AF37]/10 text-[#D4AF37] border-[#D4AF37]/20";
       case "publishing":
-        return "bg-yellow-500/10 text-yellow-400 border-yellow-500/20";
+        return "bg-[#D1F5F3] text-[#0ABAB5] border-[#0ABAB5]/20";
       case "failed":
-        return "bg-red-500/10 text-red-400 border-red-500/20";
+        return "bg-red-50 text-red-500 border-red-200";
       default:
-        return "bg-neutral-500/10 text-neutral-400 border-neutral-500/20";
+        return "bg-[#F1F5F9] text-[#334155] border-[#E2E8F0]";
     }
   };
 
@@ -228,11 +227,11 @@ export default function ArticlesPage() {
   if (!siteId) {
     return (
       <div className="max-w-4xl mx-auto text-center py-20">
-        <AlertCircle className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
-        <h2 className="text-xl text-white mb-2">No site selected</h2>
-        <p className="text-neutral-400 mb-6">Please select a site first.</p>
+        <AlertCircle className="w-12 h-12 text-[#D4AF37] mx-auto mb-4" />
+        <h2 className="text-xl text-[#1A1A2E] mb-2">No site selected</h2>
+        <p className="text-[#334155] mb-6">Please select a site first.</p>
         <Link href="/seo-writer">
-          <button className="px-4 py-2 rounded-lg bg-green-500/20 text-green-400">
+          <button className="px-4 py-2 rounded-lg bg-[#D1F5F3] text-[#0ABAB5]">
             Go to SEO Writer
           </button>
         </Link>
@@ -245,8 +244,8 @@ export default function ArticlesPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-white">Articles</h1>
-          <p className="text-neutral-400">
+          <h1 className="font-serif text-3xl font-bold text-[#1A1A2E]">Articles</h1>
+          <p className="text-[#334155]">
             Manage your generated SEO articles.
           </p>
         </div>
@@ -254,7 +253,7 @@ export default function ArticlesPage() {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={() => setIsNewArticleModalOpen(true)}
-          className="px-4 py-2 rounded-lg bg-gradient-to-r from-green-500 to-emerald-500 text-white font-medium flex items-center gap-2 shadow-lg shadow-green-500/25"
+          className="px-4 py-2 rounded-lg bg-[#0ABAB5] hover:bg-[#089691] text-white font-medium flex items-center gap-2 shadow-lg shadow-[#0ABAB5]/20 transition-colors"
         >
           <Plus className="w-4 h-4" />
           New Article
@@ -263,46 +262,54 @@ export default function ArticlesPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
+        <div className="p-4 rounded-2xl bg-white border border-[#E2E8F0] hover:shadow-premium transition-all">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-neutral-400 text-sm">Total</span>
-            <FileText className="w-5 h-5 text-green-400" />
+            <span className="text-[#334155] text-sm">Total</span>
+            <div className="w-8 h-8 rounded-lg bg-[#D1F5F3] flex items-center justify-center">
+              <FileText className="w-4 h-4 text-[#0ABAB5]" />
+            </div>
           </div>
-          <p className="text-2xl font-bold text-white">{stats.total}</p>
+          <p className="text-2xl font-bold text-[#1A1A2E]">{stats.total}</p>
         </div>
-        <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
+        <div className="p-4 rounded-2xl bg-white border border-[#E2E8F0] hover:shadow-premium transition-all">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-neutral-400 text-sm">Drafts</span>
-            <Edit3 className="w-5 h-5 text-neutral-400" />
+            <span className="text-[#334155] text-sm">Drafts</span>
+            <div className="w-8 h-8 rounded-lg bg-[#F1F5F9] flex items-center justify-center">
+              <Edit3 className="w-4 h-4 text-[#334155]" />
+            </div>
           </div>
-          <p className="text-2xl font-bold text-white">{stats.drafts}</p>
+          <p className="text-2xl font-bold text-[#1A1A2E]">{stats.drafts}</p>
         </div>
-        <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
+        <div className="p-4 rounded-2xl bg-white border border-[#E2E8F0] hover:shadow-premium transition-all">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-neutral-400 text-sm">Published</span>
-            <CheckCircle className="w-5 h-5 text-green-400" />
+            <span className="text-[#334155] text-sm">Published</span>
+            <div className="w-8 h-8 rounded-lg bg-[#D1F5F3] flex items-center justify-center">
+              <CheckCircle className="w-4 h-4 text-[#0ABAB5]" />
+            </div>
           </div>
-          <p className="text-2xl font-bold text-white">{stats.published}</p>
+          <p className="text-2xl font-bold text-[#1A1A2E]">{stats.published}</p>
         </div>
-        <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
+        <div className="p-4 rounded-2xl bg-white border border-[#E2E8F0] hover:shadow-premium transition-all">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-neutral-400 text-sm">Scheduled</span>
-            <Clock className="w-5 h-5 text-blue-400" />
+            <span className="text-[#334155] text-sm">Scheduled</span>
+            <div className="w-8 h-8 rounded-lg bg-[#D4AF37]/10 flex items-center justify-center">
+              <Clock className="w-4 h-4 text-[#D4AF37]" />
+            </div>
           </div>
-          <p className="text-2xl font-bold text-white">{stats.scheduled}</p>
+          <p className="text-2xl font-bold text-[#1A1A2E]">{stats.scheduled}</p>
         </div>
       </div>
 
       {/* Search & Filters */}
       <div className="flex flex-col md:flex-row gap-4 mb-6">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#334155]" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search articles..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-neutral-500 focus:outline-none focus:border-green-500/50"
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-[#E2E8F0] text-[#1A1A2E] placeholder-[#334155] focus:outline-none focus:border-[#0ABAB5] transition-colors"
           />
         </div>
         <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0">
@@ -312,8 +319,8 @@ export default function ArticlesPage() {
               onClick={() => setStatusFilter(status)}
               className={`px-4 py-2 rounded-xl text-sm capitalize whitespace-nowrap transition-colors ${
                 statusFilter === status
-                  ? "bg-green-500/20 text-green-400 border border-green-500/30"
-                  : "bg-white/5 text-neutral-400 border border-white/10 hover:bg-white/10"
+                  ? "bg-[#D1F5F3] text-[#0ABAB5] border border-[#0ABAB5]/30"
+                  : "bg-white text-[#334155] border border-[#E2E8F0] hover:bg-[#F1F5F9]"
               }`}
             >
               {status}
@@ -325,20 +332,20 @@ export default function ArticlesPage() {
       {/* Articles List */}
       {isLoading ? (
         <div className="flex items-center justify-center py-20">
-          <Loader2 className="w-8 h-8 text-green-400 animate-spin" />
+          <Loader2 className="w-8 h-8 text-[#0ABAB5] animate-spin" />
         </div>
       ) : filteredArticles.length === 0 ? (
         <div className="text-center py-20">
-          <FileText className="w-16 h-16 text-neutral-600 mx-auto mb-4" />
-          <h2 className="text-xl text-white mb-2">No articles found</h2>
-          <p className="text-neutral-400 mb-6">
+          <FileText className="w-16 h-16 text-[#E2E8F0] mx-auto mb-4" />
+          <h2 className="text-xl text-[#1A1A2E] mb-2">No articles found</h2>
+          <p className="text-[#334155] mb-6">
             {searchQuery
               ? "Try a different search term."
               : "Create your first article to get started."}
           </p>
           <button
             onClick={() => setIsNewArticleModalOpen(true)}
-            className="px-4 py-2 rounded-lg bg-green-500/20 text-green-400 font-medium"
+            className="px-4 py-2 rounded-lg bg-[#D1F5F3] text-[#0ABAB5] font-medium"
           >
             Create Article
           </button>
@@ -350,11 +357,11 @@ export default function ArticlesPage() {
               key={article.id}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="group p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 transition-all"
+              className="group p-4 rounded-2xl bg-white border border-[#E2E8F0] hover:border-[#0ABAB5]/30 hover:shadow-premium transition-all"
             >
               <div className="flex gap-4">
                 {/* Thumbnail */}
-                <div className="w-24 h-24 md:w-32 md:h-24 rounded-xl overflow-hidden bg-white/5 flex-shrink-0">
+                <div className="w-24 h-24 md:w-32 md:h-24 rounded-xl overflow-hidden bg-[#F1F5F9] flex-shrink-0">
                   {article.featuredImage ? (
                     <img
                       src={article.featuredImage}
@@ -363,7 +370,7 @@ export default function ArticlesPage() {
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <ImageIcon className="w-8 h-8 text-neutral-600" />
+                      <ImageIcon className="w-8 h-8 text-[#E2E8F0]" />
                     </div>
                   )}
                 </div>
@@ -373,9 +380,9 @@ export default function ArticlesPage() {
                   <div className="flex items-start justify-between gap-3 mb-2">
                     <Link
                       href={`/seo-writer/articles/${article.id}?siteId=${siteId}`}
-                      className="hover:text-green-400 transition-colors"
+                      className="hover:text-[#0ABAB5] transition-colors"
                     >
-                      <h3 className="text-white font-medium text-lg line-clamp-1">
+                      <h3 className="text-[#1A1A2E] font-medium text-lg line-clamp-1">
                         {article.title}
                       </h3>
                     </Link>
@@ -389,28 +396,28 @@ export default function ArticlesPage() {
                     </span>
                   </div>
 
-                  <p className="text-neutral-500 text-sm line-clamp-2 mb-3">
+                  <p className="text-[#334155] text-sm line-clamp-2 mb-3">
                     {article.metaDescription || "No description available"}
                   </p>
 
                   <div className="flex flex-wrap items-center gap-3 text-sm">
-                    <span className="text-neutral-500">
+                    <span className="text-[#334155]">
                       {article.wordCount.toLocaleString()} words
                     </span>
-                    <span className="text-neutral-600">•</span>
-                    <span className="text-neutral-500">{formatDate(article.createdAt)}</span>
+                    <span className="text-[#E2E8F0]">•</span>
+                    <span className="text-[#334155]">{formatDate(article.createdAt)}</span>
                     {article.keyword && (
                       <>
-                        <span className="text-neutral-600">•</span>
-                        <span className="px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 text-xs">
+                        <span className="text-[#E2E8F0]">•</span>
+                        <span className="px-2 py-0.5 rounded bg-[#1E3A5F]/10 text-[#1E3A5F] text-xs">
                           {article.keyword.keyword}
                         </span>
                       </>
                     )}
                     {article.scheduledFor && (
                       <>
-                        <span className="text-neutral-600">•</span>
-                        <span className="text-blue-400 text-xs">
+                        <span className="text-[#E2E8F0]">•</span>
+                        <span className="text-[#D4AF37] text-xs">
                           Scheduled: {formatDate(article.scheduledFor)}
                         </span>
                       </>
@@ -421,15 +428,15 @@ export default function ArticlesPage() {
                 {/* Actions */}
                 <div className="flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                   <Link href={`/seo-writer/articles/${article.id}?siteId=${siteId}`}>
-                    <button className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                      <Eye className="w-4 h-4 text-neutral-400" />
+                    <button className="p-2 rounded-lg bg-[#F1F5F9] hover:bg-[#E2E8F0] transition-colors">
+                      <Eye className="w-4 h-4 text-[#334155]" />
                     </button>
                   </Link>
                   <button
                     onClick={() => deleteArticle(article.id)}
-                    className="p-2 rounded-lg bg-white/5 hover:bg-red-500/20 transition-colors"
+                    className="p-2 rounded-lg bg-[#F1F5F9] hover:bg-red-50 transition-colors"
                   >
-                    <Trash2 className="w-4 h-4 text-neutral-400 hover:text-red-400" />
+                    <Trash2 className="w-4 h-4 text-[#334155] hover:text-red-500" />
                   </button>
                 </div>
               </div>

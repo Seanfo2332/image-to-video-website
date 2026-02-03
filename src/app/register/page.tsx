@@ -4,7 +4,7 @@ import { Navbar } from "@/components/landing/Navbar";
 
 export default function RegisterPage() {
   return (
-    <div className="min-h-screen bg-gradient-mesh relative">
+    <div className="min-h-screen bg-[#0a0a0a] bg-gradient-mesh relative">
       <Navbar />
 
       {/* Background effects */}

@@ -198,10 +198,10 @@ export default function SEOWriterSetupPage() {
             <div
               className={`w-10 h-10 rounded-full flex items-center justify-center font-medium transition-all ${
                 s === step
-                  ? "bg-green-500 text-white"
+                  ? "bg-[#0ABAB5] text-white"
                   : s < step
-                  ? "bg-green-500/20 text-green-400"
-                  : "bg-white/10 text-neutral-500"
+                  ? "bg-[#D1F5F3] text-[#0ABAB5]"
+                  : "bg-[#F1F5F9] text-[#334155]"
               }`}
             >
               {s < step ? <CheckCircle className="w-5 h-5" /> : s}
@@ -209,7 +209,7 @@ export default function SEOWriterSetupPage() {
             {s < 4 && (
               <div
                 className={`w-16 h-0.5 mx-2 transition-all ${
-                  s < step ? "bg-green-500" : "bg-white/10"
+                  s < step ? "bg-[#0ABAB5]" : "bg-[#E2E8F0]"
                 }`}
               />
             )}
@@ -227,27 +227,27 @@ export default function SEOWriterSetupPage() {
             exit={{ opacity: 0, x: -20 }}
             className="text-center"
           >
-            <h1 className="text-3xl font-bold text-white mb-4">
+            <h1 className="text-3xl font-bold text-[#1A1A2E] mb-4">
               What's your website?
             </h1>
-            <p className="text-neutral-400 mb-8">
+            <p className="text-[#334155] mb-8">
               Enter your website URL and we'll analyze it to understand your business.
             </p>
 
             <div className="max-w-md mx-auto">
               <div className="relative mb-6">
-                <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-500" />
+                <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#334155]" />
                 <input
                   type="text"
                   value={websiteUrl}
                   onChange={(e) => setWebsiteUrl(e.target.value)}
                   placeholder="yourwebsite.com"
-                  className="w-full pl-12 pr-4 py-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder-neutral-500 focus:outline-none focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20"
+                  className="w-full pl-12 pr-4 py-4 rounded-xl bg-[#F1F5F9] border border-[#E2E8F0] text-[#1A1A2E] placeholder-[#334155] focus:outline-none focus:border-[#0ABAB5] focus:ring-2 focus:ring-[#0ABAB5]/20"
                 />
               </div>
 
               {error && (
-                <div className="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 flex items-center gap-2">
+                <div className="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 flex items-center gap-2">
                   <AlertCircle className="w-5 h-5 flex-shrink-0" />
                   {error}
                 </div>
@@ -258,7 +258,7 @@ export default function SEOWriterSetupPage() {
                 disabled={isLoading || !websiteUrl}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full py-4 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 text-white font-medium shadow-lg shadow-green-500/25 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-4 rounded-xl bg-gradient-to-r from-[#0ABAB5] to-[#089691] text-white font-medium shadow-lg shadow-[#0ABAB5]/20 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
                   <>
@@ -273,9 +273,9 @@ export default function SEOWriterSetupPage() {
                 )}
               </motion.button>
 
-              <p className="text-sm text-neutral-500 mt-4">
+              <p className="text-sm text-[#334155] mt-4">
                 Don't have a website?{" "}
-                <button className="text-green-400 hover:underline">
+                <button className="text-[#0ABAB5] hover:underline">
                   Skip this step
                 </button>
               </p>
@@ -291,49 +291,49 @@ export default function SEOWriterSetupPage() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
           >
-            <h1 className="text-3xl font-bold text-white mb-4 text-center">
+            <h1 className="text-3xl font-bold text-[#1A1A2E] mb-4 text-center">
               Brand Review
             </h1>
-            <p className="text-neutral-400 mb-8 text-center">
+            <p className="text-[#334155] mb-8 text-center">
               Review and adjust your brand settings if needed.
             </p>
 
             {/* Brand Card */}
-            <div className="p-6 rounded-2xl bg-white/5 border border-white/10 mb-6">
+            <div className="p-6 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm mb-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
-                  <Globe className="w-6 h-6 text-green-400" />
+                <div className="w-12 h-12 rounded-xl bg-[#D1F5F3] flex items-center justify-center">
+                  <Globe className="w-6 h-6 text-[#0ABAB5]" />
                 </div>
                 <div>
-                  <h3 className="text-white font-medium">{brandAnalysis.brandName}</h3>
-                  <p className="text-sm text-neutral-500">{websiteUrl}</p>
+                  <h3 className="text-[#1A1A2E] font-medium">{brandAnalysis.brandName}</h3>
+                  <p className="text-sm text-[#334155]">{websiteUrl}</p>
                 </div>
               </div>
 
               <div className="space-y-4 text-sm">
                 <div>
-                  <h4 className="text-neutral-400 mb-1">Brand Description</h4>
-                  <p className="text-white">{brandAnalysis.brandDescription}</p>
+                  <h4 className="text-[#334155] mb-1">Brand Description</h4>
+                  <p className="text-[#1A1A2E]">{brandAnalysis.brandDescription}</p>
                 </div>
                 <div>
-                  <h4 className="text-neutral-400 mb-1">Tone</h4>
-                  <p className="text-white">{brandAnalysis.tone}</p>
+                  <h4 className="text-[#334155] mb-1">Tone</h4>
+                  <p className="text-[#1A1A2E]">{brandAnalysis.tone}</p>
                 </div>
                 <div>
-                  <h4 className="text-neutral-400 mb-1">Target Audience</h4>
-                  <p className="text-white">{brandAnalysis.targetAudience}</p>
+                  <h4 className="text-[#334155] mb-1">Target Audience</h4>
+                  <p className="text-[#1A1A2E]">{brandAnalysis.targetAudience}</p>
                 </div>
                 <div>
-                  <h4 className="text-neutral-400 mb-1">Brand Voice</h4>
-                  <p className="text-white">{brandAnalysis.brandVoice}</p>
+                  <h4 className="text-[#334155] mb-1">Brand Voice</h4>
+                  <p className="text-[#1A1A2E]">{brandAnalysis.brandVoice}</p>
                 </div>
                 <div>
-                  <h4 className="text-neutral-400 mb-2">Key Themes</h4>
+                  <h4 className="text-[#334155] mb-2">Key Themes</h4>
                   <div className="flex flex-wrap gap-2">
                     {brandAnalysis.keyThemes?.map((theme, i) => (
                       <span
                         key={i}
-                        className="px-3 py-1 rounded-full bg-green-500/10 text-green-400 text-xs"
+                        className="px-3 py-1 rounded-full bg-[#D1F5F3] text-[#0ABAB5] text-xs"
                       >
                         {theme}
                       </span>
@@ -345,11 +345,11 @@ export default function SEOWriterSetupPage() {
 
             {/* Language Selection */}
             <div className="mb-6">
-              <label className="block text-white font-medium mb-2">Language</label>
+              <label className="block text-[#1A1A2E] font-medium mb-2">Language</label>
               <select
                 value={language}
                 onChange={(e) => setLanguage(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-green-500/50"
+                className="w-full px-4 py-3 rounded-xl bg-[#F1F5F9] border border-[#E2E8F0] text-[#1A1A2E] focus:outline-none focus:border-[#0ABAB5]"
               >
                 <option value="English">English</option>
                 <option value="Spanish">Spanish</option>
@@ -364,7 +364,7 @@ export default function SEOWriterSetupPage() {
 
             {/* Image Style Selection */}
             <div className="mb-8">
-              <label className="block text-white font-medium mb-4">
+              <label className="block text-[#1A1A2E] font-medium mb-4">
                 Choose article image style
               </label>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -374,22 +374,22 @@ export default function SEOWriterSetupPage() {
                     onClick={() => setImageStyle(style.id)}
                     className={`p-4 rounded-xl border transition-all text-left ${
                       imageStyle === style.id
-                        ? "bg-green-500/10 border-green-500/30"
-                        : "bg-white/5 border-white/10 hover:border-white/20"
+                        ? "bg-[#D1F5F3] border-[#0ABAB5]/30"
+                        : "bg-white border-[#E2E8F0] hover:border-[#0ABAB5]/30"
                     }`}
                   >
-                    <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center mb-2">
-                      <ImageIcon className="w-5 h-5 text-neutral-400" />
+                    <div className="w-10 h-10 rounded-lg bg-[#F1F5F9] flex items-center justify-center mb-2">
+                      <ImageIcon className="w-5 h-5 text-[#334155]" />
                     </div>
-                    <h4 className="text-white font-medium text-sm">{style.name}</h4>
-                    <p className="text-neutral-500 text-xs">{style.desc}</p>
+                    <h4 className="text-[#1A1A2E] font-medium text-sm">{style.name}</h4>
+                    <p className="text-[#334155] text-xs">{style.desc}</p>
                   </button>
                 ))}
               </div>
             </div>
 
             {error && (
-              <div className="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 flex items-center gap-2">
+              <div className="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 flex items-center gap-2">
                 <AlertCircle className="w-5 h-5 flex-shrink-0" />
                 {error}
               </div>
@@ -398,7 +398,7 @@ export default function SEOWriterSetupPage() {
             <div className="flex gap-4">
               <button
                 onClick={() => setStep(1)}
-                className="px-6 py-3 rounded-xl bg-white/10 text-white font-medium hover:bg-white/20 transition-colors flex items-center gap-2"
+                className="px-6 py-3 rounded-xl bg-[#F1F5F9] text-[#1A1A2E] font-medium hover:bg-[#E2E8F0] transition-colors flex items-center gap-2"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Back
@@ -408,7 +408,7 @@ export default function SEOWriterSetupPage() {
                 disabled={isLoading}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="flex-1 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 text-white font-medium shadow-lg shadow-green-500/25 flex items-center justify-center gap-2 disabled:opacity-50"
+                className="flex-1 py-3 rounded-xl bg-gradient-to-r from-[#0ABAB5] to-[#089691] text-white font-medium shadow-lg shadow-[#0ABAB5]/20 flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 {isLoading ? (
                   <>
@@ -434,10 +434,10 @@ export default function SEOWriterSetupPage() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
           >
-            <h1 className="text-3xl font-bold text-white mb-4 text-center">
+            <h1 className="text-3xl font-bold text-[#1A1A2E] mb-4 text-center">
               Upcoming Articles
             </h1>
-            <p className="text-neutral-400 mb-8 text-center">
+            <p className="text-[#334155] mb-8 text-center">
               Some examples of what SEO Writer will create for you.
             </p>
 
@@ -445,10 +445,10 @@ export default function SEOWriterSetupPage() {
               {keywords.slice(0, 5).map((kw, i) => (
                 <div
                   key={i}
-                  className="p-4 rounded-xl bg-white/5 border border-white/10"
+                  className="p-4 rounded-xl bg-white border border-[#E2E8F0] shadow-sm"
                 >
-                  <h4 className="text-white font-medium">{kw.keyword}</h4>
-                  <p className="text-sm text-neutral-500">
+                  <h4 className="text-[#1A1A2E] font-medium">{kw.keyword}</h4>
+                  <p className="text-sm text-[#334155]">
                     Est. monthly traffic boost: +{kw.trafficBoost}
                   </p>
                 </div>
@@ -456,7 +456,7 @@ export default function SEOWriterSetupPage() {
             </div>
 
             {error && (
-              <div className="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 flex items-center gap-2">
+              <div className="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 flex items-center gap-2">
                 <AlertCircle className="w-5 h-5 flex-shrink-0" />
                 {error}
               </div>
@@ -465,7 +465,7 @@ export default function SEOWriterSetupPage() {
             <div className="flex gap-4">
               <button
                 onClick={() => setStep(2)}
-                className="px-6 py-3 rounded-xl bg-white/10 text-white font-medium hover:bg-white/20 transition-colors flex items-center gap-2"
+                className="px-6 py-3 rounded-xl bg-[#F1F5F9] text-[#1A1A2E] font-medium hover:bg-[#E2E8F0] transition-colors flex items-center gap-2"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Back
@@ -475,7 +475,7 @@ export default function SEOWriterSetupPage() {
                 disabled={isLoading}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="flex-1 py-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 text-white font-medium shadow-lg shadow-green-500/25 flex items-center justify-center gap-2 disabled:opacity-50"
+                className="flex-1 py-3 rounded-xl bg-gradient-to-r from-[#0ABAB5] to-[#089691] text-white font-medium shadow-lg shadow-[#0ABAB5]/20 flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 {isLoading ? (
                   <>
@@ -502,21 +502,21 @@ export default function SEOWriterSetupPage() {
             exit={{ opacity: 0, x: -20 }}
             className="text-center"
           >
-            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center mx-auto mb-6">
-              <CheckCircle className="w-12 h-12 text-green-400" />
+            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#D1F5F3] to-[#0ABAB5]/20 flex items-center justify-center mx-auto mb-6">
+              <CheckCircle className="w-12 h-12 text-[#0ABAB5]" />
             </div>
-            <h1 className="text-3xl font-bold text-white mb-4">All set!</h1>
-            <p className="text-neutral-400 mb-8">
+            <h1 className="text-3xl font-bold text-[#1A1A2E] mb-4">All set!</h1>
+            <p className="text-[#334155] mb-8">
               SEO Writer is ready to generate content for your site.
             </p>
 
             {/* WordPress Connection */}
-            <div className="max-w-md mx-auto mb-8 p-6 rounded-2xl bg-white/5 border border-white/10">
-              <h3 className="text-white font-medium mb-4 flex items-center gap-2">
-                <Globe className="w-5 h-5 text-green-400" />
+            <div className="max-w-md mx-auto mb-8 p-6 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm">
+              <h3 className="text-[#1A1A2E] font-medium mb-4 flex items-center gap-2">
+                <Globe className="w-5 h-5 text-[#0ABAB5]" />
                 Connect WordPress (Optional)
               </h3>
-              <p className="text-neutral-400 text-sm mb-4">
+              <p className="text-[#334155] text-sm mb-4">
                 Connect your WordPress site to auto-publish articles.
               </p>
               <input
@@ -524,16 +524,16 @@ export default function SEOWriterSetupPage() {
                 value={wpUsername}
                 onChange={(e) => setWpUsername(e.target.value)}
                 placeholder="WordPress Username"
-                className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-neutral-500 focus:outline-none focus:border-green-500/50 mb-3"
+                className="w-full px-4 py-3 rounded-lg bg-[#F1F5F9] border border-[#E2E8F0] text-[#1A1A2E] placeholder-[#334155] focus:outline-none focus:border-[#0ABAB5] mb-3"
               />
               <input
                 type="password"
                 value={wpPassword}
                 onChange={(e) => setWpPassword(e.target.value)}
                 placeholder="Application Password"
-                className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-neutral-500 focus:outline-none focus:border-green-500/50 mb-3"
+                className="w-full px-4 py-3 rounded-lg bg-[#F1F5F9] border border-[#E2E8F0] text-[#1A1A2E] placeholder-[#334155] focus:outline-none focus:border-[#0ABAB5] mb-3"
               />
-              <p className="text-xs text-neutral-500">
+              <p className="text-xs text-[#334155]">
                 Find in WordPress Admin → Users → Profile → Application Passwords
               </p>
             </div>
@@ -542,7 +542,7 @@ export default function SEOWriterSetupPage() {
               onClick={finishSetup}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="px-8 py-4 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 text-white font-medium shadow-lg shadow-green-500/25 flex items-center justify-center gap-2 mx-auto"
+              className="px-8 py-4 rounded-xl bg-gradient-to-r from-[#0ABAB5] to-[#089691] text-white font-medium shadow-lg shadow-[#0ABAB5]/20 flex items-center justify-center gap-2 mx-auto"
             >
               <FileText className="w-5 h-5" />
               Go to Dashboard

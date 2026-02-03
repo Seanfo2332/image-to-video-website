@@ -14,11 +14,13 @@ export default async function SEOWriterLayout({
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] bg-gradient-mesh">
+    <div className="min-h-screen bg-[#FAFBFC]">
+      {/* Subtle background pattern */}
+      <div className="fixed inset-0 pattern-dots opacity-20 pointer-events-none" />
       <SEOWriterSidebar />
       {/* Mobile top padding */}
       <div className="lg:hidden h-14" />
-      <main className="lg:ml-64 min-h-screen">
+      <main className="lg:ml-64 min-h-screen relative">
         <div className="p-4 md:p-8">{children}</div>
       </main>
     </div>

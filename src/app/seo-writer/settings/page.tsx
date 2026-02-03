@@ -112,20 +112,20 @@ function LanguageDropdown({
   const selectedLanguage = LANGUAGES.find(l => l.code === value) || LANGUAGES[0];
 
   return (
-    <div className="py-4 border-b border-neutral-800">
+    <div className="py-4 border-b border-[#E2E8F0]">
       <div className="flex items-center gap-3">
         <span className="text-2xl">{selectedLanguage.flag}</span>
         <div className="flex-1">
-          <label className="block text-sm font-medium text-neutral-300 mb-1">
+          <label className="block text-sm font-medium text-[#334155] mb-1">
             Content Language
           </label>
           <div className="relative">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="w-full flex items-center justify-between px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-purple-500/50 cursor-pointer hover:bg-white/10 transition-colors"
+              className="w-full flex items-center justify-between px-4 py-2.5 rounded-lg bg-[#F1F5F9] border border-[#E2E8F0] text-[#1A1A2E] text-sm focus:outline-none focus:border-[#D4AF37] cursor-pointer hover:bg-[#E2E8F0] transition-colors"
             >
               <span>{selectedLanguage.name}</span>
-              <ChevronDown className={`w-4 h-4 text-neutral-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`w-4 h-4 text-[#334155] transition-transform ${isOpen ? 'rotate-180' : ''}`} />
             </button>
 
             {isOpen && (
@@ -137,7 +137,7 @@ function LanguageDropdown({
                 />
 
                 {/* Dropdown */}
-                <div className="absolute top-full left-0 right-0 mt-2 py-2 rounded-lg bg-neutral-800 border border-neutral-700 shadow-xl z-20 max-h-64 overflow-y-auto">
+                <div className="absolute top-full left-0 right-0 mt-2 py-2 rounded-lg bg-white border border-[#E2E8F0] shadow-xl z-20 max-h-64 overflow-y-auto">
                   {LANGUAGES.map((lang) => (
                     <button
                       key={lang.code}
@@ -145,14 +145,14 @@ function LanguageDropdown({
                         onChange(lang.code);
                         setIsOpen(false);
                       }}
-                      className={`w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-white/10 transition-colors ${
-                        lang.code === value ? 'bg-purple-500/20 text-purple-300' : 'text-neutral-200'
+                      className={`w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-[#F1F5F9] transition-colors ${
+                        lang.code === value ? 'bg-[#D4AF37]/10 text-[#D4AF37]' : 'text-[#1A1A2E]'
                       }`}
                     >
                       <span className="text-xl">{lang.flag}</span>
                       <span className="text-sm">{lang.name}</span>
                       {lang.code === value && (
-                        <CheckCircle className="w-4 h-4 text-purple-400 ml-auto" />
+                        <CheckCircle className="w-4 h-4 text-[#D4AF37] ml-auto" />
                       )}
                     </button>
                   ))}
@@ -196,15 +196,15 @@ function EditableSection({
   };
 
   return (
-    <div className="py-6 border-b border-neutral-800">
+    <div className="py-6 border-b border-[#E2E8F0]">
       <div className="flex items-center gap-2 mb-3">
-        <h3 className="text-sm font-semibold text-neutral-300">{label}</h3>
+        <h3 className="text-sm font-semibold text-[#334155]">{label}</h3>
         {!isEditing && (
           <button
             onClick={() => setIsEditing(true)}
-            className="p-1 rounded hover:bg-white/10 transition-colors"
+            className="p-1 rounded hover:bg-[#F1F5F9] transition-colors"
           >
-            <Pencil className="w-3.5 h-3.5 text-purple-400" />
+            <Pencil className="w-3.5 h-3.5 text-[#D4AF37]" />
           </button>
         )}
       </div>
@@ -215,27 +215,27 @@ function EditableSection({
             value={localValue}
             onChange={(e) => setLocalValue(e.target.value)}
             rows={6}
-            className="w-full px-4 py-3 rounded-lg bg-white/5 border border-purple-500/30 text-neutral-200 text-sm leading-relaxed focus:outline-none focus:border-purple-500 resize-none"
+            className="w-full px-4 py-3 rounded-lg bg-[#F1F5F9] border border-[#D4AF37]/30 text-[#1A1A2E] text-sm leading-relaxed focus:outline-none focus:border-[#D4AF37] resize-none"
           />
           <div className="flex gap-2">
             <button
               onClick={handleSave}
               disabled={isSaving}
-              className="px-4 py-2 rounded-lg bg-purple-500 text-white text-sm font-medium hover:bg-purple-600 transition-colors disabled:opacity-50 flex items-center gap-2"
+              className="px-4 py-2 rounded-lg bg-[#D4AF37] text-white text-sm font-medium hover:bg-[#C9A032] transition-colors disabled:opacity-50 flex items-center gap-2"
             >
               {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
               Save
             </button>
             <button
               onClick={handleCancel}
-              className="px-4 py-2 rounded-lg bg-white/10 text-neutral-300 text-sm font-medium hover:bg-white/20 transition-colors"
+              className="px-4 py-2 rounded-lg bg-[#F1F5F9] text-[#334155] text-sm font-medium hover:bg-[#E2E8F0] transition-colors"
             >
               Cancel
             </button>
           </div>
         </div>
       ) : (
-        <p className="text-neutral-400 text-sm leading-relaxed whitespace-pre-wrap">
+        <p className="text-[#334155] text-sm leading-relaxed whitespace-pre-wrap">
           {value || "Not set"}
         </p>
       )}
@@ -434,11 +434,11 @@ export default function SettingsPage() {
   if (!siteId) {
     return (
       <div className="max-w-4xl mx-auto text-center py-20">
-        <AlertCircle className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
-        <h2 className="text-xl text-white mb-2">No site selected</h2>
-        <p className="text-neutral-400 mb-6">Please select a site first.</p>
+        <AlertCircle className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
+        <h2 className="text-xl text-[#1A1A2E] mb-2">No site selected</h2>
+        <p className="text-[#334155] mb-6">Please select a site first.</p>
         <Link href="/seo-writer">
-          <button className="px-4 py-2 rounded-lg bg-green-500/20 text-green-400">
+          <button className="px-4 py-2 rounded-lg bg-[#D1F5F3] text-[#0ABAB5]">
             Go to SEO Writer
           </button>
         </Link>
@@ -449,7 +449,7 @@ export default function SettingsPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 text-green-400 animate-spin" />
+        <Loader2 className="w-8 h-8 text-[#0ABAB5] animate-spin" />
       </div>
     );
   }
@@ -459,19 +459,19 @@ export default function SettingsPage() {
       {/* Header */}
       <div className="flex items-center gap-4 mb-8">
         <Link href={`/seo-writer?siteId=${siteId}`}>
-          <button className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-            <ArrowLeft className="w-5 h-5 text-neutral-400" />
+          <button className="p-2 rounded-lg bg-[#F1F5F9] hover:bg-[#E2E8F0] transition-colors">
+            <ArrowLeft className="w-5 h-5 text-[#334155]" />
           </button>
         </Link>
         <div>
-          <h1 className="text-3xl font-bold text-white">Settings</h1>
-          <p className="text-neutral-400">{site?.name || site?.url}</p>
+          <h1 className="text-3xl font-bold text-[#1A1A2E]">Settings</h1>
+          <p className="text-[#334155]">{site?.name || site?.url}</p>
         </div>
       </div>
 
       {/* Alerts */}
       {error && (
-        <div className="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 flex items-center gap-2">
+        <div className="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 flex items-center gap-2">
           <AlertCircle className="w-5 h-5 flex-shrink-0" />
           {error}
         </div>
@@ -480,7 +480,7 @@ export default function SettingsPage() {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-6 p-4 rounded-lg bg-green-500/10 border border-green-500/20 text-green-400 flex items-center gap-2"
+          className="mb-6 p-4 rounded-lg bg-[#D1F5F3] border border-[#0ABAB5]/20 text-[#0ABAB5] flex items-center gap-2"
         >
           <CheckCircle className="w-5 h-5 flex-shrink-0" />
           {success}
@@ -489,10 +489,10 @@ export default function SettingsPage() {
 
       <div className="space-y-6">
         {/* Your Brand Section */}
-        <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
+        <div className="p-6 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm">
           <div className="mb-6">
-            <h2 className="text-xl font-semibold text-white">Your Brand</h2>
-            <p className="text-neutral-400 text-sm">Language, audience, and content settings</p>
+            <h2 className="text-xl font-semibold text-[#1A1A2E]">Your Brand</h2>
+            <p className="text-[#334155] text-sm">Language, audience, and content settings</p>
           </div>
 
           {/* Content Language */}
@@ -526,16 +526,16 @@ export default function SettingsPage() {
           />
 
           {/* Create Images Toggle */}
-          <div className="py-6 border-b border-neutral-800">
+          <div className="py-6 border-b border-[#E2E8F0]">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-semibold text-neutral-300">Create Images For My Articles</h3>
-                <p className="text-neutral-500 text-xs mt-1">AI generates images for your articles</p>
+                <h3 className="text-sm font-semibold text-[#334155]">Create Images For My Articles</h3>
+                <p className="text-[#334155] text-xs mt-1">AI generates images for your articles</p>
               </div>
               <button
                 onClick={() => setGenerateImages(!generateImages)}
                 className={`relative w-12 h-6 rounded-full transition-colors ${
-                  generateImages ? "bg-purple-500" : "bg-neutral-700"
+                  generateImages ? "bg-[#D4AF37]" : "bg-[#E2E8F0]"
                 }`}
               >
                 <span
@@ -550,7 +550,7 @@ export default function SettingsPage() {
           {/* Image Style */}
           {generateImages && (
             <div className="py-6">
-              <h3 className="text-sm font-semibold text-neutral-300 mb-4">Image Style</h3>
+              <h3 className="text-sm font-semibold text-[#334155] mb-4">Image Style</h3>
               <div className="grid grid-cols-3 gap-3">
                 {IMAGE_STYLES.map((style) => (
                   <button
@@ -558,8 +558,8 @@ export default function SettingsPage() {
                     onClick={() => updateBrandProfile("imageStyle", style.id)}
                     className={`relative rounded-xl overflow-hidden aspect-[16/10] group ${
                       brandProfile?.imageStyle === style.id
-                        ? "ring-2 ring-purple-500 ring-offset-2 ring-offset-neutral-900"
-                        : "hover:ring-2 hover:ring-white/20 hover:ring-offset-2 hover:ring-offset-neutral-900"
+                        ? "ring-2 ring-[#D4AF37] ring-offset-2 ring-offset-white"
+                        : "hover:ring-2 hover:ring-[#E2E8F0] hover:ring-offset-2 hover:ring-offset-white"
                     }`}
                   >
                     <img
@@ -573,7 +573,7 @@ export default function SettingsPage() {
                     </span>
                     {brandProfile?.imageStyle === style.id && (
                       <div className="absolute top-2 right-2">
-                        <CheckCircle className="w-5 h-5 text-purple-400" />
+                        <CheckCircle className="w-5 h-5 text-[#D4AF37]" />
                       </div>
                     )}
                   </button>
@@ -584,27 +584,27 @@ export default function SettingsPage() {
         </div>
 
         {/* WordPress Connection */}
-        <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
-          <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-            <Globe className="w-5 h-5 text-green-400" />
+        <div className="p-6 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm">
+          <h2 className="text-xl font-semibold text-[#1A1A2E] mb-4 flex items-center gap-2">
+            <Globe className="w-5 h-5 text-[#0ABAB5]" />
             WordPress Connection
           </h2>
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm text-neutral-400 mb-2">
+              <label className="block text-sm text-[#334155] mb-2">
                 Website URL
               </label>
               <input
                 type="text"
                 value={site?.url || ""}
                 disabled
-                className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-neutral-400 cursor-not-allowed"
+                className="w-full px-4 py-3 rounded-lg bg-[#F1F5F9] border border-[#E2E8F0] text-[#334155] cursor-not-allowed"
               />
             </div>
 
             <div>
-              <label className="block text-sm text-neutral-400 mb-2">
+              <label className="block text-sm text-[#334155] mb-2">
                 WordPress Username
               </label>
               <input
@@ -612,12 +612,12 @@ export default function SettingsPage() {
                 value={wpUsername}
                 onChange={(e) => setWpUsername(e.target.value)}
                 placeholder="admin"
-                className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-neutral-500 focus:outline-none focus:border-green-500/50"
+                className="w-full px-4 py-3 rounded-lg bg-[#F1F5F9] border border-[#E2E8F0] text-[#1A1A2E] placeholder-[#334155] focus:outline-none focus:border-[#0ABAB5]"
               />
             </div>
 
             <div>
-              <label className="block text-sm text-neutral-400 mb-2">
+              <label className="block text-sm text-[#334155] mb-2">
                 Application Password
               </label>
               <input
@@ -625,9 +625,9 @@ export default function SettingsPage() {
                 value={wpPassword}
                 onChange={(e) => setWpPassword(e.target.value)}
                 placeholder="xxxx xxxx xxxx xxxx xxxx xxxx"
-                className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-neutral-500 focus:outline-none focus:border-green-500/50"
+                className="w-full px-4 py-3 rounded-lg bg-[#F1F5F9] border border-[#E2E8F0] text-[#1A1A2E] placeholder-[#334155] focus:outline-none focus:border-[#0ABAB5]"
               />
-              <p className="text-xs text-neutral-500 mt-2">
+              <p className="text-xs text-[#334155] mt-2">
                 Find in WordPress Admin → Users → Profile → Application Passwords
               </p>
             </div>
@@ -636,18 +636,18 @@ export default function SettingsPage() {
               <div className="flex items-center gap-2">
                 {site?.isConnected ? (
                   <>
-                    <CheckCircle className="w-4 h-4 text-green-400" />
-                    <span className="text-green-400 text-sm">Connected</span>
+                    <CheckCircle className="w-4 h-4 text-[#0ABAB5]" />
+                    <span className="text-[#0ABAB5] text-sm">Connected</span>
                     {site.lastTestedAt && (
-                      <span className="text-neutral-500 text-xs">
+                      <span className="text-[#334155] text-xs">
                         (tested {new Date(site.lastTestedAt).toLocaleDateString()})
                       </span>
                     )}
                   </>
                 ) : (
                   <>
-                    <AlertCircle className="w-4 h-4 text-yellow-400" />
-                    <span className="text-yellow-400 text-sm">Not connected</span>
+                    <AlertCircle className="w-4 h-4 text-yellow-500" />
+                    <span className="text-yellow-500 text-sm">Not connected</span>
                   </>
                 )}
               </div>
@@ -656,7 +656,7 @@ export default function SettingsPage() {
                 disabled={isTesting || !wpUsername}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="px-4 py-2 rounded-lg bg-blue-500/20 text-blue-400 font-medium flex items-center gap-2 disabled:opacity-50"
+                className="px-4 py-2 rounded-lg bg-[#1E3A5F]/10 text-[#1E3A5F] font-medium flex items-center gap-2 disabled:opacity-50"
               >
                 {isTesting ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -670,21 +670,21 @@ export default function SettingsPage() {
         </div>
 
         {/* Auto-Publishing Settings */}
-        <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
-          <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-            <Zap className="w-5 h-5 text-purple-400" />
+        <div className="p-6 rounded-2xl bg-white border border-[#E2E8F0] shadow-sm">
+          <h2 className="text-xl font-semibold text-[#1A1A2E] mb-4 flex items-center gap-2">
+            <Zap className="w-5 h-5 text-[#D4AF37]" />
             Auto-Publishing
           </h2>
-          <p className="text-neutral-400 text-sm mb-6">
+          <p className="text-[#334155] text-sm mb-6">
             Automatically generate and publish articles from your keywords. Articles are generated daily to fill the next 7 days.
           </p>
 
           <div className="space-y-6">
             {/* Enable Auto-Publish Toggle */}
-            <div className="flex items-center justify-between py-4 border-b border-neutral-800">
+            <div className="flex items-center justify-between py-4 border-b border-[#E2E8F0]">
               <div>
-                <h3 className="text-sm font-semibold text-neutral-300">Enable Auto-Publishing</h3>
-                <p className="text-neutral-500 text-xs mt-1">
+                <h3 className="text-sm font-semibold text-[#334155]">Enable Auto-Publishing</h3>
+                <p className="text-[#334155] text-xs mt-1">
                   Automatically generate articles from pending keywords
                 </p>
               </div>
@@ -692,7 +692,7 @@ export default function SettingsPage() {
                 onClick={() => updateAutoPublishSettings({ enabled: !autoPublishSettings?.enabled })}
                 disabled={isUpdatingAutoPublish}
                 className={`relative w-12 h-6 rounded-full transition-colors disabled:opacity-50 ${
-                  autoPublishSettings?.enabled ? "bg-purple-500" : "bg-neutral-700"
+                  autoPublishSettings?.enabled ? "bg-[#D4AF37]" : "bg-[#E2E8F0]"
                 }`}
               >
                 <span
@@ -706,18 +706,18 @@ export default function SettingsPage() {
             {autoPublishSettings?.enabled && (
               <>
                 {/* Publish Time */}
-                <div className="py-4 border-b border-neutral-800">
+                <div className="py-4 border-b border-[#E2E8F0]">
                   <div className="flex items-center gap-3">
-                    <Clock className="w-5 h-5 text-neutral-400" />
+                    <Clock className="w-5 h-5 text-[#334155]" />
                     <div className="flex-1">
-                      <label className="block text-sm font-medium text-neutral-300 mb-2">
+                      <label className="block text-sm font-medium text-[#334155] mb-2">
                         Daily Publish Time
                       </label>
                       <select
                         value={autoPublishSettings?.publishTime || "09:00"}
                         onChange={(e) => updateAutoPublishSettings({ publishTime: e.target.value })}
                         disabled={isUpdatingAutoPublish}
-                        className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-purple-500/50 disabled:opacity-50"
+                        className="w-full px-4 py-2.5 rounded-lg bg-[#F1F5F9] border border-[#E2E8F0] text-[#1A1A2E] text-sm focus:outline-none focus:border-[#D4AF37] disabled:opacity-50"
                       >
                         <option value="06:00">6:00 AM</option>
                         <option value="07:00">7:00 AM</option>
@@ -736,10 +736,10 @@ export default function SettingsPage() {
 
                 {/* Days Ahead */}
                 <div className="py-4">
-                  <label className="block text-sm font-medium text-neutral-300 mb-2">
+                  <label className="block text-sm font-medium text-[#334155] mb-2">
                     Days to Fill Ahead
                   </label>
-                  <p className="text-neutral-500 text-xs mb-3">
+                  <p className="text-[#334155] text-xs mb-3">
                     How many days of content to keep scheduled
                   </p>
                   <div className="flex gap-2">
@@ -750,8 +750,8 @@ export default function SettingsPage() {
                         disabled={isUpdatingAutoPublish}
                         className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 ${
                           autoPublishSettings?.daysAhead === days
-                            ? "bg-purple-500 text-white"
-                            : "bg-white/5 text-neutral-400 hover:bg-white/10"
+                            ? "bg-[#D4AF37] text-white"
+                            : "bg-[#F1F5F9] text-[#334155] hover:bg-[#E2E8F0]"
                         }`}
                       >
                         {days} days
@@ -766,13 +766,13 @@ export default function SettingsPage() {
 
         {/* Danger Zone */}
         <div className="p-6 rounded-2xl bg-red-500/5 border border-red-500/20">
-          <h2 className="text-xl font-semibold text-red-400 mb-2">Danger Zone</h2>
-          <p className="text-neutral-500 text-sm mb-4">Irreversible actions</p>
+          <h2 className="text-xl font-semibold text-red-500 mb-2">Danger Zone</h2>
+          <p className="text-[#334155] text-sm mb-4">Irreversible actions</p>
           <motion.button
             onClick={() => setShowDeleteModal(true)}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="px-4 py-2 rounded-lg bg-red-500/20 text-red-400 font-medium hover:bg-red-500/30 transition-colors flex items-center gap-2"
+            className="px-4 py-2 rounded-lg bg-red-500/20 text-red-500 font-medium hover:bg-red-500/30 transition-colors flex items-center gap-2"
           >
             <Unplug className="w-4 h-4" />
             Disconnect Website

@@ -2,19 +2,54 @@
 @plugin "@tailwindcss/typography";
 
 :root {
-  --background: #F8FAFC;
-  --foreground: #1E293B;
+  /* ============================================
+     PREMIUM COLOR PALETTE - AlphaFin Brand
+     ============================================ */
+
+  /* Primary Colors (from logo) */
   --tiffany-blue: #0ABAB5;
   --tiffany-dark: #089691;
   --tiffany-light: #D1F5F3;
+
+  /* Premium Neutrals */
+  --charcoal: #1A1A2E;
+  --slate: #334155;
+  --pearl: #FAFBFC;
+  --ivory: #F1F5F9;
+  --platinum: #E2E8F0;
+
+  /* Accent Colors */
+  --gold: #D4AF37;
+  --gold-light: #E8D48A;
+  --rose-gold: #B76E79;
+  --deep-navy: #1E3A5F;
+
+  /* Legacy mappings */
+  --background: var(--pearl);
+  --foreground: var(--charcoal);
   --logo-slate: #BDD3E1;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-playfair);
   --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-playfair);
+
+  /* Premium Color Tokens */
+  --color-tiffany: #0ABAB5;
+  --color-tiffany-dark: #089691;
+  --color-tiffany-light: #D1F5F3;
+  --color-charcoal: #1A1A2E;
+  --color-slate: #334155;
+  --color-pearl: #FAFBFC;
+  --color-ivory: #F1F5F9;
+  --color-platinum: #E2E8F0;
+  --color-gold: #D4AF37;
+  --color-gold-light: #E8D48A;
+  --color-rose-gold: #B76E79;
+  --color-deep-navy: #1E3A5F;
 
   /* Animation keyframes */
   --animate-spotlight: spotlight 2s ease .75s 1 forwards;
@@ -22,13 +57,70 @@
   --animate-spin-around: spin-around calc(var(--speed) * 2) infinite linear;
   --animate-gradient: gradient 8s linear infinite;
   --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-fade-in: fade-in 0.3s ease-out forwards;
+  --animate-slide-up-subtle: slide-up-subtle 0.4s ease-out forwards;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), system-ui, sans-serif;
+  background: var(--pearl);
+  color: var(--charcoal);
+  font-family: var(--font-playfair), Georgia, serif;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+   PREMIUM TYPOGRAPHY
+   ============================================ */
+
+/* Serif headings with Playfair Display */
+.font-serif {
+  font-family: var(--font-playfair), Georgia, serif;
+}
+
+.heading-premium {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--charcoal);
+}
+
+.heading-premium-lg {
+  font-size: 3rem;
+  line-height: 1.1;
+}
+
+.heading-premium-xl {
+  font-size: 3.5rem;
+  line-height: 1.1;
+}
+
+@media (min-width: 768px) {
+  .heading-premium-lg {
+    font-size: 3.5rem;
+  }
+  .heading-premium-xl {
+    font-size: 4.5rem;
+  }
+}
+
+/* Caption text */
+.text-caption {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--slate);
+}
+
+/* Premium badge styling */
+.badge-premium {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gold);
 }
 
 /* ============================================
@@ -231,6 +323,40 @@ body {
   }
 }
 
+/* Premium subtle slide up (less bouncy) */
+@keyframes slide-up-subtle {
+  0% {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Premium fade in */
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Elegant underline animation */
+@keyframes underline-expand {
+  0% {
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  100% {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
 /* Liquid wobble */
 @keyframes liquid-wobble {
   0%, 100% {
@@ -321,6 +447,18 @@ body {
   animation: liquid-wobble 10s ease-in-out infinite;
 }
 
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out forwards;
+}
+
+.animate-slide-up-subtle {
+  animation: slide-up-subtle 0.4s ease-out forwards;
+}
+
+.animate-underline-expand {
+  animation: underline-expand 0.3s ease-out forwards;
+}
+
 /* ============================================
    SPECIAL EFFECTS
    ============================================ */
@@ -364,6 +502,22 @@ body {
 
 .gradient-text-vivid {
   background: linear-gradient(135deg, #a855f7 0%, #6366f1 50%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Premium Tiffany gradient text */
+.gradient-text-tiffany {
+  background: linear-gradient(135deg, var(--tiffany-blue) 0%, var(--tiffany-dark) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Premium gold gradient text */
+.gradient-text-gold {
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -439,4 +593,163 @@ body {
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+/* ============================================
+   PREMIUM BUTTON STYLES
+   ============================================ */
+
+/* Primary Tiffany Button */
+.btn-primary {
+  background-color: var(--tiffany-blue);
+  color: white;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 14px rgba(10, 186, 181, 0.25);
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--tiffany-dark);
+  box-shadow: 0 6px 20px rgba(10, 186, 181, 0.35);
+}
+
+/* Secondary Outlined Button */
+.btn-secondary {
+  background-color: transparent;
+  color: var(--charcoal);
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--platinum);
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  border-color: var(--tiffany-blue);
+  color: var(--tiffany-blue);
+  background-color: var(--tiffany-light);
+}
+
+/* Premium Gold CTA Button */
+.btn-gold {
+  background-color: var(--gold);
+  color: var(--charcoal);
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 14px rgba(212, 175, 55, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btn-gold:hover {
+  background-color: var(--gold-light);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+}
+
+/* ============================================
+   PREMIUM CARD STYLES
+   ============================================ */
+
+.card-premium {
+  background: white;
+  border: 1px solid var(--platinum);
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.card-premium:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  border-color: rgba(10, 186, 181, 0.2);
+}
+
+.card-premium-gold {
+  background: white;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* ============================================
+   PREMIUM INPUT STYLES
+   ============================================ */
+
+.input-premium {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--platinum);
+  padding: 0.75rem 0;
+  color: var(--charcoal);
+  transition: all 0.2s ease;
+}
+
+.input-premium:focus {
+  outline: none;
+  border-bottom-color: var(--tiffany-blue);
+}
+
+.input-premium::placeholder {
+  color: var(--slate);
+  opacity: 0.6;
+}
+
+/* Input label in small caps */
+.label-premium {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--slate);
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+/* ============================================
+   PREMIUM DECORATIVE ELEMENTS
+   ============================================ */
+
+/* Subtle dot grid pattern */
+.pattern-dots {
+  background-image: radial-gradient(circle at 1px 1px, var(--platinum) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+/* Gold accent line */
+.accent-line-gold {
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+}
+
+/* Tiffany accent line */
+.accent-line-tiffany {
+  height: 2px;
+  background: linear-gradient(90deg, var(--tiffany-blue), var(--tiffany-light), var(--tiffany-blue));
+}
+
+/* Premium shadow utilities */
+.shadow-premium {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.shadow-premium-lg {
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* Gold ring accent for avatars */
+.ring-gold {
+  box-shadow: 0 0 0 2px var(--gold);
+}
+
+/* ============================================
+   PREMIUM TABLE STYLES
+   ============================================ */
+
+.table-premium tbody tr:nth-child(even) {
+  background-color: var(--ivory);
+}
+
+.table-premium tbody tr:hover {
+  background-color: var(--tiffany-light);
 }

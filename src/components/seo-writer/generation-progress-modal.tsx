@@ -56,7 +56,7 @@ export function GenerationProgressModal({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50"
           />
 
           {/* Modal */}
@@ -64,18 +64,18 @@ export function GenerationProgressModal({
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-[#1a1a1f] border border-white/10 rounded-2xl shadow-2xl z-50 overflow-hidden"
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white border border-[#E2E8F0] rounded-2xl shadow-premium-lg z-50 overflow-hidden"
           >
             {/* Header */}
-            <div className="p-6 border-b border-white/10 text-center">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center mx-auto mb-4">
+            <div className="p-6 border-b border-[#E2E8F0] text-center">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#0ABAB5] to-[#089691] flex items-center justify-center mx-auto mb-4 shadow-lg shadow-[#0ABAB5]/20">
                 <PenTool className="w-8 h-8 text-white" />
               </div>
-              <h2 className="text-xl font-semibold text-white mb-2">
+              <h2 className="text-xl font-semibold text-[#1A1A2E] mb-2">
                 Generating Article
               </h2>
-              <p className="text-sm text-neutral-400">
-                Creating content for: <span className="text-green-400">{keyword}</span>
+              <p className="text-sm text-[#334155]">
+                Creating content for: <span className="text-[#0ABAB5] font-medium">{keyword}</span>
               </p>
             </div>
 
@@ -94,27 +94,27 @@ export function GenerationProgressModal({
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
                     className={`flex items-start gap-4 p-3 rounded-xl transition-all ${
-                      isActive ? "bg-green-500/10" : ""
+                      isActive ? "bg-[#D1F5F3]" : ""
                     }`}
                   >
                     {/* Step Indicator */}
                     <div
                       className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all ${
                         isCompleted
-                          ? "bg-green-500"
+                          ? "bg-[#0ABAB5]"
                           : isActive
-                          ? "bg-green-500/20 border border-green-500/50"
-                          : "bg-white/5 border border-white/10"
+                          ? "bg-[#0ABAB5]/20 border border-[#0ABAB5]/50"
+                          : "bg-[#F1F5F9] border border-[#E2E8F0]"
                       }`}
                     >
                       {isCompleted ? (
                         <Check className="w-5 h-5 text-white" />
                       ) : isActive ? (
-                        <Loader2 className="w-5 h-5 text-green-400 animate-spin" />
+                        <Loader2 className="w-5 h-5 text-[#0ABAB5] animate-spin" />
                       ) : (
                         <Icon
                           className={`w-5 h-5 ${
-                            isPending ? "text-neutral-500" : "text-green-400"
+                            isPending ? "text-[#334155]" : "text-[#0ABAB5]"
                           }`}
                         />
                       )}
@@ -125,17 +125,17 @@ export function GenerationProgressModal({
                       <p
                         className={`font-medium transition-colors ${
                           isCompleted
-                            ? "text-green-400"
+                            ? "text-[#0ABAB5]"
                             : isActive
-                            ? "text-white"
-                            : "text-neutral-500"
+                            ? "text-[#1A1A2E]"
+                            : "text-[#334155]"
                         }`}
                       >
                         {step.title}
                       </p>
                       <p
                         className={`text-sm transition-colors ${
-                          isActive ? "text-neutral-400" : "text-neutral-600"
+                          isActive ? "text-[#334155]" : "text-[#334155]/60"
                         }`}
                       >
                         {step.description}
@@ -147,8 +147,8 @@ export function GenerationProgressModal({
             </div>
 
             {/* Footer */}
-            <div className="p-4 border-t border-white/10 text-center">
-              <p className="text-xs text-neutral-500">
+            <div className="p-4 border-t border-[#E2E8F0] text-center">
+              <p className="text-xs text-[#334155]">
                 This may take a minute. Please don&apos;t close this window.
               </p>
             </div>
