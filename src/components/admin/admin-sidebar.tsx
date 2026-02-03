@@ -26,16 +26,16 @@ export function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-64 bg-black/50 backdrop-blur-xl border-r border-white/5 flex flex-col z-50">
+    <aside className="fixed left-0 top-0 h-screen w-64 bg-white border-r border-slate-200 flex flex-col z-50 shadow-sm">
       {/* Logo */}
-      <div className="p-6 border-b border-white/5">
+      <div className="p-6 border-b border-slate-200">
         <Link href="/admin/dashboard" className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
             <Shield className="w-5 h-5 text-white" />
           </div>
           <div>
-            <span className="text-lg font-bold text-white">Admin Panel</span>
-            <p className="text-xs text-neutral-500">Management</p>
+            <span className="text-lg font-bold text-[#1E293B]">Admin Panel</span>
+            <p className="text-xs text-slate-500">Management</p>
           </div>
         </Link>
       </div>
@@ -50,8 +50,8 @@ export function AdminSidebar() {
                 whileHover={{ x: 4 }}
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                   isActive
-                    ? "bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-white border border-purple-500/30"
-                    : "text-neutral-400 hover:text-white hover:bg-white/5"
+                    ? "bg-[#D1F5F3] text-[#089691] border border-[#0ABAB5]/30"
+                    : "text-slate-600 hover:text-[#1E293B] hover:bg-slate-100"
                 }`}
               >
                 <item.icon className="w-5 h-5" />
@@ -63,11 +63,11 @@ export function AdminSidebar() {
       </nav>
 
       {/* Bottom Actions */}
-      <div className="p-4 border-t border-white/5 space-y-2">
+      <div className="p-4 border-t border-slate-200 space-y-2">
         <Link href="/">
           <motion.div
             whileHover={{ x: 4 }}
-            className="flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-400 hover:text-white hover:bg-white/5 transition-all"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:text-[#1E293B] hover:bg-slate-100 transition-all"
           >
             <Home className="w-5 h-5" />
             <span className="font-medium">Back to Site</span>
@@ -79,7 +79,7 @@ export function AdminSidebar() {
         >
           <motion.div
             whileHover={{ x: 4 }}
-            className="flex items-center gap-3 px-4 py-3 rounded-xl text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:text-red-600 hover:bg-red-50 transition-all"
           >
             <LogOut className="w-5 h-5" />
             <span className="font-medium">Sign Out</span>

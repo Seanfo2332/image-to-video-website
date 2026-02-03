@@ -25,15 +25,15 @@ export function StatsCards({ stats }: StatsCardsProps) {
       title: "Active Users",
       value: stats.activeUsers,
       icon: UserCheck,
-      gradient: "from-green-500 to-emerald-500",
-      shadow: "shadow-green-500/25",
+      gradient: "from-emerald-500 to-[#0ABAB5]",
+      shadow: "shadow-emerald-500/25",
     },
     {
       title: "Admins",
       value: stats.adminUsers,
       icon: Shield,
-      gradient: "from-purple-500 to-pink-500",
-      shadow: "shadow-purple-500/25",
+      gradient: "from-violet-500 to-purple-500",
+      shadow: "shadow-violet-500/25",
     },
     {
       title: "New This Week",
@@ -52,7 +52,7 @@ export function StatsCards({ stats }: StatsCardsProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.1 }}
-          className="liquid-glass rounded-2xl p-6"
+          className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm"
         >
           <div className="flex items-center justify-between mb-4">
             <div
@@ -61,8 +61,8 @@ export function StatsCards({ stats }: StatsCardsProps) {
               <card.icon className="w-6 h-6 text-white" />
             </div>
           </div>
-          <p className="text-4xl font-bold text-white mb-1">{card.value}</p>
-          <p className="text-neutral-400 text-sm">{card.title}</p>
+          <p className="text-4xl font-bold text-[#1E293B] mb-1">{card.value}</p>
+          <p className="text-slate-500 text-sm">{card.title}</p>
         </motion.div>
       ))}
     </div>

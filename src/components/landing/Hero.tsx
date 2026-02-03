@@ -1,56 +1,42 @@
 "use client";
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState, useCallback } from "react";
-import { Spotlight } from "@/components/ui/spotlight";
-import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
-import { ShimmerButton } from "@/components/ui/shimmer-button";
-import { SparklesCore } from "@/components/ui/sparkles";
-import { LiquidGlassCard } from "@/components/ui/liquid-glass";
-import { Play, Pause, Volume2, VolumeX, Sparkles, ArrowRight, Users, Globe, Mic } from "lucide-react";
+import { Play, Pause, Volume2, VolumeX, Sparkles, ArrowRight, Users, Globe, Mic, TrendingUp, Check } from "lucide-react";
 import Link from "next/link";
 
 // Avatar data with talking head videos
-// Using free stock videos from Mixkit - thumbnails extracted directly from videos
 const avatars = [
   {
     id: 1,
     name: "James",
     role: "Business",
-    // Thumbnail directly from the video for perfect sync
     thumbnail: "https://assets.mixkit.co/videos/28287/28287-thumb-720-0.jpg",
-    // Man in suit talking directly to camera with hand gestures
     video: "https://assets.mixkit.co/videos/28287/28287-720.mp4",
-    color: "from-cyan-500 to-blue-500"
+    color: "from-[#0ABAB5] to-[#089691]"
   },
   {
     id: 2,
     name: "Dr. David",
     role: "Professional",
-    // Thumbnail directly from the video for perfect sync
     thumbnail: "https://assets.mixkit.co/videos/4834/4834-thumb-720-0.jpg",
-    // Doctor/therapist speaking directly to camera from office
     video: "https://assets.mixkit.co/videos/4834/4834-720.mp4",
-    color: "from-violet-500 to-purple-500"
+    color: "from-[#BDD3E1] to-slate-400"
   },
   {
     id: 3,
     name: "Alex",
     role: "Presenter",
-    // Thumbnail directly from the video for perfect sync
     thumbnail: "https://assets.mixkit.co/videos/2961/2961-thumb-720-0.jpg",
-    // Person talking directly to camera with microphone
     video: "https://assets.mixkit.co/videos/2961/2961-720.mp4",
-    color: "from-pink-500 to-rose-500"
+    color: "from-pink-400 to-rose-400"
   },
   {
     id: 4,
     name: "Sofia",
     role: "Creator",
-    // Thumbnail directly from the video for perfect sync
     thumbnail: "https://assets.mixkit.co/videos/42323/42323-thumb-720-0.jpg",
-    // Content creator style talking to camera
     video: "https://assets.mixkit.co/videos/42323/42323-720.mp4",
-    color: "from-amber-500 to-orange-500"
+    color: "from-amber-400 to-orange-400"
   },
 ];
 
@@ -78,95 +64,64 @@ export function Hero() {
   return (
     <div
       ref={containerRef}
-      className="min-h-screen w-full flex items-center justify-center bg-black relative overflow-hidden"
+      className="min-h-screen w-full flex items-center justify-center relative overflow-hidden"
+      style={{
+        background: `linear-gradient(135deg, #ffffff 0%, #F8FAFC 50%, #ffffff 100%)`,
+        backgroundImage: `
+          radial-gradient(at 100% 0%, rgba(10, 186, 181, 0.08) 0px, transparent 50%),
+          radial-gradient(at 0% 100%, rgba(189, 211, 225, 0.1) 0px, transparent 50%)
+        `
+      }}
     >
-      {/* Simplified background - single gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black" />
-
-      {/* Single spotlight for accent */}
-      <Spotlight
-        className="-top-40 left-0 md:left-60 md:-top-20"
-        fill="cyan"
-      />
-
-      {/* Reduced sparkles - lower density for better performance */}
-      <div className="absolute inset-0">
-        <SparklesCore
-          background="transparent"
-          minSize={0.6}
-          maxSize={1.2}
-          particleDensity={15}
-          className="w-full h-full"
-          particleColor="#00C3FF"
-        />
+      {/* Subtle gradient mesh */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute top-20 right-20 w-72 h-72 bg-[#D1F5F3] rounded-full blur-[100px]" />
+        <div className="absolute bottom-20 left-20 w-96 h-96 bg-[#BDD3E1]/30 rounded-full blur-[120px]" />
       </div>
-
-      {/* Static gradient orbs - no animation, just CSS */}
-      <div
-        className="absolute w-[400px] h-[400px] rounded-full opacity-20"
-        style={{
-          background: "radial-gradient(circle, rgba(0, 195, 255, 0.6) 0%, transparent 70%)",
-          top: "10%",
-          left: "10%",
-          filter: "blur(60px)",
-        }}
-      />
-      <div
-        className="absolute w-[350px] h-[350px] rounded-full opacity-15"
-        style={{
-          background: "radial-gradient(circle, rgba(139, 92, 246, 0.6) 0%, transparent 70%)",
-          top: "50%",
-          right: "5%",
-          filter: "blur(60px)",
-        }}
-      />
 
       {/* Content */}
       <div className="p-4 max-w-7xl mx-auto relative z-10 w-full pt-32 md:pt-28">
-        {/* Badge - simplified animation */}
+        {/* Badge */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="flex justify-center mb-6"
         >
-          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 border border-cyan-500/30 shadow-lg shadow-cyan-500/20">
-            <Sparkles className="w-4 h-4 text-cyan-400" />
-            <span className="text-sm text-cyan-200 font-medium">
+          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#D1F5F3] border border-[#0ABAB5]/20 shadow-sm">
+            <Sparkles className="w-4 h-4 text-[#0ABAB5]" />
+            <span className="text-sm text-[#089691] font-medium">
               #1 AI Avatar Video Platform
             </span>
-            <ArrowRight className="w-4 h-4 text-cyan-400" />
+            <ArrowRight className="w-4 h-4 text-[#0ABAB5]" />
           </div>
         </motion.div>
 
-        {/* Main heading - simplified */}
+        {/* Main heading */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
           className="text-4xl md:text-7xl font-bold text-center leading-tight"
         >
-          <span className="bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-neutral-400">
+          <span className="text-[#1E293B]">
             Create AI Avatar Videos
           </span>
           <br />
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-400 to-violet-400">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0ABAB5] to-slate-400">
             That Look Real
           </span>
         </motion.h1>
 
         {/* Subheading */}
-        <motion.div
+        <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="mt-6 flex justify-center"
+          className="mt-6 text-center text-lg md:text-xl text-slate-500 max-w-2xl mx-auto"
         >
-          <TextGenerateEffect
-            words="Turn your text into professional videos with lifelike AI avatars. 175+ languages, natural lip-sync, and realistic gestures."
-            className="text-center text-lg md:text-xl text-neutral-300 max-w-2xl"
-          />
-        </motion.div>
+          Turn your text into professional videos with lifelike AI avatars. 175+ languages, natural lip-sync, and realistic gestures.
+        </motion.p>
 
         {/* Quick feature badges */}
         <motion.div
@@ -185,10 +140,10 @@ export function Hero() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.3, delay: 0.6 + index * 0.1 }}
-              className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10"
+              className="flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-slate-200 shadow-sm"
             >
-              <item.icon className="w-4 h-4 text-cyan-400" />
-              <span className="text-sm text-neutral-300">{item.text}</span>
+              <item.icon className="w-4 h-4 text-[#0ABAB5]" />
+              <span className="text-sm text-slate-600">{item.text}</span>
             </motion.div>
           ))}
         </motion.div>
@@ -201,58 +156,49 @@ export function Hero() {
           className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10"
         >
           <Link href="/generate">
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-              <ShimmerButton
-                className="shadow-2xl px-8 py-4"
-                shimmerColor="#00C3FF"
-                background="linear-gradient(135deg, #0891b2 0%, #06b6d4 50%, #22d3ee 100%)"
-              >
-                <span className="flex items-center gap-2 text-white font-semibold text-lg">
-                  Create Free Video
-                  <ArrowRight className="w-5 h-5" />
-                </span>
-              </ShimmerButton>
-            </motion.div>
+            <motion.button
+              whileHover={{ scale: 1.03, boxShadow: "0 10px 30px rgba(10, 186, 181, 0.3)" }}
+              whileTap={{ scale: 0.98 }}
+              className="px-8 py-4 rounded-xl bg-[#0ABAB5] hover:bg-[#089691] text-white font-semibold text-lg shadow-lg shadow-[#0ABAB5]/25 flex items-center gap-2 transition-all"
+            >
+              <span>Create Free Video</span>
+              <ArrowRight className="w-5 h-5" />
+            </motion.button>
           </Link>
 
           <motion.button
-            whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.1)" }}
+            whileHover={{ scale: 1.03, backgroundColor: "#f8fafc" }}
             whileTap={{ scale: 0.95 }}
-            className="px-8 py-4 rounded-full border border-white/20 text-white font-semibold text-lg backdrop-blur-sm transition-all duration-300 flex items-center gap-2"
+            className="px-8 py-4 rounded-xl border border-slate-200 bg-white text-[#1E293B] font-semibold text-lg shadow-sm transition-all flex items-center gap-2"
           >
             <Play className="w-5 h-5" />
             See Examples
           </motion.button>
         </motion.div>
 
-        {/* Avatar Showcase */}
+        {/* Avatar Showcase Card */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
           className="mt-16 relative max-w-5xl mx-auto"
         >
-          {/* Static glow effect - no animation */}
-          <div
-            className="absolute -inset-6 rounded-3xl opacity-25"
-            style={{
-              background: "linear-gradient(45deg, rgba(0, 195, 255, 0.4), rgba(139, 92, 246, 0.4))",
-              filter: "blur(30px)",
-            }}
-          />
+          {/* Card glow */}
+          <div className="absolute -inset-4 bg-gradient-to-r from-[#0ABAB5]/10 to-[#BDD3E1]/10 rounded-3xl blur-2xl" />
 
-          <LiquidGlassCard className="relative">
+          {/* Main card */}
+          <div className="relative bg-white/80 backdrop-blur-xl rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
             <div className="p-6">
               <div className="grid md:grid-cols-2 gap-8 items-center">
                 {/* Left side - Video Player */}
                 <div className="relative">
-                  <div className="aspect-[3/4] rounded-2xl bg-gradient-to-br from-neutral-900 to-black overflow-hidden relative border border-white/10">
+                  <div className="aspect-[3/4] rounded-2xl bg-gradient-to-br from-slate-100 to-slate-50 overflow-hidden relative border border-slate-200 shadow-inner">
                     {/* Background gradient based on active avatar */}
                     <motion.div
-                      className={`absolute inset-0 bg-gradient-to-br ${avatars[activeAvatar].color} opacity-20`}
+                      className={`absolute inset-0 bg-gradient-to-br ${avatars[activeAvatar].color} opacity-10`}
                       key={`bg-${activeAvatar}`}
                       initial={{ opacity: 0 }}
-                      animate={{ opacity: 0.2 }}
+                      animate={{ opacity: 0.1 }}
                       transition={{ duration: 0.5 }}
                     />
 
@@ -280,11 +226,11 @@ export function Hero() {
                           onError={() => setVideoError(true)}
                         />
                       )}
-                      {/* Gradient overlay for better text visibility */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                      {/* Gradient overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent" />
                     </div>
 
-                    {/* Video Controls - simplified */}
+                    {/* Video Controls */}
                     {!videoError && (
                       <div className="absolute top-4 right-4 flex gap-2">
                         <button
@@ -297,7 +243,7 @@ export function Hero() {
                               }
                             }
                           }}
-                          className="w-10 h-10 rounded-full bg-black/60 border border-white/20 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
+                          className="w-10 h-10 rounded-full bg-white/90 border border-slate-200 flex items-center justify-center text-slate-700 hover:bg-white transition-colors shadow-sm"
                         >
                           {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
                         </button>
@@ -309,33 +255,33 @@ export function Hero() {
                               videoRef.current.muted = !isMuted;
                             }
                           }}
-                          className="w-10 h-10 rounded-full bg-black/60 border border-white/20 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
+                          className="w-10 h-10 rounded-full bg-white/90 border border-slate-200 flex items-center justify-center text-slate-700 hover:bg-white transition-colors shadow-sm"
                         >
                           {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
                         </button>
                       </div>
                     )}
 
-                    {/* Speaking indicator - simplified */}
+                    {/* Speaking indicator */}
                     {isPlaying && !videoError && videoLoaded && (
-                      <div className="absolute bottom-24 left-1/2 -translate-x-1/2 flex gap-1 px-4 py-2 rounded-full bg-black/60">
-                        <div className="w-1 h-3 bg-cyan-400 rounded-full animate-pulse" />
-                        <div className="w-1 h-4 bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: '0.1s' }} />
-                        <div className="w-1 h-2 bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }} />
-                        <div className="w-1 h-4 bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: '0.3s' }} />
-                        <div className="w-1 h-3 bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }} />
+                      <div className="absolute bottom-24 left-1/2 -translate-x-1/2 flex gap-1 px-4 py-2 rounded-full bg-white/90 shadow-sm">
+                        <div className="w-1 h-3 bg-[#0ABAB5] rounded-full animate-pulse" />
+                        <div className="w-1 h-4 bg-[#0ABAB5] rounded-full animate-pulse" style={{ animationDelay: '0.1s' }} />
+                        <div className="w-1 h-2 bg-[#0ABAB5] rounded-full animate-pulse" style={{ animationDelay: '0.2s' }} />
+                        <div className="w-1 h-4 bg-[#0ABAB5] rounded-full animate-pulse" style={{ animationDelay: '0.3s' }} />
+                        <div className="w-1 h-3 bg-[#0ABAB5] rounded-full animate-pulse" style={{ animationDelay: '0.4s' }} />
                       </div>
                     )}
 
-                    {/* Avatar name badge - simplified */}
-                    <div className="absolute bottom-4 left-4 right-4 p-3 rounded-xl bg-black/60 border border-white/10">
+                    {/* Avatar name badge */}
+                    <div className="absolute bottom-4 left-4 right-4 p-3 rounded-xl bg-white/90 backdrop-blur-sm border border-slate-200 shadow-sm">
                       <div className="flex items-center justify-between">
                         <div>
-                          <div className="text-white font-semibold">{avatars[activeAvatar].name}</div>
-                          <div className="text-cyan-400 text-sm">{avatars[activeAvatar].role} Avatar</div>
+                          <div className="text-[#1E293B] font-semibold">{avatars[activeAvatar].name}</div>
+                          <div className="text-[#0ABAB5] text-sm">{avatars[activeAvatar].role} Avatar</div>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="text-xs text-neutral-400">
+                          <span className="text-xs text-slate-500">
                             {videoError ? "Preview" : isPlaying && videoLoaded ? "Speaking" : "Loading..."}
                           </span>
                           <div
@@ -346,7 +292,7 @@ export function Hero() {
                     </div>
                   </div>
 
-                  {/* Avatar selector thumbnails - simplified */}
+                  {/* Avatar selector thumbnails */}
                   <div className="flex justify-center gap-3 mt-4">
                     {avatars.map((avatar, index) => (
                       <button
@@ -357,8 +303,8 @@ export function Hero() {
                         }}
                         className={`relative w-12 h-12 rounded-xl overflow-hidden border-2 transition-all duration-200 hover:scale-105 ${
                           index === activeAvatar
-                            ? "border-cyan-400 shadow-lg shadow-cyan-400/30"
-                            : "border-white/20 hover:border-white/40"
+                            ? "border-[#0ABAB5] shadow-lg shadow-[#0ABAB5]/30"
+                            : "border-slate-200 hover:border-slate-300"
                         }`}
                       >
                         <img
@@ -368,7 +314,7 @@ export function Hero() {
                           loading="lazy"
                         />
                         {index === activeAvatar && (
-                          <div className="absolute inset-0 bg-cyan-400/20" />
+                          <div className="absolute inset-0 bg-[#0ABAB5]/20" />
                         )}
                       </button>
                     ))}
@@ -378,19 +324,19 @@ export function Hero() {
                 {/* Right side - Script input demo */}
                 <div className="space-y-6">
                   <div>
-                    <h3 className="text-xl font-semibold text-white mb-2">
+                    <h3 className="text-xl font-semibold text-[#1E293B] mb-2">
                       Just type your script
                     </h3>
-                    <p className="text-neutral-400 text-sm">
+                    <p className="text-slate-500 text-sm">
                       Our AI creates a professional video with your chosen avatar speaking your words naturally.
                     </p>
                   </div>
 
                   {/* Fake script input */}
-                  <div className="rounded-xl bg-black/50 border border-white/10 p-4">
-                    <div className="text-neutral-500 text-sm mb-2">Your script</div>
+                  <div className="rounded-xl bg-slate-50 border border-slate-200 p-4">
+                    <div className="text-slate-400 text-sm mb-2">Your script</div>
                     <motion.div
-                      className="text-white"
+                      className="text-[#1E293B]"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 1.2 }}
@@ -404,7 +350,7 @@ export function Hero() {
                     {["Auto lip-sync", "Natural gestures", "4K quality", "Fast render"].map((feature) => (
                       <span
                         key={feature}
-                        className="px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-xs"
+                        className="px-3 py-1 rounded-full bg-[#D1F5F3] border border-[#0ABAB5]/20 text-[#089691] text-xs font-medium"
                       >
                         {feature}
                       </span>
@@ -415,7 +361,7 @@ export function Hero() {
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-medium flex items-center justify-center gap-2"
+                    className="w-full py-3 rounded-xl bg-[#0ABAB5] hover:bg-[#089691] text-white font-medium flex items-center justify-center gap-2 transition-colors shadow-lg shadow-[#0ABAB5]/20"
                   >
                     <Play className="w-5 h-5" />
                     Generate Video
@@ -423,15 +369,26 @@ export function Hero() {
                 </div>
               </div>
             </div>
-          </LiquidGlassCard>
+          </div>
 
-          {/* Floating elements - static for performance */}
-          <div className="absolute -top-4 -right-4 w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
+          {/* Floating elements */}
+          <div className="absolute -top-4 -right-4 w-16 h-16 rounded-2xl bg-white border border-slate-200 shadow-lg flex items-center justify-center">
             <span className="text-2xl">🎭</span>
           </div>
 
-          <div className="absolute -bottom-4 -left-4 w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
+          <div className="absolute -bottom-4 -left-4 w-14 h-14 rounded-2xl bg-white border border-slate-200 shadow-lg flex items-center justify-center">
             <span className="text-xl">🎬</span>
+          </div>
+
+          {/* Growth indicator floating card */}
+          <div className="absolute -top-6 -right-6 hidden lg:flex bg-white p-4 rounded-2xl shadow-xl border border-slate-100 items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-[#D1F5F3] flex items-center justify-center">
+              <Check className="text-[#0ABAB5] w-5 h-5" />
+            </div>
+            <div>
+              <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Growth</div>
+              <div className="text-sm font-bold text-[#1E293B]">+24.5%</div>
+            </div>
           </div>
         </motion.div>
 
@@ -442,10 +399,10 @@ export function Hero() {
           transition={{ duration: 0.5, delay: 1.2 }}
           className="mt-12 text-center"
         >
-          <p className="text-neutral-500 text-sm mb-4">Trusted by 10,000+ creators worldwide</p>
-          <div className="flex items-center justify-center gap-8 opacity-50">
+          <p className="text-slate-400 text-sm mb-4">Trusted by 10,000+ creators worldwide</p>
+          <div className="flex items-center justify-center gap-8">
             {["Fortune 500", "Startups", "Creators", "Agencies"].map((text) => (
-              <span key={text} className="text-neutral-400 font-medium">{text}</span>
+              <span key={text} className="text-slate-300 font-medium">{text}</span>
             ))}
           </div>
         </motion.div>
@@ -475,7 +432,7 @@ function TypewriterText({ text }: { text: string }) {
       <motion.span
         animate={{ opacity: [1, 0] }}
         transition={{ duration: 0.5, repeat: Infinity }}
-        className="text-cyan-400"
+        className="text-[#0ABAB5]"
       >
         |
       </motion.span>

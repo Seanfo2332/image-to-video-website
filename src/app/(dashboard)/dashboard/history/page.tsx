@@ -189,15 +189,15 @@ export default function HistoryPage() {
   const getStatusColor = (status: WorkflowStatus) => {
     switch (status) {
       case "queued":
-        return "bg-blue-500/20 text-blue-400 border-blue-500/30";
+        return "bg-blue-100 text-blue-600 border-blue-200";
       case "processing":
-        return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
+        return "bg-amber-100 text-amber-600 border-amber-200";
       case "completed":
-        return "bg-green-500/20 text-green-400 border-green-500/30";
+        return "bg-emerald-100 text-emerald-600 border-emerald-200";
       case "failed":
-        return "bg-red-500/20 text-red-400 border-red-500/30";
+        return "bg-red-100 text-red-600 border-red-200";
       case "cancelled":
-        return "bg-neutral-500/20 text-neutral-400 border-neutral-500/30";
+        return "bg-slate-100 text-slate-500 border-slate-200";
     }
   };
 
@@ -277,11 +277,11 @@ export default function HistoryPage() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-8"
       >
-        <h1 className="text-3xl font-bold text-white mb-2 flex items-center gap-3">
-          <History className="w-8 h-8 text-purple-400" />
+        <h1 className="text-3xl font-bold text-[#1E293B] mb-2 flex items-center gap-3">
+          <History className="w-8 h-8 text-violet-500" />
           Prompt History
         </h1>
-        <p className="text-neutral-400">
+        <p className="text-slate-500">
           Track your prompt submissions and workflow status
         </p>
       </motion.div>
@@ -299,12 +299,12 @@ export default function HistoryPage() {
             onClick={() => setStatusFilter(status)}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               statusFilter === status
-                ? "bg-purple-500/20 text-purple-400 border border-purple-500/30"
-                : "bg-white/5 text-neutral-400 border border-white/10 hover:bg-white/10"
+                ? "bg-[#D1F5F3] text-[#089691] border border-[#0ABAB5]/30"
+                : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
             }`}
           >
             {status.charAt(0).toUpperCase() + status.slice(1)}
-            <span className="ml-2 px-1.5 py-0.5 rounded bg-white/10 text-xs">
+            <span className="ml-2 px-1.5 py-0.5 rounded bg-slate-100 text-xs">
               {statusCounts[status]}
             </span>
           </button>
@@ -319,13 +319,13 @@ export default function HistoryPage() {
         className="mb-6"
       >
         <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-500" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by URL or style..."
-            className="w-full pl-12 pr-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-neutral-500 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all"
+            className="w-full pl-12 pr-4 py-3 rounded-xl bg-white border border-slate-200 text-[#1E293B] placeholder-slate-400 focus:outline-none focus:border-[#0ABAB5] focus:ring-1 focus:ring-[#0ABAB5]/50 transition-all"
           />
         </div>
       </motion.div>
@@ -338,13 +338,13 @@ export default function HistoryPage() {
           transition={{ delay: 0.2 }}
           className="text-center py-16"
         >
-          <div className="w-24 h-24 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-6">
-            <History className="w-12 h-12 text-neutral-600" />
+          <div className="w-24 h-24 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-6">
+            <History className="w-12 h-12 text-slate-400" />
           </div>
-          <h2 className="text-2xl font-semibold text-white mb-3">
+          <h2 className="text-2xl font-semibold text-[#1E293B] mb-3">
             No submissions yet
           </h2>
-          <p className="text-neutral-400 max-w-md mx-auto mb-6">
+          <p className="text-slate-500 max-w-md mx-auto mb-6">
             Your prompt submissions and their workflow status will appear here.
             Start by creating your first prompt.
           </p>
@@ -353,14 +353,14 @@ export default function HistoryPage() {
               href="/dashboard/create"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium shadow-lg shadow-purple-500/25 flex items-center gap-2"
+              className="px-6 py-3 rounded-xl bg-[#0ABAB5] hover:bg-[#089691] text-white font-medium shadow-lg shadow-[#0ABAB5]/25 flex items-center gap-2 transition-colors"
             >
               <Wand2 className="w-5 h-5" />
               Create Prompt
             </motion.a>
             <button
               onClick={() => setShowExamples(!showExamples)}
-              className="px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-neutral-300 hover:text-white hover:bg-white/10 transition-all"
+              className="px-6 py-3 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-[#1E293B] hover:bg-slate-50 transition-all"
             >
               {showExamples ? "Hide Examples" : "Show Example History"}
             </button>
@@ -379,7 +379,7 @@ export default function HistoryPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.05 * index }}
-              className="rounded-2xl bg-white/5 border border-white/10 overflow-hidden hover:border-purple-500/30 transition-all"
+              className="rounded-2xl bg-white border border-slate-200 overflow-hidden hover:border-[#0ABAB5]/30 hover:shadow-md transition-all"
             >
               {/* Main Row */}
               <div
@@ -397,15 +397,15 @@ export default function HistoryPage() {
                         {getStatusIcon(submission.status)}
                         {submission.status.charAt(0).toUpperCase() + submission.status.slice(1)}
                       </span>
-                      <span className="text-sm text-neutral-500 flex items-center gap-1">
+                      <span className="text-sm text-slate-500 flex items-center gap-1">
                         <Calendar className="w-4 h-4" />
                         {formatDate(submission.createdAt)}
                       </span>
                     </div>
-                    <p className="text-white font-medium truncate mb-1">
+                    <p className="text-[#1E293B] font-medium truncate mb-1">
                       {submission.scriptStyle}
                     </p>
-                    <p className="text-sm text-neutral-500 truncate">
+                    <p className="text-sm text-slate-500 truncate">
                       {submission.materialUrl}
                     </p>
 
@@ -413,16 +413,16 @@ export default function HistoryPage() {
                     {submission.status === "processing" && submission.progress !== undefined && (
                       <div className="mt-3">
                         <div className="flex items-center justify-between mb-1">
-                          <span className="text-sm text-neutral-400">
+                          <span className="text-sm text-slate-500">
                             {submission.currentStep || "Processing..."}
                           </span>
-                          <span className="text-sm text-yellow-400">{submission.progress}%</span>
+                          <span className="text-sm text-amber-600">{submission.progress}%</span>
                         </div>
-                        <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                        <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
                           <motion.div
                             initial={{ width: 0 }}
                             animate={{ width: `${submission.progress}%` }}
-                            className="h-full bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full"
+                            className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full"
                           />
                         </div>
                       </div>
@@ -430,8 +430,8 @@ export default function HistoryPage() {
 
                     {/* Error message */}
                     {submission.status === "failed" && submission.error && (
-                      <div className="mt-3 p-3 rounded-lg bg-red-500/10 border border-red-500/20">
-                        <p className="text-sm text-red-400 flex items-start gap-2">
+                      <div className="mt-3 p-3 rounded-lg bg-red-50 border border-red-200">
+                        <p className="text-sm text-red-600 flex items-start gap-2">
                           <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
                           {submission.error}
                         </p>
@@ -450,7 +450,7 @@ export default function HistoryPage() {
                           handleCancel(submission.id);
                         }}
                         disabled={cancellingId === submission.id}
-                        className="px-3 py-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-all text-sm font-medium flex items-center gap-1.5 disabled:opacity-50"
+                        className="px-3 py-2 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 transition-all text-sm font-medium flex items-center gap-1.5 disabled:opacity-50"
                       >
                         {cancellingId === submission.id ? (
                           <Loader2 className="w-4 h-4 animate-spin" />
@@ -469,7 +469,7 @@ export default function HistoryPage() {
                           e.stopPropagation();
                           handleRetry(submission.id);
                         }}
-                        className="px-3 py-2 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition-all text-sm font-medium flex items-center gap-1.5"
+                        className="px-3 py-2 rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200 transition-all text-sm font-medium flex items-center gap-1.5"
                       >
                         <RotateCcw className="w-4 h-4" />
                         Retry
@@ -482,14 +482,14 @@ export default function HistoryPage() {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={(e) => e.stopPropagation()}
-                        className="px-3 py-2 rounded-lg bg-green-500/10 text-green-400 hover:bg-green-500/20 transition-all text-sm font-medium flex items-center gap-1.5"
+                        className="px-3 py-2 rounded-lg bg-emerald-100 text-emerald-600 hover:bg-emerald-200 transition-all text-sm font-medium flex items-center gap-1.5"
                       >
                         <FileVideo className="w-4 h-4" />
                         View Video
                       </motion.a>
                     )}
 
-                    <button className="p-2 text-neutral-400 hover:text-white transition-colors">
+                    <button className="p-2 text-slate-400 hover:text-[#1E293B] transition-colors">
                       {expandedId === submission.id ? (
                         <ChevronUp className="w-5 h-5" />
                       ) : (
@@ -510,32 +510,32 @@ export default function HistoryPage() {
                     transition={{ duration: 0.2 }}
                     className="overflow-hidden"
                   >
-                    <div className="px-4 pb-4 pt-2 border-t border-white/5">
+                    <div className="px-4 pb-4 pt-2 border-t border-slate-100">
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div>
-                          <p className="text-xs text-neutral-500 mb-1">Image Style</p>
-                          <p className="text-sm text-white">{submission.imageStyle}</p>
+                          <p className="text-xs text-slate-500 mb-1">Image Style</p>
+                          <p className="text-sm text-[#1E293B]">{submission.imageStyle}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-neutral-500 mb-1">Script Style</p>
-                          <p className="text-sm text-white">{submission.scriptStyle}</p>
+                          <p className="text-xs text-slate-500 mb-1">Script Style</p>
+                          <p className="text-sm text-[#1E293B]">{submission.scriptStyle}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-neutral-500 mb-1">Language</p>
-                          <p className="text-sm text-white">{submission.language}</p>
+                          <p className="text-xs text-slate-500 mb-1">Language</p>
+                          <p className="text-sm text-[#1E293B]">{submission.language}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-neutral-500 mb-1">Voice</p>
-                          <p className="text-sm text-white">{submission.voiceId}</p>
+                          <p className="text-xs text-slate-500 mb-1">Voice</p>
+                          <p className="text-sm text-[#1E293B]">{submission.voiceId}</p>
                         </div>
                       </div>
                       <div className="mt-4">
-                        <p className="text-xs text-neutral-500 mb-1">Material URL</p>
+                        <p className="text-xs text-slate-500 mb-1">Material URL</p>
                         <a
                           href={submission.materialUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-sm text-cyan-400 hover:text-cyan-300 flex items-center gap-1"
+                          className="text-sm text-[#0ABAB5] hover:text-[#089691] flex items-center gap-1"
                         >
                           {submission.materialUrl}
                           <ExternalLink className="w-3 h-3" />
@@ -555,18 +555,18 @@ export default function HistoryPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="mt-8 p-6 rounded-2xl bg-purple-500/10 border border-purple-500/20"
+        className="mt-8 p-6 rounded-2xl bg-violet-50 border border-violet-200"
       >
-        <h3 className="text-white font-semibold mb-2 flex items-center gap-2">
-          <AlertCircle className="w-5 h-5 text-purple-400" />
+        <h3 className="text-[#1E293B] font-semibold mb-2 flex items-center gap-2">
+          <AlertCircle className="w-5 h-5 text-violet-500" />
           Workflow Status Info
         </h3>
-        <ul className="text-neutral-400 text-sm space-y-1">
-          <li><span className="text-blue-400">Queued:</span> Waiting to be processed</li>
-          <li><span className="text-yellow-400">Processing:</span> Currently generating your video</li>
-          <li><span className="text-green-400">Completed:</span> Video is ready for download</li>
-          <li><span className="text-red-400">Failed:</span> An error occurred - you can retry</li>
-          <li><span className="text-neutral-400">Cancelled:</span> Workflow was stopped</li>
+        <ul className="text-slate-600 text-sm space-y-1">
+          <li><span className="text-blue-600">Queued:</span> Waiting to be processed</li>
+          <li><span className="text-amber-600">Processing:</span> Currently generating your video</li>
+          <li><span className="text-emerald-600">Completed:</span> Video is ready for download</li>
+          <li><span className="text-red-600">Failed:</span> An error occurred - you can retry</li>
+          <li><span className="text-slate-500">Cancelled:</span> Workflow was stopped</li>
         </ul>
       </motion.div>
     </div>

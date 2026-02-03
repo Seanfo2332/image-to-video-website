@@ -103,8 +103,8 @@ export default async function AdminDashboardPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Dashboard</h1>
-        <p className="text-neutral-400">
+        <h1 className="text-3xl font-bold text-[#1E293B] mb-2">Dashboard</h1>
+        <p className="text-slate-500">
           Welcome to the admin dashboard. Here&apos;s an overview of your users.
         </p>
       </div>

@@ -23,13 +23,13 @@ export function RecentUsers({ users }: RecentUsersProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3 }}
-      className="liquid-glass rounded-2xl p-6"
+      className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm"
     >
-      <h3 className="text-lg font-semibold text-white mb-6">Recent Signups</h3>
+      <h3 className="text-lg font-semibold text-[#1E293B] mb-6">Recent Signups</h3>
 
       <div className="space-y-4">
         {users.length === 0 ? (
-          <p className="text-neutral-500 text-center py-8">No recent signups</p>
+          <p className="text-slate-500 text-center py-8">No recent signups</p>
         ) : (
           users.map((user, index) => (
             <motion.div
@@ -37,9 +37,9 @@ export function RecentUsers({ users }: RecentUsersProps) {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="flex items-center gap-4 p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
+              className="flex items-center gap-4 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors"
             >
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center overflow-hidden">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#0ABAB5] to-cyan-500 flex items-center justify-center overflow-hidden">
                 {user.image ? (
                   <img
                     src={user.image}
@@ -51,16 +51,16 @@ export function RecentUsers({ users }: RecentUsersProps) {
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-white font-medium truncate">
+                <p className="text-[#1E293B] font-medium truncate">
                   {user.name || "No name"}
                 </p>
-                <p className="text-neutral-500 text-sm truncate">{user.email}</p>
+                <p className="text-slate-500 text-sm truncate">{user.email}</p>
               </div>
               <div className="text-right">
-                <span className="text-xs px-2 py-1 rounded-full bg-white/5 text-neutral-400 capitalize">
+                <span className="text-xs px-2 py-1 rounded-full bg-slate-200 text-slate-600 capitalize">
                   {user.provider}
                 </span>
-                <p className="text-xs text-neutral-500 mt-1">
+                <p className="text-xs text-slate-500 mt-1">
                   {formatDistanceToNow(new Date(user.createdAt), {
                     addSuffix: true,
                   })}

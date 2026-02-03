@@ -14,7 +14,7 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] bg-gradient-mesh">
+    <div className="min-h-screen bg-[#F8FAFC]">
       <AdminSidebar />
       <main className="ml-64 min-h-screen">
         <div className="p-8">{children}</div>

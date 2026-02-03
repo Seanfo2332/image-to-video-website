@@ -9,7 +9,7 @@ const steps = [
     description:
       "Type or paste your script. Our AI can also help generate engaging content based on your topic.",
     icon: FileText,
-    color: "from-cyan-500 to-blue-500",
+    color: "from-[#0ABAB5] to-[#089691]",
     preview: <ScriptPreview />,
   },
   {
@@ -36,7 +36,7 @@ const steps = [
     description:
       "Hit generate and get your professional video in minutes. Export in 4K for any platform.",
     icon: Video,
-    color: "from-green-500 to-emerald-500",
+    color: "from-emerald-500 to-green-500",
     preview: <VideoPreview />,
   },
 ];
@@ -46,25 +46,25 @@ function ScriptPreview() {
   return (
     <div className="p-4 space-y-2">
       <motion.div
-        className="h-2 bg-white/20 rounded"
+        className="h-2 bg-slate-300 rounded"
         initial={{ width: 0 }}
         whileInView={{ width: "100%" }}
         transition={{ duration: 0.5 }}
       />
       <motion.div
-        className="h-2 bg-white/15 rounded"
+        className="h-2 bg-slate-200 rounded"
         initial={{ width: 0 }}
         whileInView={{ width: "80%" }}
         transition={{ duration: 0.5, delay: 0.1 }}
       />
       <motion.div
-        className="h-2 bg-white/10 rounded"
+        className="h-2 bg-slate-100 rounded"
         initial={{ width: 0 }}
         whileInView={{ width: "60%" }}
         transition={{ duration: 0.5, delay: 0.2 }}
       />
       <motion.div
-        className="mt-3 h-1 bg-gradient-to-r from-cyan-400 to-transparent rounded"
+        className="mt-3 h-1 bg-gradient-to-r from-[#0ABAB5] to-transparent rounded"
         animate={{ opacity: [0.5, 1, 0.5] }}
         transition={{ duration: 1, repeat: Infinity }}
       />
@@ -126,7 +126,7 @@ function VideoPreview() {
     <div className="p-3 flex items-center justify-center">
       <div className="relative">
         {/* Video thumbnail */}
-        <div className="w-20 h-14 rounded-lg overflow-hidden bg-gradient-to-br from-green-500/20 to-emerald-500/20 border border-green-500/20">
+        <div className="w-20 h-14 rounded-lg overflow-hidden bg-gradient-to-br from-emerald-100 to-green-50 border border-emerald-200">
           <img
             src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=160&h=112&fit=crop&crop=face"
             alt="Video preview"
@@ -134,12 +134,12 @@ function VideoPreview() {
           />
           {/* Play overlay */}
           <motion.div
-            className="absolute inset-0 flex items-center justify-center bg-black/30"
-            animate={{ opacity: [0.3, 0.5, 0.3] }}
+            className="absolute inset-0 flex items-center justify-center bg-black/20"
+            animate={{ opacity: [0.2, 0.4, 0.2] }}
             transition={{ duration: 2, repeat: Infinity }}
           >
             <motion.div
-              className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center"
+              className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center"
               animate={{ scale: [1, 1.1, 1] }}
               transition={{ duration: 1, repeat: Infinity }}
             >
@@ -149,7 +149,7 @@ function VideoPreview() {
         </div>
         {/* Download indicator */}
         <motion.div
-          className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-green-500 flex items-center justify-center"
+          className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center"
           initial={{ scale: 0 }}
           whileInView={{ scale: 1 }}
           transition={{ delay: 0.5, type: "spring" }}
@@ -163,12 +163,12 @@ function VideoPreview() {
 
 export function HowItWorks() {
   return (
-    <section className="py-24 px-4 relative overflow-hidden bg-black">
-      {/* Animated background */}
+    <section className="py-24 px-4 relative overflow-hidden bg-[#F8FAFC]">
+      {/* Subtle background lines */}
       <div className="absolute inset-0">
-        <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-cyan-500/20 to-transparent" />
-        <div className="absolute top-0 left-2/4 w-px h-full bg-gradient-to-b from-transparent via-violet-500/20 to-transparent" />
-        <div className="absolute top-0 left-3/4 w-px h-full bg-gradient-to-b from-transparent via-pink-500/20 to-transparent" />
+        <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-[#0ABAB5]/10 to-transparent" />
+        <div className="absolute top-0 left-2/4 w-px h-full bg-gradient-to-b from-transparent via-slate-200 to-transparent" />
+        <div className="absolute top-0 left-3/4 w-px h-full bg-gradient-to-b from-transparent via-[#BDD3E1]/30 to-transparent" />
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
@@ -181,17 +181,17 @@ export function HowItWorks() {
           className="text-center mb-20"
         >
           <motion.span
-            className="inline-block px-4 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-sm mb-4"
+            className="inline-block px-4 py-1 rounded-full bg-[#D1F5F3] border border-[#0ABAB5]/20 text-[#089691] text-sm mb-4 font-medium"
           >
             Simple Process
           </motion.span>
-          <h2 className="text-3xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-neutral-400">
+          <h2 className="text-3xl md:text-5xl font-bold text-[#1E293B]">
             Create Videos in
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-violet-400">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0ABAB5] to-slate-400">
               {" "}4 Easy Steps
             </span>
           </h2>
-          <p className="mt-4 text-lg text-neutral-400 max-w-2xl mx-auto">
+          <p className="mt-4 text-lg text-slate-500 max-w-2xl mx-auto">
             No video editing skills needed. Our AI does all the heavy lifting.
           </p>
         </motion.div>
@@ -201,7 +201,7 @@ export function HowItWorks() {
           {/* Connection line for desktop */}
           <div className="hidden lg:block absolute top-24 left-[10%] right-[10%] h-0.5">
             <motion.div
-              className="h-full bg-gradient-to-r from-cyan-500 via-violet-500 to-green-500"
+              className="h-full bg-gradient-to-r from-[#0ABAB5] via-violet-400 to-emerald-400"
               initial={{ scaleX: 0 }}
               whileInView={{ scaleX: 1 }}
               transition={{ duration: 1.5 }}
@@ -220,29 +220,29 @@ export function HowItWorks() {
                 className="relative"
               >
                 {/* Card */}
-                <div className="bg-neutral-900/50 border border-white/5 rounded-2xl p-6 hover:border-cyan-500/30 transition-all duration-300 group h-full">
+                <div className="bg-white border border-slate-200 rounded-2xl p-6 hover:border-[#0ABAB5]/30 hover:shadow-lg transition-all duration-300 group h-full">
                   {/* Step number badge */}
                   <div
-                    className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${step.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 relative z-10`}
+                    className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${step.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 relative z-10 shadow-lg`}
                   >
                     <step.icon className="w-6 h-6 text-white" />
                   </div>
 
                   {/* Step number */}
-                  <div className="text-5xl font-bold text-neutral-800/50 absolute top-4 right-4">
+                  <div className="text-5xl font-bold text-slate-100 absolute top-4 right-4">
                     {step.number}
                   </div>
 
                   {/* Content */}
-                  <h3 className="text-lg font-semibold text-white mb-2">
+                  <h3 className="text-lg font-semibold text-[#1E293B] mb-2">
                     {step.title}
                   </h3>
-                  <p className="text-neutral-400 text-sm mb-4">
+                  <p className="text-slate-500 text-sm mb-4">
                     {step.description}
                   </p>
 
                   {/* Preview */}
-                  <div className="rounded-xl bg-black/30 border border-white/5 overflow-hidden">
+                  <div className="rounded-xl bg-slate-50 border border-slate-100 overflow-hidden">
                     {step.preview}
                   </div>
                 </div>
@@ -250,7 +250,7 @@ export function HowItWorks() {
                 {/* Arrow for mobile */}
                 {index < steps.length - 1 && (
                   <div className="lg:hidden flex justify-center my-4">
-                    <ArrowRight className="w-6 h-6 text-cyan-500/50 rotate-90" />
+                    <ArrowRight className="w-6 h-6 text-[#0ABAB5]/50 rotate-90" />
                   </div>
                 )}
               </motion.div>
@@ -267,9 +267,9 @@ export function HowItWorks() {
           className="text-center mt-16"
         >
           <motion.button
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 1.05, boxShadow: "0 10px 30px rgba(10, 186, 181, 0.3)" }}
             whileTap={{ scale: 0.95 }}
-            className="px-8 py-4 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold text-lg shadow-lg shadow-cyan-500/25"
+            className="px-8 py-4 rounded-xl bg-[#0ABAB5] hover:bg-[#089691] text-white font-semibold text-lg shadow-lg shadow-[#0ABAB5]/25 transition-all"
           >
             Start Creating Now
           </motion.button>

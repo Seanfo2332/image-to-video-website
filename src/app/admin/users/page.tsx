@@ -58,8 +58,8 @@ export default async function AdminUsersPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Users</h1>
-        <p className="text-neutral-400">
+        <h1 className="text-3xl font-bold text-[#1E293B] mb-2">Users</h1>
+        <p className="text-slate-500">
           Manage all users in your application.
         </p>
       </div>

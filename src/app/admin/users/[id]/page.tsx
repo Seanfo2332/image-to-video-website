@@ -137,7 +137,7 @@ export default function EditUserPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <Loader2 className="w-8 h-8 animate-spin text-cyan-500" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#0ABAB5]" />
       </div>
     );
   }
@@ -145,10 +145,10 @@ export default function EditUserPage() {
   if (!user) {
     return (
       <div className="text-center py-12">
-        <p className="text-red-400">{error || "User not found"}</p>
+        <p className="text-red-500">{error || "User not found"}</p>
         <Link
           href="/admin/users"
-          className="text-cyan-400 hover:text-cyan-300 mt-4 inline-block"
+          className="text-[#0ABAB5] hover:text-[#089691] mt-4 inline-block"
         >
           Back to users
         </Link>
@@ -161,13 +161,13 @@ export default function EditUserPage() {
       <div className="flex items-center gap-4">
         <Link
           href="/admin/users"
-          className="p-2 rounded-lg bg-white/5 text-neutral-400 hover:text-white hover:bg-white/10 transition-colors"
+          className="p-2 rounded-lg bg-slate-100 text-slate-600 hover:text-[#1E293B] hover:bg-slate-200 transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <div>
-          <h1 className="text-3xl font-bold text-white">Edit User</h1>
-          <p className="text-neutral-400">{user.email}</p>
+          <h1 className="text-3xl font-bold text-[#1E293B]">Edit User</h1>
+          <p className="text-slate-500">{user.email}</p>
         </div>
       </div>
 
@@ -176,10 +176,10 @@ export default function EditUserPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="liquid-glass rounded-2xl p-6"
+          className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm"
         >
           <div className="flex flex-col items-center text-center">
-            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center overflow-hidden mb-4">
+            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#0ABAB5] to-cyan-500 flex items-center justify-center overflow-hidden mb-4">
               {user.image ? (
                 <img
                   src={user.image}
@@ -190,17 +190,17 @@ export default function EditUserPage() {
                 <User className="w-12 h-12 text-white" />
               )}
             </div>
-            <h2 className="text-xl font-bold text-white">
+            <h2 className="text-xl font-bold text-[#1E293B]">
               {user.name || "No name"}
             </h2>
-            <p className="text-neutral-400 mb-4">{user.email}</p>
+            <p className="text-slate-500 mb-4">{user.email}</p>
 
             <div className="flex gap-2 mb-6">
               <span
                 className={`px-3 py-1 rounded-full text-sm font-medium ${
                   user.role === "admin"
-                    ? "bg-purple-500/20 text-purple-400"
-                    : "bg-neutral-500/20 text-neutral-400"
+                    ? "bg-violet-100 text-violet-600"
+                    : "bg-slate-100 text-slate-600"
                 }`}
               >
                 {user.role === "admin" && <Shield className="w-3 h-3 inline mr-1" />}
@@ -209,8 +209,8 @@ export default function EditUserPage() {
               <span
                 className={`px-3 py-1 rounded-full text-sm font-medium ${
                   user.isActive
-                    ? "bg-green-500/20 text-green-400"
-                    : "bg-red-500/20 text-red-400"
+                    ? "bg-emerald-100 text-emerald-600"
+                    : "bg-red-100 text-red-600"
                 }`}
               >
                 {user.isActive ? "Active" : "Inactive"}
@@ -218,27 +218,27 @@ export default function EditUserPage() {
             </div>
 
             <div className="w-full space-y-3 text-sm">
-              <div className="flex justify-between py-2 border-b border-white/5">
-                <span className="text-neutral-500">Provider</span>
-                <span className="text-white capitalize">{user.provider}</span>
+              <div className="flex justify-between py-2 border-b border-slate-100">
+                <span className="text-slate-500">Provider</span>
+                <span className="text-[#1E293B] capitalize">{user.provider}</span>
               </div>
-              <div className="flex justify-between py-2 border-b border-white/5">
-                <span className="text-neutral-500">Joined</span>
-                <span className="text-white">
+              <div className="flex justify-between py-2 border-b border-slate-100">
+                <span className="text-slate-500">Joined</span>
+                <span className="text-[#1E293B]">
                   {format(new Date(user.createdAt), "MMM d, yyyy")}
                 </span>
               </div>
-              <div className="flex justify-between py-2 border-b border-white/5">
-                <span className="text-neutral-500">Last Login</span>
-                <span className="text-white">
+              <div className="flex justify-between py-2 border-b border-slate-100">
+                <span className="text-slate-500">Last Login</span>
+                <span className="text-[#1E293B]">
                   {user.lastLoginAt
                     ? format(new Date(user.lastLoginAt), "MMM d, yyyy HH:mm")
                     : "Never"}
                 </span>
               </div>
               <div className="flex justify-between py-2">
-                <span className="text-neutral-500">Credits</span>
-                <span className="text-yellow-400 font-semibold flex items-center gap-1">
+                <span className="text-slate-500">Credits</span>
+                <span className="text-amber-500 font-semibold flex items-center gap-1">
                   <Coins className="w-3 h-3" />
                   {user.credits}
                 </span>
@@ -252,60 +252,60 @@ export default function EditUserPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="lg:col-span-2 liquid-glass rounded-2xl p-6"
+          className="lg:col-span-2 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm"
         >
-          <h3 className="text-lg font-semibold text-white mb-6">
+          <h3 className="text-lg font-semibold text-[#1E293B] mb-6">
             Edit User Details
           </h3>
 
           {error && (
-            <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center gap-3">
-              <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
-              <p className="text-sm text-red-400">{error}</p>
+            <div className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 flex items-center gap-3">
+              <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
+              <p className="text-sm text-red-600">{error}</p>
             </div>
           )}
 
           {success && (
-            <div className="mb-6 p-4 rounded-xl bg-green-500/10 border border-green-500/20 flex items-center gap-3">
-              <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-              <p className="text-sm text-green-400">{success}</p>
+            <div className="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center gap-3">
+              <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0" />
+              <p className="text-sm text-emerald-600">{success}</p>
             </div>
           )}
 
           <form onSubmit={handleSave} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-neutral-300 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Name
               </label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-neutral-500 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all"
+                className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-[#1E293B] placeholder-slate-400 focus:outline-none focus:border-[#0ABAB5] focus:ring-1 focus:ring-[#0ABAB5]/50 transition-all"
                 placeholder="User name"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-neutral-300 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Role
               </label>
               <select
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all"
+                className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-[#1E293B] focus:outline-none focus:border-[#0ABAB5] focus:ring-1 focus:ring-[#0ABAB5]/50 transition-all"
               >
-                <option value="user" className="bg-neutral-900">
+                <option value="user">
                   User
                 </option>
-                <option value="admin" className="bg-neutral-900">
+                <option value="admin">
                   Admin
                 </option>
               </select>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-neutral-300 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Status
               </label>
               <div className="flex gap-4">
@@ -314,18 +314,18 @@ export default function EditUserPage() {
                     type="radio"
                     checked={isActive}
                     onChange={() => setIsActive(true)}
-                    className="w-4 h-4 accent-cyan-500"
+                    className="w-4 h-4 accent-[#0ABAB5]"
                   />
-                  <span className="text-white">Active</span>
+                  <span className="text-[#1E293B]">Active</span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="radio"
                     checked={!isActive}
                     onChange={() => setIsActive(false)}
-                    className="w-4 h-4 accent-cyan-500"
+                    className="w-4 h-4 accent-[#0ABAB5]"
                   />
-                  <span className="text-white">Inactive</span>
+                  <span className="text-[#1E293B]">Inactive</span>
                 </label>
               </div>
             </div>
@@ -335,7 +335,7 @@ export default function EditUserPage() {
               whileTap={{ scale: 0.98 }}
               type="submit"
               disabled={isSaving}
-              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-medium shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full py-3 px-4 rounded-xl bg-[#0ABAB5] hover:bg-[#089691] text-white font-medium shadow-lg shadow-[#0ABAB5]/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {isSaving ? (
                 <>
@@ -357,21 +357,21 @@ export default function EditUserPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="lg:col-span-3 liquid-glass rounded-2xl p-6"
+          className="lg:col-span-3 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm"
         >
           <div className="flex items-center gap-2 mb-6">
-            <Coins className="w-5 h-5 text-yellow-400" />
-            <h3 className="text-lg font-semibold text-white">Adjust Credits</h3>
-            <span className="ml-auto text-sm text-neutral-400">
-              Current balance: <span className="text-yellow-400 font-semibold">{user.credits}</span>
+            <Coins className="w-5 h-5 text-amber-500" />
+            <h3 className="text-lg font-semibold text-[#1E293B]">Adjust Credits</h3>
+            <span className="ml-auto text-sm text-slate-500">
+              Current balance: <span className="text-amber-500 font-semibold">{user.credits}</span>
             </span>
           </div>
 
           {creditMessage && (
             <div className={`mb-4 p-4 rounded-xl flex items-center gap-3 ${
               creditMessage.type === "success"
-                ? "bg-green-500/10 border border-green-500/20 text-green-400"
-                : "bg-red-500/10 border border-red-500/20 text-red-400"
+                ? "bg-emerald-50 border border-emerald-200 text-emerald-600"
+                : "bg-red-50 border border-red-200 text-red-600"
             }`}>
               {creditMessage.type === "success" ? (
                 <CheckCircle className="w-5 h-5 flex-shrink-0" />
@@ -384,26 +384,26 @@ export default function EditUserPage() {
 
           <form onSubmit={handleCreditAdjust} className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-neutral-300 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Amount (positive to add, negative to deduct)
               </label>
               <input
                 type="number"
                 value={creditAmount}
                 onChange={(e) => setCreditAmount(parseInt(e.target.value) || 0)}
-                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-yellow-500/50 focus:ring-1 focus:ring-yellow-500/50 transition-all"
+                className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-[#1E293B] focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 transition-all"
                 placeholder="e.g. 10 or -5"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-neutral-300 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Reason (optional)
               </label>
               <input
                 type="text"
                 value={creditReason}
                 onChange={(e) => setCreditReason(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-neutral-500 focus:outline-none focus:border-yellow-500/50 focus:ring-1 focus:ring-yellow-500/50 transition-all"
+                className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-[#1E293B] placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/50 transition-all"
                 placeholder="e.g. Bonus credits"
               />
             </div>
@@ -413,7 +413,7 @@ export default function EditUserPage() {
                 whileTap={{ scale: 0.98 }}
                 type="submit"
                 disabled={isAdjusting || creditAmount === 0}
-                className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-medium shadow-lg shadow-yellow-500/25 hover:shadow-yellow-500/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-medium shadow-lg shadow-amber-500/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {isAdjusting ? (
                   <Loader2 className="w-5 h-5 animate-spin" />

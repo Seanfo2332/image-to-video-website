@@ -39,21 +39,15 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <footer className="bg-black border-t border-white/5 py-16 px-4">
+    <footer className="bg-white border-t border-slate-100 py-16 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-6 gap-8 mb-12">
           {/* Logo & description */}
           <div className="col-span-2">
             <Link href="/" className="flex items-center gap-2.5 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
-                <Users className="w-5 h-5 text-white" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-bold text-white leading-none">AvatarAI</span>
-                <span className="text-[10px] text-cyan-400 font-medium">Video Generator</span>
-              </div>
+              <img src="/alphafin-full-logo.png" alt="AlphaFin" className="h-10 w-auto" />
             </Link>
-            <p className="text-neutral-400 text-sm mb-6 max-w-xs">
+            <p className="text-slate-500 text-sm mb-6 max-w-xs">
               Create professional AI avatar videos in minutes. 100+ lifelike avatars,
               175+ languages, natural lip-sync.
             </p>
@@ -65,9 +59,9 @@ export function Footer() {
                   href={social.href}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
-                  className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
+                  className="w-10 h-10 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center hover:bg-[#D1F5F3] hover:border-[#0ABAB5]/20 transition-colors"
                 >
-                  <social.icon className="w-4 h-4 text-neutral-400" />
+                  <social.icon className="w-4 h-4 text-slate-500 hover:text-[#0ABAB5]" />
                 </motion.a>
               ))}
             </div>
@@ -76,13 +70,13 @@ export function Footer() {
           {/* Links */}
           {Object.entries(footerLinks).map(([category, links]) => (
             <div key={category}>
-              <h4 className="font-semibold text-white mb-4">{category}</h4>
+              <h4 className="font-semibold text-[#1E293B] mb-4">{category}</h4>
               <ul className="space-y-3">
                 {links.map((link) => (
                   <li key={link.name}>
                     <Link
                       href={link.href}
-                      className="text-sm text-neutral-400 hover:text-white transition-colors"
+                      className="text-sm text-slate-500 hover:text-[#0ABAB5] transition-colors"
                     >
                       {link.name}
                     </Link>
@@ -94,11 +88,11 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-neutral-500">
-            &copy; {new Date().getFullYear()} AvatarAI. All rights reserved.
+        <div className="pt-8 border-t border-slate-100 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-sm text-slate-400">
+            &copy; {new Date().getFullYear()} AlphaFin. All rights reserved.
           </p>
-          <p className="text-sm text-neutral-500">
+          <p className="text-sm text-slate-400">
             Made with AI-powered avatars
           </p>
         </div>

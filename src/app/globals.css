@@ -2,8 +2,12 @@
 @plugin "@tailwindcss/typography";
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --background: #F8FAFC;
+  --foreground: #1E293B;
+  --tiffany-blue: #0ABAB5;
+  --tiffany-dark: #089691;
+  --tiffany-light: #D1F5F3;
+  --logo-slate: #BDD3E1;
 }
 
 @theme inline {
@@ -402,12 +406,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(139, 92, 246, 0.5);
+  background: rgba(10, 186, 181, 0.5);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(139, 92, 246, 0.7);
+  background: rgba(10, 186, 181, 0.7);
 }
 
 /* ============================================
@@ -415,13 +419,13 @@ body {
    ============================================ */
 
 ::selection {
-  background: rgba(139, 92, 246, 0.3);
-  color: white;
+  background: rgba(10, 186, 181, 0.3);
+  color: #1E293B;
 }
 
 ::-moz-selection {
-  background: rgba(139, 92, 246, 0.3);
-  color: white;
+  background: rgba(10, 186, 181, 0.3);
+  color: #1E293B;
 }
 
 /* ============================================

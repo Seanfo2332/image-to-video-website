@@ -82,18 +82,18 @@ export default function PaymentCompletePage() {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-md liquid-glass rounded-2xl p-8 text-center"
+        className="w-full max-w-md bg-white border border-slate-200 shadow-lg rounded-2xl p-8 text-center"
       >
         {/* Checking Status */}
         {paymentStatus === "checking" && (
           <>
-            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-blue-500/20 flex items-center justify-center">
-              <Loader2 className="w-8 h-8 text-blue-400 animate-spin" />
+            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-blue-50 flex items-center justify-center">
+              <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
             </div>
-            <h1 className="text-2xl font-bold text-white mb-2">
+            <h1 className="text-2xl font-bold text-[#1E293B] mb-2">
               Verifying Payment
             </h1>
-            <p className="text-neutral-400 mb-6">
+            <p className="text-slate-500 mb-6">
               Please wait while we confirm your payment...
             </p>
           </>
@@ -106,32 +106,32 @@ export default function PaymentCompletePage() {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ type: "spring", duration: 0.5 }}
-              className="w-16 h-16 mx-auto mb-6 rounded-full bg-green-500/20 flex items-center justify-center"
+              className="w-16 h-16 mx-auto mb-6 rounded-full bg-emerald-50 flex items-center justify-center"
             >
-              <CheckCircle className="w-8 h-8 text-green-400" />
+              <CheckCircle className="w-8 h-8 text-emerald-500" />
             </motion.div>
-            <h1 className="text-2xl font-bold text-white mb-2">
+            <h1 className="text-2xl font-bold text-[#1E293B] mb-2">
               Payment Successful!
             </h1>
-            <p className="text-neutral-400 mb-6">
+            <p className="text-slate-500 mb-6">
               Your credits have been added to your account.
             </p>
 
-            <div className="p-4 rounded-xl bg-green-500/10 border border-green-500/20 mb-6">
+            <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 mb-6">
               <div className="flex items-center justify-center gap-2 mb-2">
-                <Coins className="w-5 h-5 text-yellow-400" />
-                <span className="text-lg font-bold text-white">
+                <Coins className="w-5 h-5 text-amber-500" />
+                <span className="text-lg font-bold text-[#1E293B]">
                   +{credits} Credits
                 </span>
               </div>
-              <p className="text-sm text-neutral-400">
-                New Balance: <span className="text-white font-semibold">{newBalance} credits</span>
+              <p className="text-sm text-slate-500">
+                New Balance: <span className="text-[#1E293B] font-semibold">{newBalance} credits</span>
               </p>
             </div>
 
             <Link
               href="/dashboard/billing"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-semibold hover:shadow-lg hover:shadow-emerald-500/25 transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#0ABAB5] hover:bg-[#089691] text-white font-semibold shadow-lg shadow-[#0ABAB5]/25 transition-all"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Billing
@@ -146,21 +146,21 @@ export default function PaymentCompletePage() {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ type: "spring", duration: 0.5 }}
-              className="w-16 h-16 mx-auto mb-6 rounded-full bg-red-500/20 flex items-center justify-center"
+              className="w-16 h-16 mx-auto mb-6 rounded-full bg-red-50 flex items-center justify-center"
             >
-              <XCircle className="w-8 h-8 text-red-400" />
+              <XCircle className="w-8 h-8 text-red-500" />
             </motion.div>
-            <h1 className="text-2xl font-bold text-white mb-2">
+            <h1 className="text-2xl font-bold text-[#1E293B] mb-2">
               Payment Failed
             </h1>
-            <p className="text-neutral-400 mb-6">
+            <p className="text-slate-500 mb-6">
               Your payment could not be processed. Please try again.
             </p>
 
             <div className="flex gap-3 justify-center">
               <Link
                 href="/dashboard/billing"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-white font-medium hover:bg-white/10 transition-all"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-100 border border-slate-200 text-[#1E293B] font-medium hover:bg-slate-200 transition-all"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Back to Billing
@@ -172,27 +172,27 @@ export default function PaymentCompletePage() {
         {/* Pending */}
         {paymentStatus === "pending" && (
           <>
-            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-yellow-500/20 flex items-center justify-center">
-              <RefreshCw className="w-8 h-8 text-yellow-400" />
+            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-amber-50 flex items-center justify-center">
+              <RefreshCw className="w-8 h-8 text-amber-500" />
             </div>
-            <h1 className="text-2xl font-bold text-white mb-2">
+            <h1 className="text-2xl font-bold text-[#1E293B] mb-2">
               Payment Processing
             </h1>
-            <p className="text-neutral-400 mb-6">
+            <p className="text-slate-500 mb-6">
               Your payment is still being processed. This may take a moment.
             </p>
 
             <div className="flex gap-3 justify-center">
               <button
                 onClick={handleRetry}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-yellow-500/20 border border-yellow-500/30 text-yellow-400 font-medium hover:bg-yellow-500/30 transition-all"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-600 font-medium hover:bg-amber-100 transition-all"
               >
                 <RefreshCw className="w-4 h-4" />
                 Check Again
               </button>
               <Link
                 href="/dashboard/billing"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-white font-medium hover:bg-white/10 transition-all"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-100 border border-slate-200 text-[#1E293B] font-medium hover:bg-slate-200 transition-all"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Back to Billing

@@ -92,11 +92,11 @@ export default function ImageGeneratorPage() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-8"
       >
-        <h1 className="text-3xl font-bold text-white mb-2 flex items-center gap-3">
-          <ImageIcon className="w-8 h-8 text-purple-400" />
+        <h1 className="text-3xl font-bold text-[#1E293B] mb-2 flex items-center gap-3">
+          <ImageIcon className="w-8 h-8 text-violet-500" />
           AI Image Generator
         </h1>
-        <p className="text-neutral-400">
+        <p className="text-slate-500">
           Transform your images with AI-powered editing using custom prompts
         </p>
       </motion.div>
@@ -110,10 +110,10 @@ export default function ImageGeneratorPage() {
         className="space-y-6"
       >
         {/* Image Upload */}
-        <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
-          <label className="block text-white font-medium mb-4 flex items-center gap-2">
-            <ImageIcon className="w-5 h-5 text-purple-400" />
-            Upload Image <span className="text-red-400">*</span>
+        <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
+          <label className="block text-[#1E293B] font-medium mb-4 flex items-center gap-2">
+            <ImageIcon className="w-5 h-5 text-violet-500" />
+            Upload Image <span className="text-red-500">*</span>
           </label>
           <div className="relative">
             <input
@@ -125,7 +125,7 @@ export default function ImageGeneratorPage() {
             />
             <label
               htmlFor="image-upload"
-              className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-white/20 rounded-xl cursor-pointer hover:border-purple-500/50 transition-colors"
+              className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-slate-300 rounded-xl cursor-pointer hover:border-[#0ABAB5] hover:bg-[#D1F5F3]/20 transition-colors"
             >
               {imagePreview ? (
                 <img
@@ -135,9 +135,9 @@ export default function ImageGeneratorPage() {
                 />
               ) : (
                 <>
-                  <Upload className="w-10 h-10 text-neutral-500 mb-2" />
-                  <p className="text-neutral-400">Click to upload image</p>
-                  <p className="text-neutral-500 text-sm">JPEG, PNG</p>
+                  <Upload className="w-10 h-10 text-slate-400 mb-2" />
+                  <p className="text-slate-500">Click to upload image</p>
+                  <p className="text-slate-400 text-sm">JPEG, PNG</p>
                 </>
               )}
             </label>
@@ -145,9 +145,9 @@ export default function ImageGeneratorPage() {
         </div>
 
         {/* Custom Prompt */}
-        <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
-          <label className="block text-white font-medium mb-3 flex items-center gap-2">
-            <FileText className="w-5 h-5 text-cyan-400" />
+        <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
+          <label className="block text-[#1E293B] font-medium mb-3 flex items-center gap-2">
+            <FileText className="w-5 h-5 text-[#0ABAB5]" />
             Custom Prompt (Optional)
           </label>
           <textarea
@@ -155,13 +155,13 @@ export default function ImageGeneratorPage() {
             onChange={(e) => setPrompt(e.target.value)}
             placeholder="Describe how you want to transform the image... (e.g., 'Make it look like a watercolor painting')"
             rows={4}
-            className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-neutral-500 focus:outline-none focus:border-purple-500/50 focus:ring-1 focus:ring-purple-500/50 transition-all resize-none"
+            className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-[#1E293B] placeholder-slate-400 focus:outline-none focus:border-[#0ABAB5] focus:ring-1 focus:ring-[#0ABAB5]/50 transition-all resize-none"
           />
         </div>
 
         {/* Error Message */}
         {errorMessage && (
-          <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400">
+          <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-600">
             {errorMessage}
           </div>
         )}
@@ -171,16 +171,16 @@ export default function ImageGeneratorPage() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="p-6 rounded-xl bg-green-500/10 border border-green-500/20"
+            className="p-6 rounded-xl bg-emerald-50 border border-emerald-200"
           >
-            <div className="flex items-center gap-2 text-green-400 mb-3">
+            <div className="flex items-center gap-2 text-emerald-600 mb-3">
               <CheckCircle className="w-6 h-6" />
               <span className="font-semibold text-lg">Request Submitted Successfully!</span>
             </div>
-            <p className="text-neutral-300 mb-4">
+            <p className="text-slate-600 mb-4">
               Your image is being processed by AI. This may take 30-60 seconds.
               {submissionId && (
-                <span className="block text-neutral-500 text-sm mt-1">
+                <span className="block text-slate-500 text-sm mt-1">
                   Submission ID: {submissionId}
                 </span>
               )}
@@ -188,7 +188,7 @@ export default function ImageGeneratorPage() {
             <div className="flex gap-3">
               <Link
                 href="/dashboard/history"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-green-500/20 text-green-400 hover:bg-green-500/30 transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-100 text-emerald-600 hover:bg-emerald-200 transition-colors"
               >
                 <History className="w-4 h-4" />
                 Track Progress in History
@@ -202,7 +202,7 @@ export default function ImageGeneratorPage() {
                   setPrompt("");
                   setSubmissionId(null);
                 }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-100 text-[#1E293B] hover:bg-slate-200 transition-colors"
               >
                 <Sparkles className="w-4 h-4" />
                 Generate Another
@@ -216,10 +216,10 @@ export default function ImageGeneratorPage() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="p-6 rounded-2xl bg-white/5 border border-white/10"
+            className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm"
           >
-            <h3 className="text-white font-medium mb-4 flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-purple-400" />
+            <h3 className="text-[#1E293B] font-medium mb-4 flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-violet-500" />
               Generated Image
             </h3>
             <img
@@ -232,7 +232,7 @@ export default function ImageGeneratorPage() {
               download
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 transition-colors"
+              className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#D1F5F3] text-[#089691] hover:bg-[#0ABAB5]/20 transition-colors"
             >
               <Download className="w-4 h-4" />
               Download Image
@@ -246,7 +246,7 @@ export default function ImageGeneratorPage() {
           disabled={isSubmitting}
           whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
           whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
-          className="w-full py-4 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium shadow-lg shadow-purple-500/25 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full py-4 rounded-xl bg-[#0ABAB5] hover:bg-[#089691] text-white font-medium shadow-lg shadow-[#0ABAB5]/25 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {isSubmitting ? (
             <>
@@ -267,13 +267,13 @@ export default function ImageGeneratorPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="mt-8 p-6 rounded-2xl bg-purple-500/10 border border-purple-500/20"
+        className="mt-8 p-6 rounded-2xl bg-violet-50 border border-violet-200"
       >
-        <h3 className="text-white font-semibold mb-2 flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-purple-400" />
+        <h3 className="text-[#1E293B] font-semibold mb-2 flex items-center gap-2">
+          <Sparkles className="w-5 h-5 text-violet-500" />
           How it works
         </h3>
-        <ul className="text-neutral-400 text-sm space-y-2">
+        <ul className="text-slate-600 text-sm space-y-2">
           <li>1. Upload an image (JPEG or PNG)</li>
           <li>2. Enter a custom prompt describing the transformation</li>
           <li>3. AI processes and transforms your image</li>

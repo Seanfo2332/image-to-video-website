@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AvatarAI - AI Video Generator",
-  description: "Create stunning AI-powered videos with custom avatars",
+  title: "AlphaFin - AI Content Generator",
+  description: "Create stunning AI-powered content with AlphaFin",
 };
 
 export default function RootLayout({
