@@ -13,7 +13,20 @@ export async function GET() {
     const sites = await prisma.wordPressSite.findMany({
       where: { userId: session.user.id },
       include: {
-        brandProfile: true,
+        brandProfile: {
+          select: {
+            id: true,
+            brandName: true,
+            language: true,
+            imageStyle: true,
+          },
+        },
+        pageSpeedCache: {
+          select: {
+            score: true,
+            checkedAt: true,
+          },
+        },
         _count: {
           select: {
             articles: true,
@@ -21,6 +34,7 @@ export async function GET() {
         },
       },
       orderBy: { createdAt: "desc" },
+      take: 50, // Reasonable limit for sites per user
     });
 
     // Don't expose the app password

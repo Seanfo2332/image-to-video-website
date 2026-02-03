@@ -1,5 +1,30 @@
 import prisma from "@/lib/prisma";
 
+// Simple in-memory cache for credit configs (5 minute TTL)
+const creditConfigCache = new Map<string, { config: { cost: number; label: string }; expiresAt: number }>();
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+async function getCachedCreditConfig(workflowType: string) {
+  const cached = creditConfigCache.get(workflowType);
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.config;
+  }
+
+  const config = await prisma.creditConfig.findUnique({
+    where: { workflowType },
+    select: { cost: true, label: true },
+  });
+
+  if (config) {
+    creditConfigCache.set(workflowType, {
+      config,
+      expiresAt: Date.now() + CACHE_TTL,
+    });
+  }
+
+  return config;
+}
+
 export class InsufficientCreditsError extends Error {
   constructor(
     public required: number,
@@ -20,9 +45,7 @@ export async function checkAndDeductCredits(
   workflowType: string,
   submissionId: string
 ) {
-  const config = await prisma.creditConfig.findUnique({
-    where: { workflowType },
-  });
+  const config = await getCachedCreditConfig(workflowType);
 
   if (!config) {
     throw new Error(`No credit config found for workflow type: ${workflowType}`);

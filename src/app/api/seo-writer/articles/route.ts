@@ -14,6 +14,9 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const siteId = searchParams.get("siteId");
     const status = searchParams.get("status");
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = Math.min(parseInt(searchParams.get("limit") || "50"), 100); // Max 100
+    const skip = (page - 1) * limit;
 
     if (!siteId) {
       return NextResponse.json({ error: "Site ID required" }, { status: 400 });
@@ -22,6 +25,7 @@ export async function GET(request: NextRequest) {
     // Verify user owns the site
     const site = await prisma.wordPressSite.findFirst({
       where: { id: siteId, userId: session.user.id },
+      select: { id: true }, // Only need to verify ownership
     });
 
     if (!site) {
@@ -33,20 +37,47 @@ export async function GET(request: NextRequest) {
       where.status = status;
     }
 
-    const articles = await prisma.article.findMany({
-      where,
-      include: {
-        keyword: {
-          select: {
-            keyword: true,
-            trafficBoost: true,
+    // Get total count and articles in parallel
+    const [total, articles] = await Promise.all([
+      prisma.article.count({ where }),
+      prisma.article.findMany({
+        where,
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          metaDescription: true,
+          featuredImage: true,
+          wordCount: true,
+          articleLength: true,
+          status: true,
+          wpPostId: true,
+          scheduledFor: true,
+          publishedAt: true,
+          createdAt: true,
+          updatedAt: true,
+          keyword: {
+            select: {
+              keyword: true,
+              trafficBoost: true,
+            },
           },
         },
-      },
-      orderBy: { createdAt: "desc" },
-    });
+        orderBy: { createdAt: "desc" },
+        skip,
+        take: limit,
+      }),
+    ]);
 
-    return NextResponse.json(articles);
+    return NextResponse.json({
+      articles,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    });
   } catch (error) {
     console.error("Error fetching articles:", error);
     return NextResponse.json(

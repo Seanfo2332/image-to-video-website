@@ -19,12 +19,13 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Site ID required" }, { status: 400 });
     }
 
-    // Verify site ownership
+    // Verify site ownership (only select id for performance)
     const site = await prisma.wordPressSite.findFirst({
       where: {
         id: siteId,
         userId: session.user.id,
       },
+      select: { id: true },
     });
 
     if (!site) {
@@ -83,6 +84,7 @@ export async function GET(request: NextRequest) {
         { scheduledFor: "asc" },
         { createdAt: "desc" },
       ],
+      take: 500, // Limit to 500 articles per month (reasonable limit)
     });
 
     // Group articles by date

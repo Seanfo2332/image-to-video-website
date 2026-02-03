@@ -79,10 +79,12 @@ export default function SEOWriterPage() {
 
   const fetchArticles = async (siteId: string) => {
     try {
-      const response = await fetch(`/api/seo-writer/articles?siteId=${siteId}`);
+      const response = await fetch(`/api/seo-writer/articles?siteId=${siteId}&limit=5`);
       if (response.ok) {
         const data = await response.json();
-        setRecentArticles(data.slice(0, 5));
+        // Handle both paginated and non-paginated responses
+        const articlesList = data.articles || data;
+        setRecentArticles(articlesList.slice(0, 5));
       }
     } catch (error) {
       console.error("Failed to fetch articles:", error);

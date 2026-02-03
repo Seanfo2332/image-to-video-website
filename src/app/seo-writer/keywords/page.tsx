@@ -49,10 +49,11 @@ export default function KeywordsPage() {
 
   const fetchKeywords = async () => {
     try {
-      const response = await fetch(`/api/seo-writer/keywords?siteId=${siteId}`);
+      const response = await fetch(`/api/seo-writer/keywords?siteId=${siteId}&limit=200`);
       if (response.ok) {
         const data = await response.json();
-        setKeywords(data);
+        // Handle both paginated and non-paginated responses
+        setKeywords(data.keywords || data);
       }
     } catch (err) {
       console.error("Failed to fetch keywords:", err);

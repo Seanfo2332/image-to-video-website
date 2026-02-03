@@ -49,25 +49,14 @@ export async function GET() {
       }),
     ]);
 
-    // Get signups over the last 30 days
-    const signupsData = await prisma.user.groupBy({
-      by: ["createdAt"],
-      where: {
-        createdAt: {
-          gte: monthAgo,
-        },
-      },
-      _count: true,
-    });
-
-    // Aggregate signups by day
+    // Initialize signups by day map with zeros
     const signupsByDay = new Map<string, number>();
     for (let i = 29; i >= 0; i--) {
       const date = format(subDays(now, i), "yyyy-MM-dd");
       signupsByDay.set(date, 0);
     }
 
-    // Count users per day
+    // Get users in range (single query, no redundant groupBy)
     const usersInRange = await prisma.user.findMany({
       where: {
         createdAt: {
@@ -79,9 +68,12 @@ export async function GET() {
       },
     });
 
+    // Count users per day
     usersInRange.forEach((user) => {
       const date = format(user.createdAt, "yyyy-MM-dd");
-      signupsByDay.set(date, (signupsByDay.get(date) || 0) + 1);
+      if (signupsByDay.has(date)) {
+        signupsByDay.set(date, signupsByDay.get(date)! + 1);
+      }
     });
 
     const signupsChart = Array.from(signupsByDay.entries()).map(

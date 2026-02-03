@@ -12,31 +12,31 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get recent submissions
-    const recentSubmissions = await prisma.promptSubmission.findMany({
-      where: { userId: session.user.id },
-      orderBy: { createdAt: "desc" },
-      take: 5,
-      select: {
-        id: true,
-        scriptStyle: true,
-        status: true,
-        createdAt: true,
-      },
-    });
-
-    // Get recent videos
-    const recentVideos = await prisma.video.findMany({
-      where: { userId: session.user.id },
-      orderBy: { createdAt: "desc" },
-      take: 5,
-      select: {
-        id: true,
-        title: true,
-        status: true,
-        createdAt: true,
-      },
-    });
+    // Get recent submissions and videos in parallel
+    const [recentSubmissions, recentVideos] = await Promise.all([
+      prisma.promptSubmission.findMany({
+        where: { userId: session.user.id },
+        orderBy: { createdAt: "desc" },
+        take: 5,
+        select: {
+          id: true,
+          scriptStyle: true,
+          status: true,
+          createdAt: true,
+        },
+      }),
+      prisma.video.findMany({
+        where: { userId: session.user.id },
+        orderBy: { createdAt: "desc" },
+        take: 5,
+        select: {
+          id: true,
+          title: true,
+          status: true,
+          createdAt: true,
+        },
+      }),
+    ]);
 
     // Combine and format activity
     const activity = [

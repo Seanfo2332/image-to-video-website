@@ -72,7 +72,7 @@ export default function ArticlesPage() {
 
   const fetchArticles = async () => {
     try {
-      let url = `/api/seo-writer/articles?siteId=${siteId}`;
+      let url = `/api/seo-writer/articles?siteId=${siteId}&limit=100`;
       if (statusFilter !== "all") {
         url += `&status=${statusFilter}`;
       }
@@ -80,17 +80,42 @@ export default function ArticlesPage() {
       const response = await fetch(url);
       if (response.ok) {
         const data = await response.json();
-        setArticles(data);
+        // Handle both paginated and non-paginated responses
+        const articlesList = data.articles || data;
+        setArticles(articlesList);
 
-        // Calculate stats
-        const allArticlesResponse = await fetch(`/api/seo-writer/articles?siteId=${siteId}`);
-        if (allArticlesResponse.ok) {
-          const allArticles = await allArticlesResponse.json();
+        // Use pagination data for total, fetch stats counts efficiently
+        if (data.pagination) {
+          // Fetch stats counts in parallel
+          const [draftsRes, publishedRes, scheduledRes] = await Promise.all([
+            fetch(`/api/seo-writer/articles?siteId=${siteId}&status=draft&limit=1`),
+            fetch(`/api/seo-writer/articles?siteId=${siteId}&status=published&limit=1`),
+            fetch(`/api/seo-writer/articles?siteId=${siteId}&status=scheduled&limit=1`),
+          ]);
+
+          const [draftsData, publishedData, scheduledData] = await Promise.all([
+            draftsRes.json(),
+            publishedRes.json(),
+            scheduledRes.json(),
+          ]);
+
+          // Get total from an unfiltered request
+          const totalRes = await fetch(`/api/seo-writer/articles?siteId=${siteId}&limit=1`);
+          const totalData = await totalRes.json();
+
           setStats({
-            total: allArticles.length,
-            drafts: allArticles.filter((a: Article) => a.status === "draft").length,
-            published: allArticles.filter((a: Article) => a.status === "published").length,
-            scheduled: allArticles.filter((a: Article) => a.status === "scheduled").length,
+            total: totalData.pagination?.total || articlesList.length,
+            drafts: draftsData.pagination?.total || 0,
+            published: publishedData.pagination?.total || 0,
+            scheduled: scheduledData.pagination?.total || 0,
+          });
+        } else {
+          // Fallback for non-paginated response
+          setStats({
+            total: articlesList.length,
+            drafts: articlesList.filter((a: Article) => a.status === "draft").length,
+            published: articlesList.filter((a: Article) => a.status === "published").length,
+            scheduled: articlesList.filter((a: Article) => a.status === "scheduled").length,
           });
         }
       }

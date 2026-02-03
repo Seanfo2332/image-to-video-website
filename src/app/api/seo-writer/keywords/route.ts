@@ -14,6 +14,10 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const siteId = searchParams.get("siteId");
     const profileId = searchParams.get("profileId");
+    const status = searchParams.get("status");
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = Math.min(parseInt(searchParams.get("limit") || "100"), 200); // Max 200
+    const skip = (page - 1) * limit;
 
     if (!siteId && !profileId) {
       return NextResponse.json(
@@ -22,20 +26,10 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    let keywords;
+    let targetProfileId = profileId;
 
-    if (profileId) {
-      keywords = await prisma.keyword.findMany({
-        where: { profileId },
-        include: {
-          _count: {
-            select: { articles: true },
-          },
-        },
-        orderBy: { trafficBoost: "desc" },
-      });
-    } else if (siteId) {
-      // Get profile for the site first
+    // If siteId is provided, get the profile first
+    if (!targetProfileId && siteId) {
       const profile = await prisma.brandProfile.findFirst({
         where: {
           site: {
@@ -43,24 +37,46 @@ export async function GET(request: NextRequest) {
             userId: session.user.id,
           },
         },
+        select: { id: true },
       });
 
       if (!profile) {
         return NextResponse.json({ error: "Profile not found" }, { status: 404 });
       }
+      targetProfileId = profile.id;
+    }
 
-      keywords = await prisma.keyword.findMany({
-        where: { profileId: profile.id },
+    // Build where clause
+    const where: { profileId: string; status?: string } = { profileId: targetProfileId! };
+    if (status) {
+      where.status = status;
+    }
+
+    // Get total count and keywords in parallel
+    const [total, keywords] = await Promise.all([
+      prisma.keyword.count({ where }),
+      prisma.keyword.findMany({
+        where,
         include: {
           _count: {
             select: { articles: true },
           },
         },
         orderBy: { trafficBoost: "desc" },
-      });
-    }
+        skip,
+        take: limit,
+      }),
+    ]);
 
-    return NextResponse.json(keywords);
+    return NextResponse.json({
+      keywords,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    });
   } catch (error) {
     console.error("Error fetching keywords:", error);
     return NextResponse.json(

@@ -53,6 +53,7 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -62,6 +63,8 @@ model Session {
   expires      DateTime
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model VerificationToken {
@@ -160,6 +163,8 @@ model CreditTransaction {
   @@index([userId])
   @@index([type])
   @@index([createdAt])
+  @@index([userId, type])
+  @@index([userId, createdAt])
 }
 
 model Voucher {
@@ -186,6 +191,8 @@ model VoucherRedemption {
   voucher Voucher @relation(fields: [voucherId], references: [id], onDelete: Cascade)
 
   @@unique([userId, voucherId])
+  @@index([userId])
+  @@index([voucherId])
 }
 
 model TopUpOrder {
@@ -201,6 +208,10 @@ model TopUpOrder {
   updatedAt        DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@index([paymentReference])
 }
 
 // SEO Writer Models
@@ -300,6 +311,7 @@ model Keyword {
   @@unique([profileId, keyword])
   @@index([profileId])
   @@index([status])
+  @@index([profileId, status])
 }
 
 model Article {
@@ -327,6 +339,8 @@ model Article {
   @@index([status])
   @@index([scheduledFor])
   @@index([createdAt])
+  @@index([siteId, status])
+  @@index([siteId, scheduledFor])
 }
 
 // GEO Content Submissions
@@ -349,5 +363,6 @@ model GeoSubmission {
   @@index([userId])
   @@index([status])
   @@index([createdAt])
+  @@index([userId, status])
 }
 
