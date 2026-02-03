@@ -76,16 +76,10 @@ export function DashboardSidebar() {
 
   const SidebarContent = () => (
     <>
-      {/* Logo with monogram accent */}
+      {/* Logo */}
       <div className="p-6 border-b border-[#E2E8F0]">
-        <Link href="/dashboard" className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0ABAB5] to-[#089691] flex items-center justify-center shadow-lg shadow-[#0ABAB5]/20">
-            <span className="text-white font-bold text-lg">A</span>
-          </div>
-          <div>
-            <span className="text-lg font-bold text-[#1A1A2E]">AlphaFin</span>
-            <p className="text-xs text-[#334155]">Dashboard</p>
-          </div>
+        <Link href="/dashboard" className="flex items-center">
+          <img src="/alphafin-full-logo.png" alt="AlphaFin" className="h-10 w-auto" />
         </Link>
       </div>
 
@@ -215,11 +209,8 @@ export function DashboardSidebar() {
       {/* Mobile Header */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-b border-[#E2E8F0]">
         <div className="flex items-center justify-between px-4 py-3">
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#0ABAB5] to-[#089691] flex items-center justify-center">
-              <span className="text-white font-bold text-sm">A</span>
-            </div>
-            <span className="text-lg font-bold text-[#1A1A2E]">AlphaFin</span>
+          <Link href="/dashboard" className="flex items-center">
+            <img src="/alphafin-full-logo.png" alt="AlphaFin" className="h-8 w-auto" />
           </Link>
           <button
             onClick={() => setIsMobileOpen(!isMobileOpen)}

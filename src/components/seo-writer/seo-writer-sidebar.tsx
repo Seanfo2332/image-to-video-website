@@ -172,15 +172,9 @@ export function SEOWriterSidebar() {
       {/* Logo & Site Selector */}
       <div className="p-4 border-b border-[#E2E8F0]">
         {/* App Logo */}
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0ABAB5] to-[#089691] flex items-center justify-center shadow-lg shadow-[#0ABAB5]/20">
-            <FileText className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <span className="text-lg font-bold text-[#1A1A2E]">SEO Writer</span>
-            <p className="text-xs text-[#0ABAB5]">AI Content</p>
-          </div>
-        </div>
+        <Link href="/seo-writer" className="flex items-center mb-4">
+          <img src="/alphafin-full-logo.png" alt="AlphaFin" className="h-10 w-auto" />
+        </Link>
 
         {/* Site Selector Dropdown */}
         {isLoading ? (
@@ -341,11 +335,8 @@ export function SEOWriterSidebar() {
       {/* Mobile Header */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-b border-[#E2E8F0]">
         <div className="flex items-center justify-between px-4 py-3">
-          <Link href="/seo-writer" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#0ABAB5] to-[#089691] flex items-center justify-center">
-              <FileText className="w-4 h-4 text-white" />
-            </div>
-            <span className="text-lg font-bold text-[#1A1A2E]">SEO Writer</span>
+          <Link href="/seo-writer" className="flex items-center">
+            <img src="/alphafin-full-logo.png" alt="AlphaFin" className="h-8 w-auto" />
           </Link>
           <button
             onClick={() => setIsMobileOpen(!isMobileOpen)}

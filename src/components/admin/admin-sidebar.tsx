@@ -25,16 +25,10 @@ export function AdminSidebar() {
 
   return (
     <aside className="fixed left-0 top-0 h-screen w-64 bg-white border-r border-[#E2E8F0] flex flex-col z-50">
-      {/* Logo with Admin monogram */}
+      {/* Logo */}
       <div className="p-6 border-b border-[#E2E8F0]">
-        <Link href="/admin/dashboard" className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#1E3A5F] to-[#0ABAB5] flex items-center justify-center shadow-lg">
-            <Shield className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <span className="text-lg font-bold text-[#1A1A2E]">Admin Panel</span>
-            <p className="text-xs text-[#334155]">Management</p>
-          </div>
+        <Link href="/admin/dashboard" className="flex items-center">
+          <img src="/alphafin-full-logo.png" alt="AlphaFin" className="h-10 w-auto" />
         </Link>
       </div>
 
