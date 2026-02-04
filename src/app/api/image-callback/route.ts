@@ -38,16 +38,42 @@ export async function POST(request: NextRequest) {
 
     // Update the submission in database
     if (submissionId) {
+      const submission = await prisma.promptSubmission.findUnique({
+        where: { id: submissionId },
+      });
+
       await prisma.promptSubmission.update({
         where: { id: submissionId },
         data: {
           status: imageUrl ? "completed" : "failed",
           progress: 100,
           currentStep: imageUrl ? "Image generated successfully!" : "Failed to generate image",
-          videoUrl: imageUrl || null,  // Using videoUrl field to store image URL
+          videoUrl: imageUrl || null,
           error: imageUrl ? null : "No image URL in callback",
         },
       });
+
+      // Create Image record if image was generated successfully
+      if (imageUrl && submission) {
+        // Check if image already exists for this submission
+        const existingImage = await prisma.image.findFirst({
+          where: { submissionId: submissionId },
+        });
+
+        if (!existingImage) {
+          await prisma.image.create({
+            data: {
+              userId: submission.userId,
+              title: `AI Image - ${new Date().toLocaleDateString()}`,
+              prompt: submission.videoMaterial || "",
+              status: "completed",
+              downloadUrl: imageUrl,
+              thumbnailUrl: imageUrl,
+              submissionId: submissionId,
+            },
+          });
+        }
+      }
     }
 
     return NextResponse.json({
