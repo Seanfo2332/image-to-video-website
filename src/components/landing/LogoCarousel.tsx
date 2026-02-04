@@ -58,9 +58,9 @@ export function LogoCarousel() {
 
           {/* Scrolling logos */}
           <motion.div
-            className="flex items-center gap-12"
+            className="flex items-center gap-16"
             animate={{
-              x: [0, -160 * logos.length],
+              x: [0, -240 * logos.length],
             }}
             transition={{
               x: {
@@ -74,7 +74,7 @@ export function LogoCarousel() {
             {duplicatedLogos.map((logo, index) => (
               <div
                 key={index}
-                className="flex-shrink-0 h-16 w-40 flex items-center justify-center grayscale hover:grayscale-0 opacity-60 hover:opacity-100 transition-all duration-300"
+                className="flex-shrink-0 h-24 w-52 flex items-center justify-center grayscale hover:grayscale-0 opacity-60 hover:opacity-100 transition-all duration-300"
               >
                 <img
                   src={logo.src}
