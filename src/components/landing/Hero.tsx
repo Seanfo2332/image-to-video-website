@@ -20,7 +20,7 @@ export function Hero() {
       </div>
 
       {/* Content */}
-      <div className="p-4 max-w-7xl mx-auto relative z-10 w-full pt-32 md:pt-28">
+      <div className="px-4 max-w-7xl mx-auto relative z-10 w-full pt-24 pb-8 md:pt-28 md:pb-0">
         {/* Split layout container */}
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left side - Text content */}
@@ -149,45 +149,45 @@ export function Hero() {
             {/* Main card - SEO Dashboard */}
             <div className="relative bg-white rounded-2xl border border-[#E2E8F0] shadow-premium-lg overflow-hidden">
               {/* Dashboard header */}
-              <div className="p-4 border-b border-[#E2E8F0] flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0ABAB5] to-[#089691] flex items-center justify-center">
-                    <BarChart3 className="w-5 h-5 text-white" />
+              <div className="p-3 md:p-4 border-b border-[#E2E8F0] flex items-center justify-between">
+                <div className="flex items-center gap-2 md:gap-3">
+                  <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-gradient-to-br from-[#0ABAB5] to-[#089691] flex items-center justify-center flex-shrink-0">
+                    <BarChart3 className="w-4 h-4 md:w-5 md:h-5 text-white" />
                   </div>
                   <div>
-                    <div className="text-sm font-semibold text-[#1A1A2E]">SEO Performance</div>
-                    <div className="text-xs text-[#334155]">Real-time analytics</div>
+                    <div className="text-xs md:text-sm font-semibold text-[#1A1A2E]">SEO Performance</div>
+                    <div className="text-[10px] md:text-xs text-[#334155]">Real-time analytics</div>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 md:gap-2">
                   <div className="w-2 h-2 rounded-full bg-[#0ABAB5] animate-pulse" />
-                  <span className="text-xs text-[#334155]">Live</span>
+                  <span className="text-[10px] md:text-xs text-[#334155]">Live</span>
                 </div>
               </div>
 
               {/* Stats row */}
               <div className="grid grid-cols-3 border-b border-[#E2E8F0]">
-                <div className="p-4 border-r border-[#E2E8F0]">
-                  <div className="text-xs text-[#334155] mb-1">Rankings</div>
-                  <div className="text-xl font-bold text-[#0ABAB5]">+342%</div>
+                <div className="p-3 md:p-4 border-r border-[#E2E8F0]">
+                  <div className="text-[10px] md:text-xs text-[#334155] mb-1">Rankings</div>
+                  <div className="text-base md:text-xl font-bold text-[#0ABAB5]">+342%</div>
                 </div>
-                <div className="p-4 border-r border-[#E2E8F0]">
-                  <div className="text-xs text-[#334155] mb-1">Traffic</div>
-                  <div className="text-xl font-bold text-[#1A1A2E]">45.2K</div>
+                <div className="p-3 md:p-4 border-r border-[#E2E8F0]">
+                  <div className="text-[10px] md:text-xs text-[#334155] mb-1">Traffic</div>
+                  <div className="text-base md:text-xl font-bold text-[#1A1A2E]">45.2K</div>
                 </div>
-                <div className="p-4">
-                  <div className="text-xs text-[#334155] mb-1">CTR</div>
-                  <div className="text-xl font-bold text-[#D4AF37]">8.6%</div>
+                <div className="p-3 md:p-4">
+                  <div className="text-[10px] md:text-xs text-[#334155] mb-1">CTR</div>
+                  <div className="text-base md:text-xl font-bold text-[#D4AF37]">8.6%</div>
                 </div>
               </div>
 
               {/* Mini chart area */}
-              <div className="p-4">
+              <div className="p-3 md:p-4">
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-medium text-[#1A1A2E]">Organic Traffic Growth</span>
-                  <span className="text-xs text-[#0ABAB5]">Last 30 days</span>
+                  <span className="text-[10px] md:text-xs font-medium text-[#1A1A2E]">Organic Traffic Growth</span>
+                  <span className="text-[10px] md:text-xs text-[#0ABAB5]">Last 30 days</span>
                 </div>
-                <div className="h-24 flex items-end gap-1">
+                <div className="h-16 md:h-24 flex items-end gap-0.5 md:gap-1">
                   {[35, 42, 38, 55, 48, 62, 58, 75, 68, 82, 78, 95, 88, 100].map((height, i) => (
                     <motion.div
                       key={i}
@@ -201,7 +201,7 @@ export function Hero() {
               </div>
 
               {/* Keyword rankings */}
-              <div className="p-4 border-t border-[#E2E8F0] space-y-3">
+              <div className="p-3 md:p-4 border-t border-[#E2E8F0] space-y-2 md:space-y-3">
                 <div className="text-xs font-medium text-[#1A1A2E] mb-2">Top Performing Keywords</div>
                 {[
                   { keyword: "AI content generation", position: 2, change: "+5" },
@@ -213,17 +213,17 @@ export function Hero() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 1 + i * 0.1 }}
-                    className="flex items-center justify-between p-2 rounded-lg bg-[#F1F5F9]"
+                    className="flex items-center justify-between p-1.5 md:p-2 rounded-lg bg-[#F1F5F9]"
                   >
-                    <div className="flex items-center gap-2">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+                    <div className="flex items-center gap-1.5 md:gap-2 min-w-0">
+                      <div className={`w-5 h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center text-[10px] md:text-xs font-bold flex-shrink-0 ${
                         item.position <= 3 ? "bg-[#D4AF37] text-white" : "bg-[#D1F5F3] text-[#0ABAB5]"
                       }`}>
                         {item.position}
                       </div>
-                      <span className="text-sm text-[#1A1A2E]">{item.keyword}</span>
+                      <span className="text-xs md:text-sm text-[#1A1A2E] truncate">{item.keyword}</span>
                     </div>
-                    <span className="text-xs text-[#0ABAB5] font-medium">{item.change}</span>
+                    <span className="text-[10px] md:text-xs text-[#0ABAB5] font-medium flex-shrink-0 ml-2">{item.change}</span>
                   </motion.div>
                 ))}
               </div>

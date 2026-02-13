@@ -18,7 +18,7 @@ export function CTA() {
           className="relative"
         >
           {/* Card */}
-          <div className="relative bg-white rounded-2xl border border-[#E2E8F0] p-10 md:p-14 text-center overflow-hidden shadow-premium-lg">
+          <div className="relative bg-white rounded-2xl border border-[#E2E8F0] p-6 sm:p-10 md:p-14 text-center overflow-hidden shadow-premium-lg">
             {/* Subtle pattern background */}
             <div className="absolute inset-0 pattern-dots opacity-30" />
 
@@ -33,7 +33,7 @@ export function CTA() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
                 viewport={{ once: true }}
-                className="flex justify-center gap-4 mb-8"
+                className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-8"
               >
                 {[
                   { value: "+342%", label: "Avg Rankings" },
@@ -46,10 +46,10 @@ export function CTA() {
                     whileInView={{ opacity: 1, scale: 1 }}
                     transition={{ delay: i * 0.1 }}
                     viewport={{ once: true }}
-                    className="px-4 py-2 rounded-xl bg-[#F1F5F9] border border-[#E2E8F0]"
+                    className="px-3 sm:px-4 py-2 rounded-xl bg-[#F1F5F9] border border-[#E2E8F0]"
                   >
-                    <div className="text-lg font-bold text-[#0ABAB5]">{stat.value}</div>
-                    <div className="text-xs text-[#334155]">{stat.label}</div>
+                    <div className="text-base sm:text-lg font-bold text-[#0ABAB5]">{stat.value}</div>
+                    <div className="text-[10px] sm:text-xs text-[#334155]">{stat.label}</div>
                   </motion.div>
                 ))}
               </motion.div>

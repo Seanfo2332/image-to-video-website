@@ -179,7 +179,7 @@ export default function PricingPage() {
 
                 {/* Price */}
                 <div className="mb-8">
-                  <span className="text-5xl font-bold text-white">
+                  <span className="text-4xl md:text-5xl font-bold text-white">
                     ${isYearly ? plan.price.yearly : plan.price.monthly}
                   </span>
                   {plan.price.monthly > 0 && (

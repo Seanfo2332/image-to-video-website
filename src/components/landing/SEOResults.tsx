@@ -45,7 +45,7 @@ export function SEOResults() {
           className="bg-white rounded-2xl border border-[#E2E8F0] shadow-premium-lg overflow-hidden"
         >
           {/* Dashboard Header */}
-          <div className="p-6 border-b border-[#E2E8F0] flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="p-4 md:p-6 border-b border-[#E2E8F0] flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-4">
             <div>
               <h3 className="text-lg font-semibold text-[#1A1A2E]">Search Performance</h3>
               <p className="text-sm text-[#334155]">Google Search Console Data</p>
@@ -59,12 +59,12 @@ export function SEOResults() {
           {/* Metrics Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 border-b border-[#E2E8F0]">
             {/* Total Clicks */}
-            <div className="p-6 border-r border-b md:border-b-0 border-[#E2E8F0]">
+            <div className="p-4 md:p-6 border-r border-b md:border-b-0 border-[#E2E8F0]">
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-3 h-3 rounded-full bg-[#4285F4]" />
-                <span className="text-sm text-[#334155]">Total clicks</span>
+                <span className="text-xs md:text-sm text-[#334155]">Total clicks</span>
               </div>
-              <div className="text-3xl font-bold text-[#1A1A2E]">25K</div>
+              <div className="text-2xl md:text-3xl font-bold text-[#1A1A2E]">25K</div>
               <div className="flex items-center gap-1 mt-1 text-sm text-[#0ABAB5]">
                 <ArrowUpRight className="w-4 h-4" />
                 <span>+342%</span>
@@ -72,12 +72,12 @@ export function SEOResults() {
             </div>
 
             {/* Total Impressions */}
-            <div className="p-6 border-b md:border-b-0 md:border-r border-[#E2E8F0]">
+            <div className="p-4 md:p-6 border-b md:border-b-0 md:border-r border-[#E2E8F0]">
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-3 h-3 rounded-full bg-[#A855F7]" />
-                <span className="text-sm text-[#334155]">Total impressions</span>
+                <span className="text-xs md:text-sm text-[#334155]">Total impressions</span>
               </div>
-              <div className="text-3xl font-bold text-[#1A1A2E]">1.45M</div>
+              <div className="text-2xl md:text-3xl font-bold text-[#1A1A2E]">1.45M</div>
               <div className="flex items-center gap-1 mt-1 text-sm text-[#0ABAB5]">
                 <ArrowUpRight className="w-4 h-4" />
                 <span>+528%</span>
@@ -85,12 +85,12 @@ export function SEOResults() {
             </div>
 
             {/* Average CTR */}
-            <div className="p-6 border-r border-[#E2E8F0]">
+            <div className="p-4 md:p-6 border-r border-b md:border-b-0 border-[#E2E8F0]">
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-3 h-3 rounded-full bg-[#0ABAB5]" />
-                <span className="text-sm text-[#334155]">Average CTR</span>
+                <span className="text-xs md:text-sm text-[#334155]">Average CTR</span>
               </div>
-              <div className="text-3xl font-bold text-[#1A1A2E]">8.6%</div>
+              <div className="text-2xl md:text-3xl font-bold text-[#1A1A2E]">8.6%</div>
               <div className="flex items-center gap-1 mt-1 text-sm text-[#0ABAB5]">
                 <ArrowUpRight className="w-4 h-4" />
                 <span>+2.4%</span>
@@ -98,12 +98,12 @@ export function SEOResults() {
             </div>
 
             {/* Average Position */}
-            <div className="p-6">
+            <div className="p-4 md:p-6">
               <div className="flex items-center gap-2 mb-2">
                 <div className="w-3 h-3 rounded-full bg-[#D4AF37]" />
-                <span className="text-sm text-[#334155]">Average position</span>
+                <span className="text-xs md:text-sm text-[#334155]">Average position</span>
               </div>
-              <div className="text-3xl font-bold text-[#1A1A2E]">4.2</div>
+              <div className="text-2xl md:text-3xl font-bold text-[#1A1A2E]">4.2</div>
               <div className="flex items-center gap-1 mt-1 text-sm text-[#0ABAB5]">
                 <ArrowUpRight className="w-4 h-4" />
                 <span>+12 spots</span>
@@ -112,17 +112,17 @@ export function SEOResults() {
           </div>
 
           {/* Chart Area */}
-          <div className="p-6">
-            <div className="relative h-64 md:h-80">
+          <div className="p-4 md:p-6">
+            <div className="relative h-48 sm:h-64 md:h-80">
               {/* Y-axis labels */}
-              <div className="absolute left-0 top-0 bottom-8 w-12 flex flex-col justify-between text-xs text-[#334155]">
+              <div className="absolute left-0 top-0 bottom-8 w-8 md:w-12 flex flex-col justify-between text-[10px] md:text-xs text-[#334155]">
                 <span>5K</span>
                 <span>2.5K</span>
                 <span>0</span>
               </div>
 
               {/* Chart container */}
-              <div className="ml-14 h-full relative">
+              <div className="ml-9 md:ml-14 h-full relative">
                 {/* Grid lines */}
                 <div className="absolute inset-0 flex flex-col justify-between">
                   <div className="border-b border-dashed border-[#E2E8F0]" />
@@ -132,8 +132,9 @@ export function SEOResults() {
 
                 {/* "Started using Alphafin" annotation */}
                 <div className="absolute left-[20%] top-0 bottom-8 border-l-2 border-dashed border-[#0ABAB5] z-10">
-                  <div className="absolute -top-1 left-2 bg-[#D1F5F3] text-[#0ABAB5] text-xs font-medium px-2 py-1 rounded whitespace-nowrap">
-                    Started using AlphaFin
+                  <div className="absolute -top-1 left-2 bg-[#D1F5F3] text-[#0ABAB5] text-[10px] md:text-xs font-medium px-1.5 md:px-2 py-0.5 md:py-1 rounded whitespace-nowrap">
+                    <span className="hidden sm:inline">Started using AlphaFin</span>
+                    <span className="sm:hidden">AlphaFin</span>
                   </div>
                 </div>
 
@@ -197,7 +198,7 @@ export function SEOResults() {
                 </svg>
 
                 {/* X-axis labels */}
-                <div className="flex justify-between text-xs text-[#334155] mt-2">
+                <div className="flex justify-between text-[10px] md:text-xs text-[#334155] mt-2">
                   <span>Aug</span>
                   <span>Sep</span>
                   <span>Oct</span>
@@ -208,13 +209,13 @@ export function SEOResults() {
               </div>
 
               {/* Legend */}
-              <div className="absolute bottom-0 right-0 flex items-center gap-6 text-sm">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-[#4285F4]" />
+              <div className="absolute -bottom-1 md:bottom-0 right-0 flex items-center gap-3 md:gap-6 text-xs md:text-sm">
+                <div className="flex items-center gap-1.5 md:gap-2">
+                  <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-[#4285F4]" />
                   <span className="text-[#334155]">Clicks</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-[#A855F7]" />
+                <div className="flex items-center gap-1.5 md:gap-2">
+                  <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-[#A855F7]" />
                   <span className="text-[#334155]">Impressions</span>
                 </div>
               </div>

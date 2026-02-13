@@ -53,14 +53,14 @@ export function LogoCarousel() {
         {/* Logo carousel with infinite scroll */}
         <div className="relative overflow-hidden">
           {/* Gradient masks */}
-          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-white to-transparent z-10" />
-          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-white to-transparent z-10" />
+          <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-20 md:w-32 bg-gradient-to-r from-white to-transparent z-10" />
+          <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-20 md:w-32 bg-gradient-to-l from-white to-transparent z-10" />
 
           {/* Scrolling logos */}
           <motion.div
-            className="flex items-center gap-16"
+            className="flex items-center gap-8 md:gap-16"
             animate={{
-              x: [0, -240 * logos.length],
+              x: [0, -176 * logos.length],
             }}
             transition={{
               x: {
@@ -74,7 +74,7 @@ export function LogoCarousel() {
             {duplicatedLogos.map((logo, index) => (
               <div
                 key={index}
-                className="flex-shrink-0 h-24 w-52 flex items-center justify-center grayscale hover:grayscale-0 opacity-60 hover:opacity-100 transition-all duration-300"
+                className="flex-shrink-0 h-16 w-36 md:h-24 md:w-52 flex items-center justify-center grayscale hover:grayscale-0 opacity-60 hover:opacity-100 transition-all duration-300"
               >
                 <img
                   src={logo.src}
