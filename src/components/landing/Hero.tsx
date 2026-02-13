@@ -7,7 +7,7 @@ import Image from "next/image";
 export function Hero() {
   return (
     <div
-      className="min-h-screen w-full flex items-center justify-center relative overflow-hidden"
+      className="min-h-0 lg:min-h-screen w-full flex items-center justify-center relative overflow-hidden"
       style={{ background: "var(--pearl)" }}
     >
       {/* Subtle dot pattern background */}
@@ -20,7 +20,7 @@ export function Hero() {
       </div>
 
       {/* Content */}
-      <div className="px-4 max-w-7xl mx-auto relative z-10 w-full pt-24 pb-8 md:pt-28 md:pb-0">
+      <div className="px-4 max-w-7xl mx-auto relative z-10 w-full pt-24 pb-12 md:pt-28 lg:pb-0">
         {/* Split layout container */}
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left side - Text content */}
@@ -136,12 +136,12 @@ export function Hero() {
             </motion.div>
           </motion.div>
 
-          {/* Right side - SEO Dashboard Preview */}
+          {/* Right side - SEO Dashboard Preview (hidden on mobile) */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="relative"
+            className="relative hidden lg:block"
           >
             {/* Card glow */}
             <div className="absolute -inset-4 bg-gradient-to-br from-[#0ABAB5]/10 to-[#D4AF37]/10 rounded-3xl blur-2xl" />
