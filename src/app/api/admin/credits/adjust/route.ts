@@ -1,6 +1,14 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { auth } from "../../../../../../auth";
 import prisma from "@/lib/prisma";
+import { rateLimit, rateLimitResponse } from "@/lib/rate-limit";
+
+const adjustSchema = z.object({
+  userId: z.string().min(1, "userId is required"),
+  amount: z.number().int().refine((n) => n !== 0, "amount must be non-zero"),
+  reason: z.string().max(500).optional(),
+});
 
 // POST /api/admin/credits/adjust - admin adjusts user credits
 export async function POST(request: Request) {
@@ -9,14 +17,20 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { userId, amount, reason } = await request.json();
+  // Rate limit: 10 adjustments per minute per admin
+  if (!rateLimit(`admin-adjust:${session.user.id}`, 10)) {
+    return rateLimitResponse();
+  }
 
-  if (!userId || typeof amount !== "number" || amount === 0) {
+  const body = await request.json();
+  const parsed = adjustSchema.safeParse(body);
+  if (!parsed.success) {
     return NextResponse.json(
-      { error: "userId and non-zero amount are required" },
+      { error: parsed.error.issues[0].message },
       { status: 400 }
     );
   }
+  const { userId, amount, reason } = parsed.data;
 
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) {

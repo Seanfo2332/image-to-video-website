@@ -3,11 +3,19 @@ import prisma from "@/lib/prisma";
 
 export async function POST(request: NextRequest) {
   try {
+    // Verify the request is from n8n (mandatory secret validation)
+    const authHeader = request.headers.get("x-n8n-secret");
+    const expectedSecret = process.env.N8N_CALLBACK_SECRET;
+
+    if (!expectedSecret || authHeader !== expectedSecret) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     // Get submissionId from query params
     const { searchParams } = new URL(request.url);
     const submissionId = searchParams.get("submissionId");
 
-    // Get the callback data from kie.ai
+    // Get the callback data
     const data = await request.json();
 
     console.log("Image callback received:", { submissionId, data });
@@ -92,7 +100,3 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Also handle GET for testing
-export async function GET(request: NextRequest) {
-  return NextResponse.json({ status: "Image callback endpoint ready" });
-}

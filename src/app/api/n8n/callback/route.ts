@@ -6,11 +6,11 @@ import { refundCredits } from "@/lib/credits";
 // n8n calls this endpoint when workflow status changes
 export async function POST(request: Request) {
   try {
-    // Verify the request is from n8n (optional: add secret key validation)
+    // Verify the request is from n8n (mandatory secret validation)
     const authHeader = request.headers.get("x-n8n-secret");
     const expectedSecret = process.env.N8N_CALLBACK_SECRET;
 
-    if (expectedSecret && authHeader !== expectedSecret) {
+    if (!expectedSecret || authHeader !== expectedSecret) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -147,30 +147,3 @@ export async function POST(request: Request) {
   }
 }
 
-// GET endpoint for testing
-export async function GET() {
-  return NextResponse.json({
-    message: "n8n callback endpoint is active",
-    usage: {
-      method: "POST",
-      url: "/api/n8n/callback",
-      headers: {
-        "Content-Type": "application/json",
-        "x-n8n-secret": "your-secret-key (optional)",
-      },
-      body: {
-        submissionId: "required - the submission ID",
-        status: "completed | failed | processing",
-        progress: "0-100 (optional)",
-        currentStep: "description of current step (optional)",
-        error: "error message if failed (optional)",
-        videoUrl: "download URL when video completed (optional)",
-        imageUrl: "download URL when image completed (optional)",
-        videoTitle: "title for the video (optional)",
-        videoDuration: "e.g., 3:45 (optional)",
-        videoSize: "e.g., 45.2 MB (optional)",
-        thumbnailUrl: "thumbnail URL (optional)",
-      },
-    },
-  });
-}

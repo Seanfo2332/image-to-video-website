@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import prisma from "@/lib/prisma";
+import { rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 const registerSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -11,6 +12,12 @@ const registerSchema = z.object({
 
 export async function POST(request: Request) {
   try {
+    // Rate limit by IP: 5 requests per minute
+    const ip = request.headers.get("x-forwarded-for") || "unknown";
+    if (!rateLimit(`register:${ip}`, 5)) {
+      return rateLimitResponse();
+    }
+
     const body = await request.json();
     const parsed = registerSchema.safeParse(body);
 

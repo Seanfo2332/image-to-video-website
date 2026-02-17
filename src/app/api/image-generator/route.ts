@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "../../../../auth";
 import prisma from "@/lib/prisma";
 import { checkAndDeductCredits, InsufficientCreditsError } from "@/lib/credits";
+import { rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 // n8n Webhook URL - no spaces in path
 const N8N_WEBHOOK_URL = process.env.N8N_IMAGE_GENERATOR_WEBHOOK || "https://autoskz.app.n8n.cloud/webhook/image-generator-api";
@@ -10,53 +11,82 @@ const CALLBACK_BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://image-to-v
 
 export async function POST(request: NextRequest) {
   try {
-    // Get user session
+    // Require authentication
     const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Rate limit: 10 requests per minute per user
+    if (!rateLimit(`generator:${session.user.id}`, 10)) {
+      return rateLimitResponse();
+    }
 
     const formData = await request.formData();
     const image = formData.get("image") as File;
     const prompt = formData.get("prompt") as string || "enhance the image";
 
-    if (!image) {
+    if (!image || !(image instanceof File)) {
       return NextResponse.json(
         { error: "Image is required" },
         { status: 400 }
       );
     }
 
-    // Save submission to database if user is logged in
-    let submission = null;
-    if (session?.user?.id) {
-      submission = await prisma.promptSubmission.create({
-        data: {
-          userId: session.user.id,
-          materialUrl: "image-generator",
-          imageStyle: "nano-banana-edit",
-          scriptStyle: "image-edit",
-          voiceId: "",
-          videoMaterial: prompt,
-          status: "processing",
-          progress: 0,
-          currentStep: "Sending to n8n workflow...",
-        },
-      });
+    // Validate file size (max 10MB) and type
+    const MAX_FILE_SIZE = 10 * 1024 * 1024;
+    if (image.size > MAX_FILE_SIZE) {
+      return NextResponse.json(
+        { error: "Image must be under 10MB" },
+        { status: 400 }
+      );
+    }
 
-      // Deduct credits
-      try {
-        await checkAndDeductCredits(session.user.id, "image", submission.id);
-      } catch (err) {
-        await prisma.promptSubmission.update({
-          where: { id: submission.id },
-          data: { status: "failed", error: "Insufficient credits" },
-        });
-        if (err instanceof InsufficientCreditsError) {
-          return NextResponse.json(
-            { error: "Insufficient credits", required: err.required, available: err.available },
-            { status: 402 }
-          );
-        }
-        throw err;
+    const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
+    if (!ALLOWED_TYPES.includes(image.type)) {
+      return NextResponse.json(
+        { error: "Only PNG, JPEG, and WebP images are allowed" },
+        { status: 400 }
+      );
+    }
+
+    if (prompt.length > 2000) {
+      return NextResponse.json(
+        { error: "Prompt must be under 2000 characters" },
+        { status: 400 }
+      );
+    }
+
+    // Save submission to database
+    const submission = await prisma.promptSubmission.create({
+      data: {
+        userId: session.user.id,
+        materialUrl: "image-generator",
+        imageStyle: "nano-banana-edit",
+        scriptStyle: "image-edit",
+        voiceId: "",
+        videoMaterial: prompt,
+        status: "processing",
+        progress: 0,
+        currentStep: "Sending to n8n workflow...",
+      },
+    });
+
+    // Deduct credits
+    try {
+      await checkAndDeductCredits(session.user.id, "image", submission.id);
+    } catch (err) {
+      await prisma.promptSubmission.update({
+        where: { id: submission.id },
+        data: { status: "failed", error: "Insufficient credits" },
+      });
+      if (err instanceof InsufficientCreditsError) {
+        return NextResponse.json(
+          { error: "Insufficient credits", required: err.required, available: err.available },
+          { status: 402 }
+        );
       }
+      throw err;
     }
 
     try {
@@ -76,7 +106,7 @@ export async function POST(request: NextRequest) {
           imageMimeType: mimeType,
           imageFileName: image.name || "image.png",
           prompt: prompt,
-          submissionId: submission?.id || "",
+          submissionId: submission.id,
           callbackUrl: `${CALLBACK_BASE_URL}/api/n8n/callback`,
         }),
       });
@@ -87,33 +117,29 @@ export async function POST(request: NextRequest) {
       }
 
       // Update progress
-      if (submission) {
-        await prisma.promptSubmission.update({
-          where: { id: submission.id },
-          data: {
-            currentStep: "n8n workflow started - processing image...",
-            progress: 20,
-          },
-        });
-      }
+      await prisma.promptSubmission.update({
+        where: { id: submission.id },
+        data: {
+          currentStep: "n8n workflow started - processing image...",
+          progress: 20,
+        },
+      });
 
       return NextResponse.json({
         success: true,
         message: "Image generation started",
-        submissionId: submission?.id,
+        submissionId: submission.id,
       });
 
     } catch (apiError) {
       // Update submission status to failed
-      if (submission) {
-        await prisma.promptSubmission.update({
-          where: { id: submission.id },
-          data: {
-            status: "failed",
-            error: String(apiError),
-          },
-        });
-      }
+      await prisma.promptSubmission.update({
+        where: { id: submission.id },
+        data: {
+          status: "failed",
+          error: String(apiError),
+        },
+      });
       throw apiError;
     }
 
