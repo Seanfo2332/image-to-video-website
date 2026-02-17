@@ -28,7 +28,11 @@ export async function middleware(request: NextRequest) {
   }
 
   // Verify JWT token
-  const token = await getToken({ req: request });
+  const token = await getToken({
+    req: request,
+    secret: process.env.AUTH_SECRET,
+    secureCookie: process.env.NODE_ENV === "production",
+  });
 
   if (!token) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
