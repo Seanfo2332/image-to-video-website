@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import Credentials from "next-auth/providers/credentials";
+import Google from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import type { Adapter } from "next-auth/adapters";
@@ -54,6 +55,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
   },
   providers: [
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      allowDangerousEmailAccountLinking: true,
+    }),
     Credentials({
       name: "credentials",
       credentials: {
@@ -92,4 +98,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
     }),
   ],
+  events: {
+    async createUser({ user }) {
+      // Give signup bonus credits to new Google users
+      if (user.id) {
+        await prisma.creditTransaction.create({
+          data: {
+            userId: user.id,
+            amount: 10,
+            type: "signup_bonus",
+            description: "Welcome bonus credits",
+          },
+        });
+      }
+    },
+  },
 });
