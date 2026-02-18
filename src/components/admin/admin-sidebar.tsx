@@ -28,7 +28,7 @@ export function AdminSidebar() {
       {/* Logo */}
       <div className="p-6 border-b border-[#E2E8F0]">
         <Link href="/admin/dashboard" className="flex items-center">
-          <img src="/alphafin-full-logo.png" alt="AlphaFin" className="h-10 w-auto" />
+          <img src="/alphafin-full-logo.png" alt="AlphaFinHub" className="h-10 w-auto" />
         </Link>
       </div>
 

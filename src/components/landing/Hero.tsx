@@ -130,7 +130,7 @@ export function Hero() {
                 </div>
                 <div className="text-sm">
                   <span className="font-semibold text-[#1A1A2E]">10,000+</span>
-                  <span className="text-[#334155]"> businesses trust AlphaFin</span>
+                  <span className="text-[#334155]"> businesses trust AlphaFinHub</span>
                 </div>
               </div>
             </motion.div>

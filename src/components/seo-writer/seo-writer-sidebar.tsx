@@ -173,7 +173,7 @@ export function SEOWriterSidebar() {
       <div className="p-4 border-b border-[#E2E8F0]">
         {/* App Logo */}
         <Link href="/seo-writer" className="flex items-center mb-4">
-          <img src="/alphafin-full-logo.png" alt="AlphaFin" className="h-10 w-auto" />
+          <img src="/alphafin-full-logo.png" alt="AlphaFinHub" className="h-10 w-auto" />
         </Link>
 
         {/* Site Selector Dropdown */}
@@ -336,7 +336,7 @@ export function SEOWriterSidebar() {
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-b border-[#E2E8F0]">
         <div className="flex items-center justify-between px-4 py-3">
           <Link href="/seo-writer" className="flex items-center">
-            <img src="/alphafin-full-logo.png" alt="AlphaFin" className="h-8 w-auto" />
+            <img src="/alphafin-full-logo.png" alt="AlphaFinHub" className="h-8 w-auto" />
           </Link>
           <button
             onClick={() => setIsMobileOpen(!isMobileOpen)}

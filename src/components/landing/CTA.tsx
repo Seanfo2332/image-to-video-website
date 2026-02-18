@@ -122,7 +122,7 @@ export function CTA() {
                 viewport={{ once: true }}
                 className="text-sm text-[#334155] mt-8"
               >
-                Join <span className="font-semibold text-[#1A1A2E]">10,000+</span> businesses growing with AlphaFin
+                Join <span className="font-semibold text-[#1A1A2E]">10,000+</span> businesses growing with AlphaFinHub
               </motion.p>
             </div>
           </div>

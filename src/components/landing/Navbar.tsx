@@ -54,7 +54,7 @@ export function Navbar() {
                 whileHover={{ scale: 1.02 }}
                 className="h-9"
               >
-                <img src="/alphafin-full-logo.png" alt="AlphaFin" className="h-full w-auto" />
+                <img src="/alphafin-full-logo.png" alt="AlphaFinHub" className="h-full w-auto" />
               </motion.div>
             </Link>
 

@@ -79,7 +79,7 @@ export function DashboardSidebar() {
       {/* Logo */}
       <div className="p-6 border-b border-[#E2E8F0]">
         <Link href="/dashboard" className="flex items-center">
-          <img src="/alphafin-full-logo.png" alt="AlphaFin" className="h-10 w-auto" />
+          <img src="/alphafin-full-logo.png" alt="AlphaFinHub" className="h-10 w-auto" />
         </Link>
       </div>
 
@@ -210,7 +210,7 @@ export function DashboardSidebar() {
       <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-b border-[#E2E8F0]">
         <div className="flex items-center justify-between px-4 py-3">
           <Link href="/dashboard" className="flex items-center">
-            <img src="/alphafin-full-logo.png" alt="AlphaFin" className="h-8 w-auto" />
+            <img src="/alphafin-full-logo.png" alt="AlphaFinHub" className="h-8 w-auto" />
           </Link>
           <button
             onClick={() => setIsMobileOpen(!isMobileOpen)}

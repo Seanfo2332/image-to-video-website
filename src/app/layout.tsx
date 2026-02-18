@@ -20,8 +20,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "AlphaFin - Premium AI Content Generator",
-  description: "Create stunning premium AI-powered content with AlphaFin",
+  title: "AlphaFinHub - Premium AI Content Generator",
+  description: "Create stunning premium AI-powered content with AlphaFinHub",
 };
 
 export default function RootLayout({

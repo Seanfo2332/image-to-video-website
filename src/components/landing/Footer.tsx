@@ -44,7 +44,7 @@ export function Footer() {
           {/* Logo & description */}
           <div className="col-span-2">
             <Link href="/" className="flex items-center gap-2.5 mb-4">
-              <img src="/alphafin-full-logo.png" alt="AlphaFin" className="h-9 w-auto" />
+              <img src="/alphafin-full-logo.png" alt="AlphaFinHub" className="h-9 w-auto" />
             </Link>
             <p className="text-[#334155] text-sm mb-6 max-w-xs leading-relaxed">
               Create professional AI avatar videos in minutes. 100+ lifelike avatars,
@@ -88,7 +88,7 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="pt-8 border-t border-[#E2E8F0] flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-[#334155]">
-            &copy; {new Date().getFullYear()} AlphaFin. All rights reserved.
+            &copy; {new Date().getFullYear()} AlphaFinHub. All rights reserved.
           </p>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-[#D4AF37]" />

@@ -32,7 +32,7 @@ export function SEOResults() {
             SEO Performance That Speaks
           </h2>
           <p className="text-lg text-[#334155] max-w-2xl mx-auto">
-            Our clients see dramatic improvements in search visibility and organic traffic within months of using AlphaFin.
+            Our clients see dramatic improvements in search visibility and organic traffic within months of using AlphaFinHub.
           </p>
         </motion.div>
 
@@ -133,8 +133,8 @@ export function SEOResults() {
                 {/* "Started using Alphafin" annotation */}
                 <div className="absolute left-[20%] top-0 bottom-8 border-l-2 border-dashed border-[#0ABAB5] z-10">
                   <div className="absolute -top-1 left-2 bg-[#D1F5F3] text-[#0ABAB5] text-[10px] md:text-xs font-medium px-1.5 md:px-2 py-0.5 md:py-1 rounded whitespace-nowrap">
-                    <span className="hidden sm:inline">Started using AlphaFin</span>
-                    <span className="sm:hidden">AlphaFin</span>
+                    <span className="hidden sm:inline">Started using AlphaFinHub</span>
+                    <span className="sm:hidden">AlphaFinHub</span>
                   </div>
                 </div>
 
