@@ -176,9 +176,9 @@ export function Navbar() {
                   >
                     Sign In
                   </Link>
-                  <Link href="/generate">
+                  <Link href="/dashboard">
                     <button className="px-5 py-2.5 rounded-xl bg-[#0ABAB5] hover:bg-[#089691] text-white text-sm font-medium shadow-lg shadow-[#0ABAB5]/20 transition-all duration-200">
-                      Get Started
+                      Try Free
                     </button>
                   </Link>
                 </>
@@ -293,9 +293,9 @@ export function Navbar() {
                     >
                       Sign In
                     </Link>
-                    <Link href="/generate" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
                       <button className="w-full py-4 rounded-xl bg-[#0ABAB5] text-white font-semibold text-lg flex items-center justify-center gap-2">
-                        Get Started
+                        Try Free
                       </button>
                     </Link>
                   </>
