@@ -9,37 +9,30 @@ const packages = [
   {
     name: "Starter",
     credits: 50,
-    price: 1,
+    price: 5,
     popular: false,
     description: "Try out the platform",
   },
   {
     name: "Popular",
     credits: 120,
-    price: 5,
+    price: 10,
     popular: true,
     description: "Best value for creators",
   },
   {
     name: "Pro",
     credits: 300,
-    price: 10,
+    price: 25,
     popular: false,
     description: "For power users",
   },
   {
     name: "Max",
     credits: 800,
-    price: 25,
-    popular: false,
-    description: "Maximum credits, best rate",
-  },
-  {
-    name: "Ultra",
-    credits: 2000,
     price: 50,
     popular: false,
-    description: "Best rate per credit",
+    description: "Maximum credits, best rate",
   },
 ];
 
@@ -116,7 +109,7 @@ export default function PricingPage() {
       {/* Credit Packages */}
       <section className="py-24 px-4">
         <div className="max-w-7xl mx-auto">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {packages.map((pkg, index) => (
               <motion.div
                 key={pkg.name}
