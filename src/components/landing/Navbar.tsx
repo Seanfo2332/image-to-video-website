@@ -6,8 +6,8 @@ import { useSession, signOut } from "next-auth/react";
 import { Menu, X, LogOut, Shield, User, ChevronDown, Wand2, LayoutDashboard } from "lucide-react";
 
 const navItems = [
-  { name: "Features", href: "#features" },
-  { name: "How It Works", href: "#how-it-works" },
+  { name: "Features", href: "/#features" },
+  { name: "How It Works", href: "/#how-it-works" },
   { name: "Pricing", href: "/pricing" },
 ];
 

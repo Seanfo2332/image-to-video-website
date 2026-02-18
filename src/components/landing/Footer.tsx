@@ -4,7 +4,7 @@ import { Twitter, Linkedin, Instagram, Youtube } from "lucide-react";
 
 const footerLinks = {
   Product: [
-    { name: "Features", href: "#features" },
+    { name: "Features", href: "/#features" },
     { name: "Pricing", href: "/pricing" },
     { name: "Avatars", href: "#avatars" },
     { name: "API", href: "#" },

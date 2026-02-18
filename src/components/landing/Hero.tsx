@@ -104,7 +104,7 @@ export function Hero() {
                 </button>
               </Link>
 
-              <Link href="#features">
+              <Link href="/#features">
                 <button className="px-8 py-4 rounded-xl border border-[#E2E8F0] bg-white text-[#1A1A2E] font-medium text-lg shadow-sm hover:border-[#0ABAB5] hover:bg-[#D1F5F3]/30 transition-all duration-200 flex items-center gap-2">
                   <Sparkles className="w-5 h-5" />
                   See How It Works
