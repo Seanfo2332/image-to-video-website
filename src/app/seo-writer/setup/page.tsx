@@ -185,7 +185,39 @@ export default function SEOWriterSetupPage() {
     }
   };
 
-  const finishSetup = () => {
+  const [isSavingWp, setIsSavingWp] = useState(false);
+  const [wpError, setWpError] = useState<string | null>(null);
+  const [wpSuccess, setWpSuccess] = useState(false);
+
+  const finishSetup = async () => {
+    // If WordPress credentials were provided, test and save them first
+    if (wpUsername && wpPassword && siteId) {
+      setIsSavingWp(true);
+      setWpError(null);
+      try {
+        const response = await fetch("/api/seo-writer/wordpress/test", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            siteId,
+            username: wpUsername,
+            appPassword: wpPassword,
+          }),
+        });
+        const data = await response.json();
+        if (!data.success) {
+          setWpError(data.error || "Connection failed. You can configure this later in Settings.");
+          setIsSavingWp(false);
+          return;
+        }
+        setWpSuccess(true);
+      } catch {
+        setWpError("Connection failed. You can configure this later in Settings.");
+        setIsSavingWp(false);
+        return;
+      }
+      setIsSavingWp(false);
+    }
     router.push(`/seo-writer?siteId=${siteId}`);
   };
 
@@ -536,17 +568,50 @@ export default function SEOWriterSetupPage() {
               <p className="text-xs text-[#334155]">
                 Find in WordPress Admin → Users → Profile → Application Passwords
               </p>
+
+              {wpError && (
+                <div className="mt-3 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 text-sm flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                  {wpError}
+                </div>
+              )}
+              {wpSuccess && (
+                <div className="mt-3 p-3 rounded-lg bg-[#D1F5F3] border border-[#0ABAB5]/20 text-[#0ABAB5] text-sm flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 flex-shrink-0" />
+                  WordPress connected successfully!
+                </div>
+              )}
             </div>
 
-            <motion.button
-              onClick={finishSetup}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="px-8 py-4 rounded-xl bg-gradient-to-r from-[#0ABAB5] to-[#089691] text-white font-medium shadow-lg shadow-[#0ABAB5]/20 flex items-center justify-center gap-2 mx-auto"
-            >
-              <FileText className="w-5 h-5" />
-              Go to Dashboard
-            </motion.button>
+            <div className="flex flex-col items-center gap-3">
+              <motion.button
+                onClick={finishSetup}
+                disabled={isSavingWp}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="px-8 py-4 rounded-xl bg-gradient-to-r from-[#0ABAB5] to-[#089691] text-white font-medium shadow-lg shadow-[#0ABAB5]/20 flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                {isSavingWp ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Testing connection...
+                  </>
+                ) : (
+                  <>
+                    <FileText className="w-5 h-5" />
+                    {wpUsername && wpPassword ? "Connect & Go to Dashboard" : "Go to Dashboard"}
+                  </>
+                )}
+              </motion.button>
+              {wpUsername && wpPassword && (
+                <button
+                  onClick={() => router.push(`/seo-writer?siteId=${siteId}`)}
+                  className="text-sm text-[#334155] hover:text-[#0ABAB5] transition-colors"
+                >
+                  Skip — configure later in Settings
+                </button>
+              )}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

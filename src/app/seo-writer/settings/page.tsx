@@ -285,7 +285,7 @@ export default function SettingsPage() {
         const foundSite = sites.find((s: Site) => s.id === siteId);
         if (foundSite) {
           setSite(foundSite);
-          setWpUsername(foundSite.username);
+          setWpUsername(foundSite.username === "pending" ? "" : foundSite.username);
         }
       }
 

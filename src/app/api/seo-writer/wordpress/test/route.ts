@@ -31,11 +31,12 @@ export async function POST(request: NextRequest) {
       testUrl = testUrl || site.url;
 
       // Only use stored credentials if form values are NOT provided
+      // Treat "pending" (from initial setup) as empty
       if (!testUsername || testUsername === "pending") {
-        testUsername = site.username;
+        testUsername = site.username !== "pending" ? site.username : "";
       }
       if (!testPassword) {
-        testPassword = site.appPassword;
+        testPassword = site.appPassword !== "pending" ? site.appPassword : "";
       }
     }
 
@@ -59,14 +60,11 @@ export async function POST(request: NextRequest) {
     const cleanUsername = testUsername.trim();
 
     console.log(`Testing WordPress connection to: ${normalizedUrl}`);
-    console.log(`Username: "${cleanUsername}"`);
-    console.log(`Password length: ${cleanPassword.length}`);
+    console.log(`Username: "${cleanUsername}", Password length: ${cleanPassword.length}`);
 
     // Test connection to WordPress REST API
     const authString = `${cleanUsername}:${cleanPassword}`;
     const credentials = Buffer.from(authString, 'utf-8').toString("base64");
-
-    console.log(`Auth string: "${authString}"`);
 
     // First, test if we can access the users/me endpoint (requires authentication)
     const response = await fetch(`${normalizedUrl}/wp-json/wp/v2/users/me`, {
