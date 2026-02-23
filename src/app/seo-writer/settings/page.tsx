@@ -392,10 +392,11 @@ export default function SettingsPage() {
       const data = await response.json();
 
       if (data.success) {
-        setSuccess(`Connected successfully! User: ${data.user.name}`);
+        setSuccess(`Connected successfully! ${data.user?.name ? `User: ${data.user.name}` : ""}`);
         setSite({ ...site!, isConnected: true, lastTestedAt: new Date().toISOString() });
       } else {
-        setError(data.error || "Connection failed");
+        const msg = data.hint ? `${data.error}. ${data.hint}` : (data.error || "Connection failed");
+        setError(msg);
       }
     } catch (err) {
       setError("Failed to test connection");
