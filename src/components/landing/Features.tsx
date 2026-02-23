@@ -10,6 +10,8 @@ import {
   Sparkles,
   Globe,
   Target,
+  ArrowUp,
+  ChevronRight,
 } from "lucide-react";
 
 const features = [
@@ -18,7 +20,7 @@ const features = [
     description:
       "Create SEO-optimized articles that rank on Google and get cited by AI platforms like ChatGPT and Perplexity.",
     icon: Sparkles,
-    size: "large",
+    size: "featured",
     demo: <ContentDemo />,
   },
   {
@@ -42,7 +44,7 @@ const features = [
     description:
       "Automatically find and suggest internal linking opportunities to boost your site's SEO structure.",
     icon: Link2,
-    size: "medium",
+    size: "small",
     demo: <LinkingDemo />,
   },
   {
@@ -51,6 +53,7 @@ const features = [
       "Monitor your keyword rankings and track progress over time with detailed analytics.",
     icon: TrendingUp,
     size: "small",
+    demo: <RankTrackingDemo />,
   },
   {
     title: "Content Briefs",
@@ -58,6 +61,7 @@ const features = [
       "Generate comprehensive content briefs with outlines, FAQs, and competitor analysis.",
     icon: FileText,
     size: "small",
+    demo: <ContentBriefDemo />,
   },
   {
     title: "Performance Analytics",
@@ -65,6 +69,7 @@ const features = [
       "Track clicks, impressions, CTR, and rankings with Google Search Console integration.",
     icon: BarChart3,
     size: "small",
+    demo: <PerformanceAnalyticsDemo />,
   },
 ];
 
@@ -218,9 +223,169 @@ function LinkingDemo() {
   );
 }
 
+// Rank tracking demo component
+function RankTrackingDemo() {
+  const keywords = [
+    { keyword: "best seo tools", position: 2, change: 3 },
+    { keyword: "ai content writer", position: 5, change: 8 },
+    { keyword: "geo optimization", position: 1, change: 12 },
+  ];
+  return (
+    <div className="p-4 space-y-2">
+      {keywords.map((kw, i) => (
+        <motion.div
+          key={kw.keyword}
+          initial={{ opacity: 0, x: -15 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ delay: i * 0.12 }}
+          viewport={{ once: true }}
+          className="flex items-center justify-between px-3 py-2 rounded-lg bg-[#F1F5F9]"
+        >
+          <span className="text-xs text-[#1A1A2E] font-medium truncate">{kw.keyword}</span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold text-[#1A1A2E] bg-white px-2 py-0.5 rounded-md border border-[#E2E8F0]">
+              #{kw.position}
+            </span>
+            <span className="text-xs font-medium text-emerald-500 flex items-center gap-0.5">
+              <ArrowUp className="w-3 h-3" />
+              +{kw.change}
+            </span>
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
+// Content brief demo component
+function ContentBriefDemo() {
+  const outlineItems = ["Introduction", "Top 10 Tools", "Pricing Guide"];
+  return (
+    <div className="p-4 space-y-2.5">
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        viewport={{ once: true }}
+        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0ABAB5]/10 border border-[#0ABAB5]/20"
+      >
+        <FileText className="w-3.5 h-3.5 text-[#0ABAB5]" />
+        <span className="text-xs font-semibold text-[#1A1A2E]">Content Brief: Best SEO Tools</span>
+      </motion.div>
+      {outlineItems.map((item, i) => (
+        <motion.div
+          key={item}
+          initial={{ opacity: 0, x: -12 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.15 + i * 0.1 }}
+          viewport={{ once: true }}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#F1F5F9]"
+        >
+          <ChevronRight className="w-3 h-3 text-[#0ABAB5]" />
+          <span className="text-xs text-[#334155]">H2:</span>
+          <span className="text-xs text-[#1A1A2E] font-medium">{item}</span>
+        </motion.div>
+      ))}
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+        viewport={{ once: true }}
+        className="flex items-center gap-2 pt-1"
+      >
+        <span className="text-xs font-medium text-[#0ABAB5] px-2 py-0.5 bg-[#D1F5F3] rounded">5 FAQs</span>
+        <span className="text-xs font-medium text-[#D4AF37] px-2 py-0.5 bg-[#D4AF37]/10 rounded">8 Competitors</span>
+      </motion.div>
+    </div>
+  );
+}
+
+// Performance analytics demo component
+function PerformanceAnalyticsDemo() {
+  const bars = [35, 45, 40, 60, 55, 75, 90];
+  return (
+    <div className="p-4 space-y-3">
+      <div className="flex items-center gap-2">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3 }}
+          viewport={{ once: true }}
+          className="flex-1 px-3 py-2 rounded-lg bg-[#F1F5F9]"
+        >
+          <div className="text-[10px] text-[#334155]">Clicks</div>
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-sm font-bold text-[#1A1A2E]">25K</span>
+            <span className="text-[10px] font-medium text-emerald-500">+342%</span>
+          </div>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+          viewport={{ once: true }}
+          className="flex-1 px-3 py-2 rounded-lg bg-[#F1F5F9]"
+        >
+          <div className="text-[10px] text-[#334155]">CTR</div>
+          <span className="text-sm font-bold text-[#1A1A2E]">8.6%</span>
+        </motion.div>
+      </div>
+      <div className="flex items-end justify-between gap-1.5 h-16">
+        {bars.map((height, i) => (
+          <motion.div
+            key={i}
+            className="flex-1 rounded-t-sm bg-gradient-to-t from-[#0ABAB5] to-[#089691]"
+            initial={{ height: 0 }}
+            whileInView={{ height: `${height}%` }}
+            transition={{ duration: 0.4, delay: i * 0.06 }}
+            viewport={{ once: true }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function FeatureCard({ feature, index }: { feature: typeof features[0]; index: number }) {
-  const isLarge = feature.size === "large";
-  const isMedium = feature.size === "medium";
+  const isFeatured = feature.size === "featured";
+
+  if (isFeatured) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        viewport={{ once: true }}
+        className="group relative bg-white rounded-2xl border border-[#E2E8F0] overflow-hidden
+          transition-all duration-300 hover:shadow-premium-lg hover:border-[#0ABAB5]/20
+          md:col-span-3"
+      >
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent opacity-60" />
+        <div className="md:flex">
+          {/* Text side */}
+          <div className="p-6 md:p-8 md:flex-1">
+            <div className="w-12 h-12 rounded-xl bg-[#D1F5F3] border border-[#0ABAB5]/10
+              flex items-center justify-center mb-4
+              group-hover:bg-[#0ABAB5] transition-colors duration-300">
+              <feature.icon className="w-6 h-6 text-[#0ABAB5] group-hover:text-white transition-colors duration-300" />
+            </div>
+            <h3 className="font-semibold text-[#1A1A2E] text-xl md:text-2xl mb-2">
+              {feature.title}
+            </h3>
+            <p className="text-[#334155] text-sm leading-relaxed max-w-md">
+              {feature.description}
+            </p>
+          </div>
+          {/* Demo side */}
+          {feature.demo && (
+            <div className="border-t md:border-t-0 md:border-l border-[#E2E8F0] bg-[#FAFBFC] md:w-[380px]">
+              {feature.demo}
+            </div>
+          )}
+        </div>
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div
@@ -228,38 +393,20 @@ function FeatureCard({ feature, index }: { feature: typeof features[0]; index: n
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.05 }}
       viewport={{ once: true }}
-      className={`
-        group relative bg-white rounded-2xl border border-[#E2E8F0] overflow-hidden
+      className="group relative bg-white rounded-2xl border border-[#E2E8F0] overflow-hidden
         transition-all duration-300 hover:shadow-premium-lg hover:border-[#0ABAB5]/20
-        ${isLarge ? "md:col-span-2 md:row-span-2" : ""}
-        ${isMedium ? "md:col-span-2" : ""}
-      `}
+        flex flex-col"
     >
-      {/* Subtle gold accent line for featured cards */}
-      {isLarge && (
-        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent opacity-60" />
-      )}
-
       {/* Content */}
-      <div className={`p-6 ${isLarge ? "md:p-8" : ""}`}>
-        {/* Icon */}
-        <div className={`
-          w-12 h-12 rounded-xl bg-[#D1F5F3] border border-[#0ABAB5]/10
-          flex items-center justify-center mb-4
-          group-hover:bg-[#0ABAB5] transition-colors duration-300
-        `}>
-          <feature.icon className="w-6 h-6 text-[#0ABAB5] group-hover:text-white transition-colors duration-300" />
+      <div className="p-5">
+        <div className="w-10 h-10 rounded-xl bg-[#D1F5F3] border border-[#0ABAB5]/10
+          flex items-center justify-center mb-3
+          group-hover:bg-[#0ABAB5] transition-colors duration-300">
+          <feature.icon className="w-5 h-5 text-[#0ABAB5] group-hover:text-white transition-colors duration-300" />
         </div>
-
-        {/* Title */}
-        <h3 className={`
-          font-semibold text-[#1A1A2E] mb-2
-          ${isLarge ? "text-xl md:text-2xl" : "text-lg"}
-        `}>
+        <h3 className="font-semibold text-[#1A1A2E] text-base mb-1.5">
           {feature.title}
         </h3>
-
-        {/* Description */}
         <p className="text-[#334155] text-sm leading-relaxed">
           {feature.description}
         </p>
@@ -267,10 +414,7 @@ function FeatureCard({ feature, index }: { feature: typeof features[0]; index: n
 
       {/* Demo area */}
       {feature.demo && (
-        <div className={`
-          border-t border-[#E2E8F0] bg-[#FAFBFC]
-          ${isLarge ? "min-h-[180px]" : "min-h-[100px]"}
-        `}>
+        <div className="border-t border-[#E2E8F0] bg-[#FAFBFC] mt-auto">
           {feature.demo}
         </div>
       )}
@@ -319,8 +463,8 @@ export function Features() {
           </p>
         </motion.div>
 
-        {/* Magazine-style grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-6xl mx-auto">
+        {/* Feature grid: 1 featured + 3+3 uniform */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
           {features.map((feature, i) => (
             <FeatureCard key={i} feature={feature} index={i} />
           ))}

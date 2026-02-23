@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-const REDIRECT_URI = process.env.NEXTAUTH_URL + "/api/seo-writer/analytics/callback";
+const REDIRECT_URI = (process.env.AUTH_URL || process.env.NEXTAUTH_URL) + "/api/seo-writer/analytics/callback";
 
 // GET - Handle OAuth callback from Google
 export async function GET(request: NextRequest) {

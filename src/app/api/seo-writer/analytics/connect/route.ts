@@ -3,7 +3,7 @@ import { auth } from "../../../../../../auth";
 import { prisma } from "@/lib/prisma";
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
-const REDIRECT_URI = process.env.NEXTAUTH_URL + "/api/seo-writer/analytics/callback";
+const REDIRECT_URI = (process.env.AUTH_URL || process.env.NEXTAUTH_URL) + "/api/seo-writer/analytics/callback";
 const SCOPES = [
   "https://www.googleapis.com/auth/webmasters.readonly",
 ];
