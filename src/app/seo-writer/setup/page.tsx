@@ -150,6 +150,13 @@ export default function SEOWriterSetupPage() {
         setKeywords(keywordsData.keywords || []);
       }
 
+      // Auto-enable auto-publish so the cron fills the calendar
+      await fetch("/api/seo-writer/auto-publish", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ siteId, enabled: true, daysAhead: 7 }),
+      });
+
       setStep(3);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
@@ -165,13 +172,17 @@ export default function SEOWriterSetupPage() {
     setError(null);
 
     try {
-      // Generate article for the top keyword
+      // Generate first article for today using the top keyword
+      const today = new Date();
+      today.setHours(9, 0, 0, 0);
+
       await fetch("/api/seo-writer/articles", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           siteId,
-          keywordId: keywords[0].keyword, // This should be the keyword ID, but for now we'll use the first one
+          keyword: keywords[0].keyword,
+          scheduledFor: today.toISOString(),
         }),
       });
 
@@ -218,6 +229,16 @@ export default function SEOWriterSetupPage() {
       }
       setIsSavingWp(false);
     }
+
+    // Fire-and-forget: fill remaining calendar days (days 2-7) in background
+    if (siteId) {
+      fetch("/api/seo-writer/generate-schedule", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ siteId }),
+      }).catch(() => {});
+    }
+
     router.push(`/seo-writer?siteId=${siteId}`);
   };
 
@@ -503,7 +524,7 @@ export default function SEOWriterSetupPage() {
                 Back
               </button>
               <motion.button
-                onClick={() => setStep(4)}
+                onClick={generateFirstArticle}
                 disabled={isLoading}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -512,7 +533,7 @@ export default function SEOWriterSetupPage() {
                 {isLoading ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    Setting up...
+                    Generating first article...
                   </>
                 ) : (
                   <>
